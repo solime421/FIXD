@@ -12,3 +12,168 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id             Int      @id @default(autoincrement())
+  email          String   @unique
+  firstName      String
+  lastName       String
+  phone          String?
+  passwordHash   String
+  role           Role
+  profilePicture String?
+  billingInfo    Json?
+  location       Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  freelancerDetails FreelancerDetails?
+
+  ordersAsClient     Order[]  @relation("ClientOrders")
+  ordersAsFreelancer Order[]  @relation("FreelancerOrders")
+  chatsAsClient      Chat[]   @relation("ClientChats")
+  chatsAsFreelancer  Chat[]   @relation("FreelancerChats")
+  reviewsWritten     Review[] @relation("ReviewsWritten")
+  reviewsReceived    Review[] @relation("ReviewsReceived")
+
+  // Additional relations from other models:
+  offers   Offer[]   @relation("UserOffers")
+  messages Message[] @relation("UserMessages")
+}
+
+enum Role {
+  client
+  freelancer
+}
+
+model FreelancerDetails {
+  userId          Int      @id
+  aboutMeSmall    String?
+  aboutMeDetailed String?
+  countryOfOrigin String?
+  memberSince     DateTime @default(now())
+
+  // Relation back to User
+  user User @relation(fields: [userId], references: [id])
+
+  portfolioImages PortfolioImage[]     @relation("FreelancerPortfolio")
+  specialties     Specialty[]          @relation("FreelancerSpecialties")
+  categories      FreelancerCategory[] @relation("FreelancerCategories")
+}
+
+model PortfolioImage {
+  id           Int      @id @default(autoincrement())
+  freelancerId Int
+  imageUrl     String
+  createdAt    DateTime @default(now())
+
+  // Relation back to FreelancerDetails, using explicit relation name.
+  freelancer FreelancerDetails @relation(fields: [freelancerId], references: [userId], name: "FreelancerPortfolio")
+}
+
+model Specialty {
+  id           Int    @id @default(autoincrement())
+  freelancerId Int
+  specialty    String
+
+  // Relation back to FreelancerDetails.
+  freelancer FreelancerDetails @relation(fields: [freelancerId], references: [userId], name: "FreelancerSpecialties")
+}
+
+model Category {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  // One-to-many relation with FreelancerCategory.
+  freelancerCategories FreelancerCategory[]
+}
+
+model FreelancerCategory {
+  freelancerId Int
+  categoryId   Int
+
+  // Relation fields with explicit relation name
+  freelancer FreelancerDetails @relation(fields: [freelancerId], references: [userId], name: "FreelancerCategories")
+  category   Category          @relation(fields: [categoryId], references: [id])
+
+  @@id([freelancerId, categoryId])
+}
+
+model Order {
+  id           Int      @id @default(autoincrement())
+  clientId     Int
+  freelancerId Int
+  offerName    String
+  depositPaid  Boolean  @default(false)
+  status       String   @default("in_progress")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now())
+
+  // Relations to User for client and freelancer.
+  client     User @relation("ClientOrders", fields: [clientId], references: [id])
+  freelancer User @relation("FreelancerOrders", fields: [freelancerId], references: [id])
+
+  // One-to-one relation with Review (each order can have one review)
+  review Review?
+}
+
+model Offer {
+  id              Int       @id @default(autoincrement())
+  chatId          Int
+  freelancerId    Int
+  offerName       String
+  requiresDeposit Boolean
+  accepted        Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  acceptedAt      DateTime?
+
+  // Relation to Chat; implicit opposite relation will be created in Chat.offers
+  chat       Chat @relation(fields: [chatId], references: [id])
+  // Relation to User (freelancer); we specify a relation name to link with User.offers.
+  freelancer User @relation(fields: [freelancerId], references: [id], name: "UserOffers")
+}
+
+model Chat {
+  id           Int      @id @default(autoincrement())
+  clientId     Int
+  freelancerId Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now())
+
+  // Relations to User: explicit relation names for client and freelancer.
+  client     User @relation("ClientChats", fields: [clientId], references: [id])
+  freelancer User @relation("FreelancerChats", fields: [freelancerId], references: [id])
+
+  // One-to-many: A Chat can have many messages and offers.
+  messages Message[]
+  offers   Offer[]
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  chatId    Int
+  senderId  Int
+  message   String
+  createdAt DateTime @default(now())
+
+  // Relation to Chat.
+  chat   Chat @relation(fields: [chatId], references: [id])
+  // Relation to User (sender) with explicit relation name.
+  sender User @relation(fields: [senderId], references: [id], name: "UserMessages")
+}
+
+model Review {
+  id         Int      @id @default(autoincrement())
+  orderId    Int      @unique
+  reviewerId Int
+  revieweeId Int
+  rating     Int
+  comment    String?
+  createdAt  DateTime @default(now())
+
+  // Relation to Order.
+  order    Order @relation(fields: [orderId], references: [id])
+  // Relations to User for reviewer and reviewee with explicit names.
+  reviewer User  @relation("ReviewsWritten", fields: [reviewerId], references: [id])
+  reviewee User  @relation("ReviewsReceived", fields: [revieweeId], references: [id])
+}
