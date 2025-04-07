@@ -1,0 +1,45 @@
+### POST - Register a new client
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "client@example.com",
+  "first_name": "Client",
+  "last_name": "User",
+  "phone": "1234567890",
+  "password": "password123",
+  "confirm_password": "password123",
+  "role": "client"
+}
+
+### Register a new freelancer
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "freelancer@example.com",
+  "first_name": "Freelancer",
+  "last_name": "User",
+  "phone": "0987654321",
+  "password": "password123",
+  "confirm_password": "password123",
+  "role": "freelancer"
+}
+
+### Login as client
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "client@example.com",
+  "password": "password123"
+}
+
+### Login as freelancer
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "freelancer@example.com",
+  "password": "password123"
+}

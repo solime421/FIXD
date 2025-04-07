@@ -1,17 +1,25 @@
-require('dotenv').config();
-const express = require('express');
+import dotenv from 'dotenv';
+dotenv.config();
+import express from 'express';
 //import path, {dirname} from 'path' 
 //import { fileURLToPath } from 'url'
 
-// ----------- All routes
-const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/users');
-const freelancersRoutes = require('./routes/freelancers');
-const chatsRoutes = require('./routes/chats');
-const offersRoutes = require('./routes/offers');
-const ordersRoutes = require('./routes/orders');
-const checkoutRoutes = require('./routes/checkout');
-const reviewRoutes = require('./routes/reviews');
+// ----------- Importing all routes
+import authRoutes from './routes/auth.js';
+
+
+
+/* UNCOMENT ONE BY ONE
+import userRoutes from './routes/users.js';
+import freelancersRoutes from './routes/freelancers.js';
+import chatsRoutes from './routes/chats.js';
+import offersRoutes from './routes/offers.js';
+import ordersRoutes from './routes/orders.js';
+import checkoutRoutes from './routes/checkout.js';
+import reviewRoutes from './routes/reviews.js';
+*/
+
+
 
 const app = express();
 app.use(express.json()); //It tells your Express app to automatically understand JSON data sent in requests
@@ -46,7 +54,11 @@ app.get('/', (req, res)=>{
 
 // ----------- Register API routes
 app.use('/api/auth', authRoutes);
-//You're telling Express to mount the authRoutes router at the /api/auth path. This means that all routes defined in the authRoutes file will automatically have /api/auth prefixed to their URL.
+//This means that all routes defined in the authRoutes file will automatically have /api/auth prefixed to their URL.
+
+
+
+/*  UNCOMENT ONE BY ONE
 app.use('/api/users', userRoutes);
 app.use('/api/freelancers', freelancersRoutes);
 app.use('/api/chats', chatsRoutes);
@@ -54,12 +66,16 @@ app.use('/api/offers', offersRoutes);
 app.use('/api/orders', ordersRoutes);
 app.use('/api/checkout', checkoutRoutes);
 app.use('/api/reviews', reviewRoutes);
+*/
+
+
 
 // ----------- Global error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
