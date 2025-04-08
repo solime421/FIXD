@@ -47,13 +47,14 @@ enum Role {
 }
 
 model FreelancerDetails {
-  userId          Int      @id
-  aboutMeSmall    String?
-  aboutMeDetailed String?
-  countryOfOrigin String?
-  memberSince     DateTime @default(now())
+  userId               Int      @id
+  aboutMeSmall         String?
+  aboutMeDetailed      String?
+  countryOfOrigin      String?
+  memberSince          DateTime @default(now())
+  urgentServiceEnabled Boolean  @default(false) // NEW FIELD: toggles urgent services
 
-  // Relation back to User
+  // relation back to user
   user User @relation(fields: [userId], references: [id])
 
   portfolioImages PortfolioImage[]     @relation("FreelancerPortfolio")
