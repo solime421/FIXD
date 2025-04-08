@@ -14,7 +14,7 @@ export const verifyToken = (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
     // Attach the decoded user info to the request object for later use in route handlers
-    req.user = decoded;  // Now you can use req.user.id and req.user.role in your endpoints
+    req.user = decoded;  // Now here I decoded the token, and can use it in the project as just simply req.user.
     
     next(); // Proceed to the next middleware/route handler
   } catch (err) {

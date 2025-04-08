@@ -100,14 +100,15 @@ model FreelancerCategory {
 }
 
 model Order {
-  id           Int      @id @default(autoincrement())
-  clientId     Int
-  freelancerId Int
-  offerName    String
-  depositPaid  Boolean  @default(false)
-  status       String   @default("in_progress")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @default(now())
+  id            Int      @id @default(autoincrement())
+  clientId      Int
+  freelancerId  Int
+  offerName     String // Snapshot of the accepted offer's name
+  depositPaid   Boolean  @default(false)
+  depositAmount Float?
+  status        String   @default("in_progress")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now())
 
   // Relations to User for client and freelancer.
   client     User @relation("ClientOrders", fields: [clientId], references: [id])
@@ -123,6 +124,7 @@ model Offer {
   freelancerId    Int
   offerName       String
   requiresDeposit Boolean
+  depositAmount   Float?
   accepted        Boolean   @default(false)
   createdAt       DateTime  @default(now())
   acceptedAt      DateTime?

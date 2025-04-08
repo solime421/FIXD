@@ -14,9 +14,6 @@ export const register = async (req, res) => {
     }
 
     const lowerRole = role.toLowerCase();
-    if (!['client', 'freelancer'].includes(lowerRole)) {
-      return res.status(400).json({ message: "Invalid role. Must be 'client' or 'freelancer'." });
-    }
 
     // Check if user exists
     const existingUser = await prisma.user.findUnique({ where: { email } });
