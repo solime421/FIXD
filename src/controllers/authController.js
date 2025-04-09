@@ -74,7 +74,7 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Invalid login information." });
     }
 
-    const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '24h' });
     res.json({ user: { id: user.id, email: user.email, role: user.role }, token });
   } catch (error) {
     console.error(error);

@@ -1,0 +1,18 @@
+### GET Freelancer Public Profile
+# This request simulates a client viewing a freelancer’s public profile. So can message should be enabled.
+GET http://localhost:3000/api/publicProfiles/3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDIwMzg3MiwiZXhwIjoxNzQ0MjkwMjcyfQ.o2iY-mKOUCleFmuY5G_mRPbNklJqOLox3u2shKEsOaY
+Content-Type: application/json
+
+### GET Freelancer Public Profile
+# This request simulates a freelancer viewing a freelancer’s public profile. So can message should be FALSE.
+GET http://localhost:3000/api/publicProfiles/3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyMDM4OTIsImV4cCI6MTc0NDI5MDI5Mn0.q0SY49ijBd1TnAe9PYoWV14MJBkPa5QxRamI8igq4kE
+Content-Type: application/json
+
+
+### GET Client Public Profile
+# This request simulates a freelancer viewing a client's public profile.
+GET http://localhost:3000/api/publicProfiles/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyMDM4OTIsImV4cCI6MTc0NDI5MDI5Mn0.q0SY49ijBd1TnAe9PYoWV14MJBkPa5QxRamI8igq4kE
+Content-Type: application/json

@@ -6,11 +6,12 @@ import express from 'express';
 
 // ----------- Importing all routes
 import authRoutes from './routes/auth.js';
+import publicProfilesRoutes from './routes/publicProfiles.js';
 
 
 
 /* UNCOMENT ONE BY ONE
-import userRoutes from './routes/users.js';
+import personalProfilesRoutes from './routes/personalProfiles.js';
 import freelancersRoutes from './routes/freelancers.js';
 import chatsRoutes from './routes/chats.js';
 import offersRoutes from './routes/offers.js';
@@ -54,12 +55,14 @@ app.get('/', (req, res)=>{
 
 // ----------- Register API routes
 app.use('/api/auth', authRoutes);
+app.use('/api/publicProfiles', publicProfilesRoutes);
+
 //This means that all routes defined in the authRoutes file will automatically have /api/auth prefixed to their URL.
 
 
 
 /*  UNCOMENT ONE BY ONE
-app.use('/api/users', userRoutes);
+app.use('/api/personalProfiles', personalProfilesRoutes);
 app.use('/api/freelancers', freelancersRoutes);
 app.use('/api/chats', chatsRoutes);
 app.use('/api/offers', offersRoutes);
