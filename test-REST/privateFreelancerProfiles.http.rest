@@ -1,0 +1,24 @@
+### GET Freelancer Details
+GET http://localhost:3000/api/privateFreelancerProfiles/details
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyMDg1NzAsImV4cCI6MTc0NDI5NDk3MH0.0rCZftl5a1OVwA0232vbV2iQ27y2hPjqV02bHh1HZMQ
+Content-Type: application/json
+
+### Update About Me Section
+POST http://localhost:3000/api/privateFreelancerProfiles/about-me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyMDg1NzAsImV4cCI6MTc0NDI5NDk3MH0.0rCZftl5a1OVwA0232vbV2iQ27y2hPjqV02bHh1HZMQ
+Content-Type: application/json
+
+{
+  "aboutMeSmall": "I am a skilled freelancer with 10 years of experience.",
+  "aboutMeDetailed": "I specialize in delivering quality projects on time while ensuring superior craftsmanship and attention to detail.",
+  "countryOfOrigin": "Serbia"
+}
+
+### Toggle Urgent Service
+POST http://localhost:3000/api/privateFreelancerProfiles/urgent-service
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyMDg1NzAsImV4cCI6MTc0NDI5NDk3MH0.0rCZftl5a1OVwA0232vbV2iQ27y2hPjqV02bHh1HZMQ
+Content-Type: application/json
+
+{
+  "urgentServiceEnabled": true
+}

@@ -8,11 +8,11 @@ import express from 'express';
 import authRoutes from './routes/auth.js';
 import publicProfilesRoutes from './routes/publicProfiles.js';
 import privateProfilesRoutes from './routes/privateProfiles.js';
+import privateFreelancerProfilesRoutes from './routes/privateFreelancerProfiles.js';
 
 
 
 /* UNCOMENT ONE BY ONE
-import freelancersRoutes from './routes/freelancers.js';
 import chatsRoutes from './routes/chats.js';
 import offersRoutes from './routes/offers.js';
 import ordersRoutes from './routes/orders.js';
@@ -57,6 +57,7 @@ app.get('/', (req, res)=>{
 app.use('/api/auth', authRoutes);
 app.use('/api/publicProfiles', publicProfilesRoutes);
 app.use('/api/privateProfiles', privateProfilesRoutes);
+app.use('/api/privateFreelancerProfiles', privateFreelancerProfilesRoutes); 
 
 //This means that all routes defined in the authRoutes file will automatically have /api/auth prefixed to their URL.
 
