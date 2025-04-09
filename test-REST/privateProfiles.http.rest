@@ -1,0 +1,58 @@
+### CLIENT - for client@example.com - id:1
+### GET Personal Profile
+GET http://localhost:3000/api/privateProfiles/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDIwNjk4OSwiZXhwIjoxNzQ0MjkzMzg5fQ.ofWdEx5igdYUO_jhXUZJgFi1t8KboAZ76IoyUtKWD80
+Content-Type: application/json
+
+###
+### POST Update Personal Data
+POST http://localhost:3000/api/privateProfiles/personal-data
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDIwNjk4OSwiZXhwIjoxNzQ0MjkzMzg5fQ.ofWdEx5igdYUO_jhXUZJgFi1t8KboAZ76IoyUtKWD80
+Content-Type: application/json
+
+{
+  "firstName": "Tamara",
+  "lastName": "Sikimic",
+  "phone": "0607340258"
+}
+
+###
+### POST Update Profile Picture
+POST http://localhost:3000/api/privateProfiles/profile-picture
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDIwNjk4OSwiZXhwIjoxNzQ0MjkzMzg5fQ.ofWdEx5igdYUO_jhXUZJgFi1t8KboAZ76IoyUtKWD80
+Content-Type: application/json
+
+{
+  "profilePicture": "http://example.com/new-profile-pic.jpg"
+}
+
+###
+### POST Update Location
+POST http://localhost:3000/api/privateProfiles/location
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDIwNjk4OSwiZXhwIjoxNzQ0MjkzMzg5fQ.ofWdEx5igdYUO_jhXUZJgFi1t8KboAZ76IoyUtKWD80
+Content-Type: application/json
+
+{
+  "location": {
+    "lat": 50,
+    "lng": -50,
+    "zip": "34000",
+    "city": "Kragujevac",
+    "country": "Serbia",
+    "address": "Drugi srpski ustanak"
+  }
+}
+
+###
+### POST Update Billing Information
+POST http://localhost:3000/api/privateProfiles/billing
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDIwNjk4OSwiZXhwIjoxNzQ0MjkzMzg5fQ.ofWdEx5igdYUO_jhXUZJgFi1t8KboAZ76IoyUtKWD80
+Content-Type: application/json
+
+{
+  "billingInfo": {
+    "cardNumber": "0000111122223333",
+    "expiry": "12/11",
+    "cvv": "321"
+  }
+}
