@@ -57,9 +57,8 @@ model FreelancerDetails {
   // relation back to user
   user User @relation(fields: [userId], references: [id])
 
-  portfolioImages PortfolioImage[]     @relation("FreelancerPortfolio")
-  specialties     Specialty[]          @relation("FreelancerSpecialties")
-  categories      FreelancerCategory[] @relation("FreelancerCategories")
+  portfolioImages PortfolioImage[] @relation("FreelancerPortfolio")
+  specialties     Specialty[]      @relation("FreelancerSpecialties")
 }
 
 model PortfolioImage {
@@ -79,25 +78,6 @@ model Specialty {
 
   // Relation back to FreelancerDetails.
   freelancer FreelancerDetails @relation(fields: [freelancerId], references: [userId], name: "FreelancerSpecialties")
-}
-
-model Category {
-  id   Int    @id @default(autoincrement())
-  name String
-
-  // One-to-many relation with FreelancerCategory.
-  freelancerCategories FreelancerCategory[]
-}
-
-model FreelancerCategory {
-  freelancerId Int
-  categoryId   Int
-
-  // Relation fields with explicit relation name
-  freelancer FreelancerDetails @relation(fields: [freelancerId], references: [userId], name: "FreelancerCategories")
-  category   Category          @relation(fields: [categoryId], references: [id])
-
-  @@id([freelancerId, categoryId])
 }
 
 model Order {
