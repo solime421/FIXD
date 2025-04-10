@@ -1,0 +1,19 @@
+### GET all Portfolio Images
+GET http://localhost:3000/api/privatePortfolio
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyNzgyMzcsImV4cCI6MTc0NDM2NDYzN30.s2KdR8vsQV_8i34VC2vxT2eIUdBEPQFNBZmjiYbNWCI
+Content-Type: application/json
+
+### POST Add a New Portfolio Image
+POST http://localhost:3000/api/privatePortfolio
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyODE4NzUsImV4cCI6MTc0NDM2ODI3NX0.7ScSMMm2rXB-KCW1BtgdY78i18nkt5PfyYNGxLPsEv0
+Content-Type: application/json
+
+{
+  "imageUrl": "https://greatimage.com/image1.jpg"
+}
+
+### DELETE a Portfolio Image
+### 5 is an image id
+DELETE http://localhost:3000/api/privatePortfolio/4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyNzgyMzcsImV4cCI6MTc0NDM2NDYzN30.s2KdR8vsQV_8i34VC2vxT2eIUdBEPQFNBZmjiYbNWCI
+Content-Type: application/json
