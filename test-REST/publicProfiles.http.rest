@@ -1,18 +1,18 @@
 ### GET Freelancer Public Profile
-# This request simulates a CLIENT viewing a freelancer’s public profile. So can message should be enabled.
-GET http://localhost:3000/api/publicProfiles/3
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDI3Nzg0OSwiZXhwIjoxNzQ0MzY0MjQ5fQ.vTln9lbG_HlttwxuNR4hYEGaXNgLWyNFneVC91ur-r4
+# Simulise kako KLIENT gleda profil Majstora. Znaci, message should be enabled.
+GET http://localhost:3000/api/publicProfiles/8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDI3ODE3OCwiZXhwIjoxNzQ0MzY0NTc4fQ.v-6wOwGNlcZiX6twgeBu-nsaD4wC_u606ZR8CUzNicI
 Content-Type: application/json
 
 ### GET Freelancer Public Profile
-# This request simulates a FREELANCER viewing a freelancer’s public profile. So can message should be FALSE.
+# Simulise kako MAJSTOR gleda profil Majstora. Znaci, message should be FALSE.
 GET http://localhost:3000/api/publicProfiles/3
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyNzgwMjAsImV4cCI6MTc0NDM2NDQyMH0.ISxV-xHrpVgd83ai3beRgbNZkxeTm6B-RCh2xSFxSDs
 Content-Type: application/json
 
 
 ### GET Client Public Profile
-# This request simulates a FREELANCER viewing a client's public profile.
+# Simulise kako MAJSTOR gleda profil Klienta.
 GET http://localhost:3000/api/publicProfiles/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyNzgwMjAsImV4cCI6MTc0NDM2NDQyMH0.ISxV-xHrpVgd83ai3beRgbNZkxeTm6B-RCh2xSFxSDs
 Content-Type: application/json
