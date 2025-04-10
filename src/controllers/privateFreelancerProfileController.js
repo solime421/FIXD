@@ -17,6 +17,7 @@ export const getFreelancerDetails = async (req, res) => {
         aboutMeDetailed: true,
         countryOfOrigin: true,
         urgentServiceEnabled: true,
+        depositAmount: true,
       },
     });
     if (!details) {
@@ -73,10 +74,32 @@ export const toggleUrgentService = async (req, res) => {
   }
 };
 
-const freelancerProfileController = {
+
+//Update deposit amount
+export const updateDepositAmount = async (req, res) => {
+  try {
+    // Ensure only freelancers can update deposit information.
+    if (req.user.role !== 'freelancer') {
+      return res.status(403).json({ message: "Only freelancers can update deposit information." });
+    }
+    const userId = req.user.id;
+    const { depositAmount } = req.body;
+    const updatedDetails = await prisma.freelancerDetails.update({
+      where: { userId },
+      data: { depositAmount },
+    });
+    res.json({ depositAmount: updatedDetails.depositAmount });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error." });
+  }
+};
+
+const privateFreelancerProfileController = {
   getFreelancerDetails,
   updateAboutMeSection,
   toggleUrgentService,
+  updateDepositAmount,
 };
 
-export default freelancerProfileController;
+export default privateFreelancerProfileController;

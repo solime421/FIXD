@@ -53,6 +53,7 @@ model FreelancerDetails {
   countryOfOrigin      String?
   memberSince          DateTime @default(now())
   urgentServiceEnabled Boolean  @default(false) // NEW FIELD: toggles urgent services
+  depositAmount        Float?
 
   // relation back to user
   user User @relation(fields: [userId], references: [id])

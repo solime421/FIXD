@@ -13,4 +13,7 @@ router.post('/about-me', verifyToken, privateFreelancerProfileController.updateA
 // Toggle urgent service setting
 router.post('/urgent-service', verifyToken, privateFreelancerProfileController.toggleUrgentService);
 
+// POST update deposit amount
+router.post('/deposit', verifyToken, privateFreelancerProfileController.updateDepositAmount);
+
 export default router;

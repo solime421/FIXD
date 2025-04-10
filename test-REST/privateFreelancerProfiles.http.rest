@@ -14,11 +14,20 @@ Content-Type: application/json
   "countryOfOrigin": "Serbia"
 }
 
-### Toggle Urgent Service
+### Toggle/Update Urgent Service
 POST http://localhost:3000/api/privateFreelancerProfiles/urgent-service
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyNzgyMzcsImV4cCI6MTc0NDM2NDYzN30.s2KdR8vsQV_8i34VC2vxT2eIUdBEPQFNBZmjiYbNWCI
 Content-Type: application/json
 
 {
   "urgentServiceEnabled": true
+}
+
+### Update Deposit Amount
+POST http://localhost:3000/api/privateFreelancerProfiles/deposit
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyNzgyMzcsImV4cCI6MTc0NDM2NDYzN30.s2KdR8vsQV_8i34VC2vxT2eIUdBEPQFNBZmjiYbNWCI
+Content-Type: application/json
+
+{
+  "depositAmount": 50.0
 }
