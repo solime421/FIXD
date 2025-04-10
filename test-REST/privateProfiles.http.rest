@@ -1,41 +1,42 @@
 ### CLIENT - for client@example.com - id:1
+### FREELANCER - for freelancer@example.com - id:3
 ### GET Personal Profile
 GET http://localhost:3000/api/privateProfiles/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyMDg1NzAsImV4cCI6MTc0NDI5NDk3MH0.0rCZftl5a1OVwA0232vbV2iQ27y2hPjqV02bHh1HZMQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyNzgyMzcsImV4cCI6MTc0NDM2NDYzN30.s2KdR8vsQV_8i34VC2vxT2eIUdBEPQFNBZmjiYbNWCI
 Content-Type: application/json
 
 ###
 ### POST Update Personal Data
 POST http://localhost:3000/api/privateProfiles/personal-data
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyMDg1NzAsImV4cCI6MTc0NDI5NDk3MH0.0rCZftl5a1OVwA0232vbV2iQ27y2hPjqV02bHh1HZMQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDI3ODE3OCwiZXhwIjoxNzQ0MzY0NTc4fQ.v-6wOwGNlcZiX6twgeBu-nsaD4wC_u606ZR8CUzNicI
 Content-Type: application/json
 
 {
-  "firstName": "Bobanyy",
-  "lastName": "Rajovichyy",
-  "phone": "0601234567"
+  "firstName": "Tamara",
+  "lastName": "Sikimic",
+  "phone": "0607340258"
 }
 
 ###
 ### POST Update Profile Picture
 POST http://localhost:3000/api/privateProfiles/profile-picture
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyMDg1NzAsImV4cCI6MTc0NDI5NDk3MH0.0rCZftl5a1OVwA0232vbV2iQ27y2hPjqV02bHh1HZMQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyNzgyMzcsImV4cCI6MTc0NDM2NDYzN30.s2KdR8vsQV_8i34VC2vxT2eIUdBEPQFNBZmjiYbNWCI
 Content-Type: application/json
 
 {
-  "profilePicture": "http://example.com/new-profile-pic.jpg"
+  "profilePicture": "http://newexample.com/new-profile-pic.jpg"
 }
 
 ###
 ### POST Update Location
 POST http://localhost:3000/api/privateProfiles/location
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyMDg1NzAsImV4cCI6MTc0NDI5NDk3MH0.0rCZftl5a1OVwA0232vbV2iQ27y2hPjqV02bHh1HZMQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyNzgyMzcsImV4cCI6MTc0NDM2NDYzN30.s2KdR8vsQV_8i34VC2vxT2eIUdBEPQFNBZmjiYbNWCI
 Content-Type: application/json
 
 {
   "location": {
-    "lat": 50,
-    "lng": -50,
+    "lat": 49,
+    "lng": -49,
     "zip": "34000",
     "city": "Kragujevac",
     "country": "Serbia",
@@ -46,12 +47,12 @@ Content-Type: application/json
 ###
 ### POST Update Billing Information
 POST http://localhost:3000/api/privateProfiles/billing
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyMDg1NzAsImV4cCI6MTc0NDI5NDk3MH0.0rCZftl5a1OVwA0232vbV2iQ27y2hPjqV02bHh1HZMQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyNzgyMzcsImV4cCI6MTc0NDM2NDYzN30.s2KdR8vsQV_8i34VC2vxT2eIUdBEPQFNBZmjiYbNWCI
 Content-Type: application/json
 
 {
   "billingInfo": {
-    "cardNumber": "0000111122223333",
+    "cardNumber": "0000111122224444",
     "expiry": "12/11",
     "cvv": "321"
   }
