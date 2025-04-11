@@ -1,6 +1,6 @@
 ### GET Freelancer Details
 GET http://localhost:3000/api/privateFreelancerProfiles/details
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyNzgyMzcsImV4cCI6MTc0NDM2NDYzN30.s2KdR8vsQV_8i34VC2vxT2eIUdBEPQFNBZmjiYbNWCI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQzNjgwNTMsImV4cCI6MTc0NDQ1NDQ1M30.aQCIn32r9yFx9CU7MeD4U8LgAJAAADySW007nC4vVRc
 Content-Type: application/json
 
 ### Update About Me Section

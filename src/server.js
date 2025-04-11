@@ -11,6 +11,7 @@ import privateProfilesRoutes from './routes/privateProfiles.js';
 import privateFreelancerProfilesRoutes from './routes/privateFreelancerProfiles.js';
 import privatePortfolioRoutes from './routes/privatePortfolio.js';
 import privateSpecialityRoutes from './routes/privateSpeciality.js';
+import searchRoutes from './routes/searchRoutes.js';
 
 
 
@@ -62,6 +63,7 @@ app.use('/api/privateProfiles', privateProfilesRoutes);
 app.use('/api/privateFreelancerProfiles', privateFreelancerProfilesRoutes); 
 app.use('/api/privatePortfolio', privatePortfolioRoutes);
 app.use('/api/privateSpeciality', privateSpecialityRoutes);
+app.use('/api/search', searchRoutes);
 
 //This means that all routes defined in the authRoutes file will automatically have /api/auth prefixed to their URL.
 

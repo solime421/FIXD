@@ -1,20 +1,20 @@
 ### GET All Specialties
 GET http://localhost:3000/api/privateSpeciality
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyODE4NzUsImV4cCI6MTc0NDM2ODI3NX0.7ScSMMm2rXB-KCW1BtgdY78i18nkt5PfyYNGxLPsEv0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsInJvbGUiOiJmcmVlbGFuY2VyIiwiaWF0IjoxNzQ0MzY4NTk0LCJleHAiOjE3NDQ0NTQ5OTR9.0WLcJyhbeYkkeT8l3DqUWAvqLYi3SJNDrUSthZ-tjpQ
 Content-Type: application/json
 
 ###
 ### POST Add New Specialty
 POST http://localhost:3000/api/privateSpeciality
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyODE4NzUsImV4cCI6MTc0NDM2ODI3NX0.7ScSMMm2rXB-KCW1BtgdY78i18nkt5PfyYNGxLPsEv0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsInJvbGUiOiJmcmVlbGFuY2VyIiwiaWF0IjoxNzQ0MzY4NTk0LCJleHAiOjE3NDQ0NTQ5OTR9.0WLcJyhbeYkkeT8l3DqUWAvqLYi3SJNDrUSthZ-tjpQ
 Content-Type: application/json
 
 {
-  "specialty": "Mechanic"
+  "specialty": "Painting"
 }
 
 ###
 ### DELETE Specialty by ID
-DELETE http://localhost:3000/api/privateSpeciality/2
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyODE4NzUsImV4cCI6MTc0NDM2ODI3NX0.7ScSMMm2rXB-KCW1BtgdY78i18nkt5PfyYNGxLPsEv0
+DELETE http://localhost:3000/api/privateSpeciality/11
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQzNjgyOTMsImV4cCI6MTc0NDQ1NDY5M30.8Ybokda6WMaDH3p1s76wc02125we7rWgqcfTUctyUY4
 Content-Type: application/json
