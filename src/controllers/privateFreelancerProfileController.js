@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-//GET /api/freelancer/details
+//GET info
 export const getFreelancerDetails = async (req, res) => {
   try {
     // guard code - might delete
@@ -45,7 +45,6 @@ export const updateAboutMeSection = async (req, res) => {
       data: { aboutMeSmall, aboutMeDetailed, countryOfOrigin },
     });
     
-    //returns
     res.json(updatedDetails);
   } catch (error) {
     console.error(error);
@@ -65,7 +64,7 @@ export const toggleUrgentService = async (req, res) => {
     const { urgentServiceEnabled } = req.body; // Expected to be true or false
     const updatedDetails = await prisma.freelancerDetails.update({
       where: { userId },
-      data: { urgentServiceEnabled }, //send the value from the front
+      data: { urgentServiceEnabled }, //send the value from the front - MIGHT CHANGE
     });
     res.json(updatedDetails);
   } catch (error) {

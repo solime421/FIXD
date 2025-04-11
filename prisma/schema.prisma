@@ -52,7 +52,7 @@ model FreelancerDetails {
   aboutMeDetailed      String?
   countryOfOrigin      String?
   memberSince          DateTime @default(now())
-  urgentServiceEnabled Boolean  @default(false) // NEW FIELD: toggles urgent services
+  urgentServiceEnabled Boolean  @default(false)
   depositAmount        Float?
 
   // relation back to user
