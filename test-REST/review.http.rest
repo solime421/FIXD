@@ -1,8 +1,6 @@
 ### POST Leave a Review
-# This request simulates a client leaving a review for a freelancer.
-# The request body must include the orderId, revieweeId, rating, and an optional comment.
 POST http://localhost:3000/api/reviews
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDM3MDgzMCwiZXhwIjoxNzQ0NDU3MjMwfQ.-8eWN8_NQkZ6PgEWFDZgqcsDk9WpGbOAdosTeIBO4AM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ0NTc2MjcsImV4cCI6MTc0NDU0NDAyN30.aGa9txadGEJZIEF10wwTwcYjWMFzcit4Hz6AUsTJWQ4
 Content-Type: application/json
 
 {
@@ -11,11 +9,3 @@ Content-Type: application/json
   "rating": 4,
   "comment": "Excellent service and professional work!"
 }
-
-###
-### GET Reviews for a Freelancer
-# This request retrieves all reviews for the freelancer with ID 5.
-# The endpoint is defined as GET /api/freelancers/:id/reviews.
-GET http://localhost:3000/api/freelancers/5/reviews
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDM3MDgzMCwiZXhwIjoxNzQ0NDU3MjMwfQ.-8eWN8_NQkZ6PgEWFDZgqcsDk9WpGbOAdosTeIBO4AM
-Content-Type: application/json

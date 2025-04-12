@@ -88,7 +88,7 @@ model Order {
   offerName     String // Snapshot of the accepted offer's name
   depositPaid   Boolean  @default(false)
   depositAmount Float?
-  status        String   @default("in_progress")
+  status        Boolean  @default(false) // false = in progress, true = completed
   createdAt     DateTime @default(now())
   updatedAt     DateTime @default(now())
 

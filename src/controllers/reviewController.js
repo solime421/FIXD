@@ -31,24 +31,5 @@ export const leaveReview = async (req, res) => {
   }
 };
 
-
-//GET all reviews for a specific freelancer.
-export const getFreelancerReviews = async (req, res) => {
-  try {
-    const freelancerId = parseInt(req.params.id);
-    const reviews = await prisma.review.findMany({
-      where: { revieweeId: freelancerId },
-      include: {
-        reviewer: { select: { firstName: true, lastName: true } },
-      },
-      orderBy: { createdAt: 'desc' },
-    });
-    res.json(reviews);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Failed to retrieve reviews." });
-  }
-};
-
-const reviewController = { leaveReview, getFreelancerReviews };
+const reviewController = { leaveReview };
 export default reviewController;

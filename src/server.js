@@ -9,12 +9,8 @@ import authRoutes from './routes/auth.js';
 import publicProfilesRoutes from './routes/publicProfiles.js';
 import privateProfilesRoutes from './routes/privateProfiles.js';
 import privateFreelancerProfilesRoutes from './routes/privateFreelancerProfiles.js';
-import privatePortfolioRoutes from './routes/privatePortfolio.js';
-import privateSpecialityRoutes from './routes/privateSpeciality.js';
 import searchRoutes from './routes/searchRoutes.js';
 import reviewRoutes from './routes/reviews.js';  // post review
-import freelancersRoutes from './routes/freelancers.js'; //get review
-
 
 
 
@@ -64,13 +60,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/publicProfiles', publicProfilesRoutes);
 app.use('/api/privateProfiles', privateProfilesRoutes);
 app.use('/api/privateFreelancerProfiles', privateFreelancerProfilesRoutes); 
-app.use('/api/privatePortfolio', privatePortfolioRoutes);
-app.use('/api/privateSpeciality', privateSpecialityRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/reviews', reviewRoutes);  // post review
-app.use('/api/freelancers', freelancersRoutes);  //get review
-
-
 
 /*  UNCOMENT ONE BY ONE
 app.use('/api/chats', chatsRoutes);

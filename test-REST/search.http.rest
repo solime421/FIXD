@@ -1,7 +1,7 @@
 ### Basic Search Test
 # This tests the endpoint with only a search term, e.g., "mechanic".
-GET http://localhost:3000/api/search?search=plum
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDM3MDgzMCwiZXhwIjoxNzQ0NDU3MjMwfQ.-8eWN8_NQkZ6PgEWFDZgqcsDk9WpGbOAdosTeIBO4AM
+GET http://localhost:3000/api/search?search=mechanic
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ0NTc2MjcsImV4cCI6MTc0NDU0NDAyN30.aGa9txadGEJZIEF10wwTwcYjWMFzcit4Hz6AUsTJWQ4
 Content-Type: application/json
 
 ### Search with Deposit Range Filter
