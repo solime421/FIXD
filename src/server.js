@@ -12,6 +12,9 @@ import privateFreelancerProfilesRoutes from './routes/privateFreelancerProfiles.
 import privatePortfolioRoutes from './routes/privatePortfolio.js';
 import privateSpecialityRoutes from './routes/privateSpeciality.js';
 import searchRoutes from './routes/searchRoutes.js';
+import reviewRoutes from './routes/reviews.js';  // post review
+import freelancersRoutes from './routes/freelancers.js'; //get review
+
 
 
 
@@ -20,7 +23,6 @@ import chatsRoutes from './routes/chats.js';
 import offersRoutes from './routes/offers.js';
 import ordersRoutes from './routes/orders.js';
 import checkoutRoutes from './routes/checkout.js';
-import reviewRoutes from './routes/reviews.js';
 */
 
 
@@ -58,24 +60,23 @@ app.get('/', (req, res)=>{
 
 // ----------- Register API routes
 app.use('/api/auth', authRoutes);
+//This means that all routes defined in the authRoutes file will automatically have /api/auth prefixed to their URL.
 app.use('/api/publicProfiles', publicProfilesRoutes);
 app.use('/api/privateProfiles', privateProfilesRoutes);
 app.use('/api/privateFreelancerProfiles', privateFreelancerProfilesRoutes); 
 app.use('/api/privatePortfolio', privatePortfolioRoutes);
 app.use('/api/privateSpeciality', privateSpecialityRoutes);
 app.use('/api/search', searchRoutes);
-
-//This means that all routes defined in the authRoutes file will automatically have /api/auth prefixed to their URL.
+app.use('/api/reviews', reviewRoutes);  // post review
+app.use('/api/freelancers', freelancersRoutes);  //get review
 
 
 
 /*  UNCOMENT ONE BY ONE
-app.use('/api/freelancers', freelancersRoutes);
 app.use('/api/chats', chatsRoutes);
 app.use('/api/offers', offersRoutes);
 app.use('/api/orders', ordersRoutes);
 app.use('/api/checkout', checkoutRoutes);
-app.use('/api/reviews', reviewRoutes);
 */
 
 
