@@ -1,6 +1,6 @@
 ### POST Leave a Review
 POST http://localhost:3000/api/reviews
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ0NTc2MjcsImV4cCI6MTc0NDU0NDAyN30.aGa9txadGEJZIEF10wwTwcYjWMFzcit4Hz6AUsTJWQ4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDczNDY4MCwiZXhwIjoxNzQ0ODIxMDgwfQ.y8LSAmsr72urok4FW7qWZwVhRsJgHJkowd9sCkGDvJE
 Content-Type: application/json
 
 {

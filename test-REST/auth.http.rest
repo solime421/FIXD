@@ -17,9 +17,9 @@ POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-  "email": "freelancer@example.com",
-  "first_name": "Freelancer",
-  "last_name": "User",
+  "email": "freelancer4@example.com",
+  "first_name": "Vlady",
+  "last_name": "Daddy",
   "phone": "0987654321",
   "password": "password123",
   "confirm_password": "password123",
@@ -40,6 +40,6 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "freelancerid5@example.com",
+  "email": "freelancer2@example.com",
   "password": "password123"
 }

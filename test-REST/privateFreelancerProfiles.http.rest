@@ -1,11 +1,11 @@
 ### GET Freelancer Details
 GET http://localhost:3000/api/privateFreelancerProfiles/details
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQzNjgwNTMsImV4cCI6MTc0NDQ1NDQ1M30.aQCIn32r9yFx9CU7MeD4U8LgAJAAADySW007nC4vVRc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzQyNjIsImV4cCI6MTc0NDgyMDY2Mn0._yMLgk5baCtQnWp_ai6P4Fep7mOSB803bdxTScgJfEI
 Content-Type: application/json
 
 ### Update About Me Section
 POST http://localhost:3000/api/privateFreelancerProfiles/about-me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyNzgyMzcsImV4cCI6MTc0NDM2NDYzN30.s2KdR8vsQV_8i34VC2vxT2eIUdBEPQFNBZmjiYbNWCI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzQyNjIsImV4cCI6MTc0NDgyMDY2Mn0._yMLgk5baCtQnWp_ai6P4Fep7mOSB803bdxTScgJfEI
 Content-Type: application/json
 
 {
@@ -16,7 +16,7 @@ Content-Type: application/json
 
 ### Toggle/Update Urgent Service
 POST http://localhost:3000/api/privateFreelancerProfiles/urgent-service
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyNzgyMzcsImV4cCI6MTc0NDM2NDYzN30.s2KdR8vsQV_8i34VC2vxT2eIUdBEPQFNBZmjiYbNWCI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzQyNjIsImV4cCI6MTc0NDgyMDY2Mn0._yMLgk5baCtQnWp_ai6P4Fep7mOSB803bdxTScgJfEI
 Content-Type: application/json
 
 {
@@ -25,7 +25,7 @@ Content-Type: application/json
 
 ### Update Deposit Amount
 POST http://localhost:3000/api/privateFreelancerProfiles/deposit
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyNzgyMzcsImV4cCI6MTc0NDM2NDYzN30.s2KdR8vsQV_8i34VC2vxT2eIUdBEPQFNBZmjiYbNWCI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzQyNjIsImV4cCI6MTc0NDgyMDY2Mn0._yMLgk5baCtQnWp_ai6P4Fep7mOSB803bdxTScgJfEI
 Content-Type: application/json
 
 {

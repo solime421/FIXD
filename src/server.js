@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import express from 'express';
+import http from 'http';
+import { Server as SocketIOServer } from 'socket.io';
 //import path, {dirname} from 'path' 
 //import { fileURLToPath } from 'url'
 
@@ -11,20 +13,46 @@ import privateProfilesRoutes from './routes/privateProfiles.js';
 import privateFreelancerProfilesRoutes from './routes/privateFreelancerProfiles.js';
 import searchRoutes from './routes/searchRoutes.js';
 import reviewRoutes from './routes/reviews.js';  // post review
+import chatsRoutes from './routes/chats.js';
 
 
 
 /* UNCOMENT ONE BY ONE
-import chatsRoutes from './routes/chats.js';
 import offersRoutes from './routes/offers.js';
 import ordersRoutes from './routes/orders.js';
 import checkoutRoutes from './routes/checkout.js';
 */
 
 
-
 const app = express();
 app.use(express.json()); //It tells your Express app to automatically understand JSON data sent in requests
+
+
+// Create HTTP server from our Express app
+const server = http.createServer(app);
+
+// Initialize Socket.IO on the HTTP server with permissive CORS (adjust as needed)
+const io = new SocketIOServer(server, {
+  cors: { origin: '*' }
+});
+// Make the io instance globally available
+global.io = io;
+
+// Socket.IO connection handler
+io.on('connection', (socket) => {
+  console.log('User connected via Socket.IO:', socket.id);
+
+  // Listen for a client joining a chat room
+  socket.on('joinRoom', (chatId) => {
+    console.log(`Socket ${socket.id} joining room ${chatId}`);
+    socket.join(String(chatId));
+  });
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected:', socket.id);
+  });
+});
+
 
 
 // ----------- Figuring Out Where Your Files Are
@@ -62,9 +90,10 @@ app.use('/api/privateProfiles', privateProfilesRoutes);
 app.use('/api/privateFreelancerProfiles', privateFreelancerProfilesRoutes); 
 app.use('/api/search', searchRoutes);
 app.use('/api/reviews', reviewRoutes);  // post review
+app.use('/api/chats', chatsRoutes);
+
 
 /*  UNCOMENT ONE BY ONE
-app.use('/api/chats', chatsRoutes);
 app.use('/api/offers', offersRoutes);
 app.use('/api/orders', ordersRoutes);
 app.use('/api/checkout', checkoutRoutes);

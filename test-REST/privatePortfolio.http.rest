@@ -1,22 +1,22 @@
 ###
 ### GET All Portfolio Images for Freelancer
 GET http://localhost:3000/api/privateFreelancerProfiles/portfolio
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ0NTc2MjcsImV4cCI6MTc0NDU0NDAyN30.aGa9txadGEJZIEF10wwTwcYjWMFzcit4Hz6AUsTJWQ4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzQyNjIsImV4cCI6MTc0NDgyMDY2Mn0._yMLgk5baCtQnWp_ai6P4Fep7mOSB803bdxTScgJfEI
 Content-Type: application/json
 
 ###
 ### POST Add a New Portfolio Image
 POST http://localhost:3000/api/privateFreelancerProfiles/portfolio
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ0NTc2MjcsImV4cCI6MTc0NDU0NDAyN30.aGa9txadGEJZIEF10wwTwcYjWMFzcit4Hz6AUsTJWQ4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzQyNjIsImV4cCI6MTc0NDgyMDY2Mn0._yMLgk5baCtQnWp_ai6P4Fep7mOSB803bdxTScgJfEI
 Content-Type: application/json
 
 {
-  "imageUrl": "https://janko-4.com/image1.jpg"
+  "imageUrl": "https://gagi-4.com/image1.jpg"
 }
 
 ###
 ### DELETE a Portfolio Image
 # Deletes the portfolio image with ID 4.
 DELETE http://localhost:3000/api/privateFreelancerProfiles/portfolio/23
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ0NTc2MjcsImV4cCI6MTc0NDU0NDAyN30.aGa9txadGEJZIEF10wwTwcYjWMFzcit4Hz6AUsTJWQ4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzQyNjIsImV4cCI6MTc0NDgyMDY2Mn0._yMLgk5baCtQnWp_ai6P4Fep7mOSB803bdxTScgJfEI
 Content-Type: application/json

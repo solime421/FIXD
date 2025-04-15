@@ -139,10 +139,10 @@ model Message {
   senderId  Int
   message   String
   createdAt DateTime @default(now())
-
-  // Relation to Chat.
+  isRead    Boolean  @default(false) // New field to mark if the message is read
+  
+  // Relations…
   chat   Chat @relation(fields: [chatId], references: [id])
-  // Relation to User (sender) with explicit relation name.
   sender User @relation(fields: [senderId], references: [id], name: "UserMessages")
 }
 
