@@ -12,25 +12,20 @@ import publicProfilesRoutes from './routes/publicProfiles.js';
 import privateProfilesRoutes from './routes/privateProfiles.js';
 import privateFreelancerProfilesRoutes from './routes/privateFreelancerProfiles.js';
 import searchRoutes from './routes/searchRoutes.js';
-import reviewRoutes from './routes/reviews.js';  // post review
+import reviewRoutes from './routes/reviews.js';
 import chatsRoutes from './routes/chats.js';
-
-
-
-/* UNCOMENT ONE BY ONE
 import offersRoutes from './routes/offers.js';
 import ordersRoutes from './routes/orders.js';
-import checkoutRoutes from './routes/checkout.js';
-*/
+//import checkoutRoutes from './routes/checkout.js';
 
 
 const app = express();
 app.use(express.json()); //It tells your Express app to automatically understand JSON data sent in requests
 
+//SOCKET.IO
 
 // Create HTTP server from our Express app
 const server = http.createServer(app);
-
 // Initialize Socket.IO on the HTTP server with permissive CORS (adjust as needed)
 const io = new SocketIOServer(server, {
   cors: { origin: '*' }
@@ -91,14 +86,9 @@ app.use('/api/privateFreelancerProfiles', privateFreelancerProfilesRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/reviews', reviewRoutes);  // post review
 app.use('/api/chats', chatsRoutes);
-
-
-/*  UNCOMENT ONE BY ONE
 app.use('/api/offers', offersRoutes);
 app.use('/api/orders', ordersRoutes);
-app.use('/api/checkout', checkoutRoutes);
-*/
-
+//app.use('/api/checkout', checkoutRoutes);
 
 
 // ----------- Global error handler

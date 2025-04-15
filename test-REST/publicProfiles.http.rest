@@ -14,5 +14,5 @@ Content-Type: application/json
 ### GET Client Public Profile
 # Simulise kako MAJSTOR gleda profil Klienta.
 GET http://localhost:3000/api/publicProfiles/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzQyNjIsImV4cCI6MTc0NDgyMDY2Mn0._yMLgk5baCtQnWp_ai6P4Fep7mOSB803bdxTScgJfEI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3NDc1MzgsImV4cCI6MTc0NDgzMzkzOH0.uPiwaLFd-mMik5f-y-zBwBon45DcuS9_rqsVcvnA-t8
 Content-Type: application/json

@@ -4,7 +4,10 @@ import { verifyToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// Client leaves a review for a freelancer
+// Leave a review (POST)
 router.post('/', verifyToken, reviewController.leaveReview);
+
+// Get reviews for the logged-in freelancer
+router.get('/', verifyToken, reviewController.getFreelancerReviews);
 
 export default router;

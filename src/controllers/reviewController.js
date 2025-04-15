@@ -31,5 +31,27 @@ export const leaveReview = async (req, res) => {
   }
 };
 
-const reviewController = { leaveReview };
+export const getFreelancerReviews = async (req, res) => {
+  try {
+    if (req.user.role !== 'freelancer') {
+      return res.status(403).json({ message: 'Only freelancers can view their reviews.' });
+    }
+
+    const reviews = await prisma.review.findMany({
+      where: { revieweeId: req.user.id },
+      include: {
+        reviewer: { select: { firstName: true, lastName: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    res.json(reviews);
+  } catch (error) {
+    console.error('Error fetching reviews:', error);
+    res.status(500).json({ message: 'Failed to fetch reviews.' });
+  }
+};
+
+
+const reviewController = { leaveReview, getFreelancerReviews };
 export default reviewController;

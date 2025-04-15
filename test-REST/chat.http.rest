@@ -1,6 +1,3 @@
-### client Token - eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDczNDY4MCwiZXhwIjoxNzQ0ODIxMDgwfQ.y8LSAmsr72urok4FW7qWZwVhRsJgHJkowd9sCkGDvJE
-### freelancer - eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzcwMjMsImV4cCI6MTc0NDgyMzQyM30.UTqz-4qTQ6fVSHipYSc7l_92JdwSXNwWRxTuGMl03yw
-
 ### GET All Chats - Retrieves all chats in which the authenticated user participates
 # client
 GET http://localhost:3000/api/chats
@@ -16,22 +13,22 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6I
 Content-Type: application/json
 
 {
-  "freelancer_id": 3
+  "freelancer_id": 4
 }
 
 
 ### GET Chat Messages
 # Retrieves all messages for the chat with ID 10.
-GET http://localhost:3000/api/chats/1/messages
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzcwMjMsImV4cCI6MTc0NDgyMzQyM30.UTqz-4qTQ6fVSHipYSc7l_92JdwSXNwWRxTuGMl03yw
+GET http://localhost:3000/api/chats/4/messages
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDc0MTI3MCwiZXhwIjoxNzQ0ODI3NjcwfQ.AH9otGmBaz5hPUu2tlZ5ZJ7mAS_JieUdLgPxSm-bxMY
 Content-Type: application/json
 
 
 ### POST Send Message
 # Sends a new message in the chat with ID 10.
 # The message is also broadcast via Socket.IO to all users in the chat room.
-POST http://localhost:3000/api/chats/1/messages
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDczNDY4MCwiZXhwIjoxNzQ0ODIxMDgwfQ.y8LSAmsr72urok4FW7qWZwVhRsJgHJkowd9sCkGDvJE
+POST http://localhost:3000/api/chats/4/messages
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDc0MTI3MCwiZXhwIjoxNzQ0ODI3NjcwfQ.AH9otGmBaz5hPUu2tlZ5ZJ7mAS_JieUdLgPxSm-bxMY
 Content-Type: application/json
 
 {
@@ -39,8 +36,6 @@ Content-Type: application/json
 }
 
 ### Mark All Messages in Chat as Read
-# This POST request marks all unread messages in chat with ID 12 as read.
-# It expects that the authenticated user (obtained from the JWT token) is not the sender of the messages.
-POST http://localhost:3000/api/chats/1/messages/read
+POST http://localhost:3000/api/chats/4/messages/read
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzcwMjMsImV4cCI6MTc0NDgyMzQyM30.UTqz-4qTQ6fVSHipYSc7l_92JdwSXNwWRxTuGMl03yw
 Content-Type: application/json

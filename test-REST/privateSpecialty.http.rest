@@ -1,21 +1,21 @@
 ### GET All Specialties for Freelancer
 GET http://localhost:3000/api/privateFreelancerProfiles/specialities
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzQyNjIsImV4cCI6MTc0NDgyMDY2Mn0._yMLgk5baCtQnWp_ai6P4Fep7mOSB803bdxTScgJfEI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3NDkxNDQsImV4cCI6MTc0NDgzNTU0NH0.uPLSMIDgjQgWF2RX3nCSLifeoZDMesWpBbgKW2XWIt4
 Content-Type: application/json
 
 ###
 ### POST Add New Specialty
 POST http://localhost:3000/api/privateFreelancerProfiles/specialities
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzQyNjIsImV4cCI6MTc0NDgyMDY2Mn0._yMLgk5baCtQnWp_ai6P4Fep7mOSB803bdxTScgJfEI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3NDkxNDQsImV4cCI6MTc0NDgzNTU0NH0.uPLSMIDgjQgWF2RX3nCSLifeoZDMesWpBbgKW2XWIt4
 Content-Type: application/json
 
 {
-  "specialty": "Electrician"
+  "specialty": "Painter"
 }
 
 ###
 ### DELETE Specialty by ID
 # Deletes the specialty with ID 11.
 DELETE http://localhost:3000/api/privateFreelancerProfiles/specialities/19
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzQyNjIsImV4cCI6MTc0NDgyMDY2Mn0._yMLgk5baCtQnWp_ai6P4Fep7mOSB803bdxTScgJfEI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3NDkxNDQsImV4cCI6MTc0NDgzNTU0NH0.uPLSMIDgjQgWF2RX3nCSLifeoZDMesWpBbgKW2XWIt4
 Content-Type: application/json

@@ -1,0 +1,57 @@
+### OFFER ENDPOINTS
+
+### POST Send Offer
+POST http://localhost:3000/api/offers
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3NDk1NzYsImV4cCI6MTc0NDgzNTk3Nn0.nmgSyXXZu4JT93JY9NtsD0LNF518-KSBsxnXLZdaEDQ
+Content-Type: application/json
+
+{
+  "chatId": 1,
+  "offer_name": "Check job",
+  "requires_deposit": true,
+  "depositAmount": 10
+}
+
+
+### GET Offer by Chat
+# Used by a client to view the latest pending offer for a given chat
+GET http://localhost:3000/api/offers/chat/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDczNDY4MCwiZXhwIjoxNzQ0ODIxMDgwfQ.y8LSAmsr72urok4FW7qWZwVhRsJgHJkowd9sCkGDvJE
+Content-Type: application/json
+
+
+### POST Accept Offer
+POST http://localhost:3000/api/offers/8/accept
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDczNDY4MCwiZXhwIjoxNzQ0ODIxMDgwfQ.y8LSAmsr72urok4FW7qWZwVhRsJgHJkowd9sCkGDvJE
+Content-Type: application/json
+
+
+### ORDER ENDPOINTS
+
+### POST Create Order
+POST http://localhost:3000/api/orders
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3NDkxNDQsImV4cCI6MTc0NDgzNTU0NH0.uPLSMIDgjQgWF2RX3nCSLifeoZDMesWpBbgKW2XWIt4
+Content-Type: application/json
+
+{
+  "freelancerId": 4,
+  "offerName": "Check job",
+  "deposit_paid": true,
+  "depositAmount": 10
+}
+
+
+### GET All Orders
+GET http://localhost:3000/api/orders
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3NDkxNDQsImV4cCI6MTc0NDgzNTU0NH0.uPLSMIDgjQgWF2RX3nCSLifeoZDMesWpBbgKW2XWIt4
+Content-Type: application/json
+
+
+### PUT Update Order Status
+PUT http://localhost:3000/api/orders/8/status
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3NDk1NzYsImV4cCI6MTc0NDgzNTk3Nn0.nmgSyXXZu4JT93JY9NtsD0LNF518-KSBsxnXLZdaEDQ
+Content-Type: application/json
+
+{
+  "status": true
+}
