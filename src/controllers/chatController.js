@@ -3,25 +3,26 @@ const prisma = new PrismaClient();
 
 //GET Retrieve all chats where the authenticated user is involved.
 export const getChats = async (req, res) => {
-  try {
-    const userId = req.user.id;
-
-    const chats = await prisma.chat.findMany({
-      where: {
-        OR: [
-          { clientId: userId },
-          { freelancerId: userId }
-        ]
-        //finds all chats in which the user is a participant, regardless of the role
-      },
-      orderBy: { updatedAt: 'desc' }
-    });
-
-    return res.json(chats);
-  } catch (error) {
-    console.error('Error retrieving chats:', error);
-    return res.status(500).json({ message: 'Server error while retrieving chats.' });
-  }
+    try {
+      const userId = req.user.id;
+      const chats = await prisma.chat.findMany({
+        where: {
+          OR: [
+            { clientId: userId },
+            { freelancerId: userId }
+          ]
+        },
+        orderBy: { updatedAt: 'desc' },
+        include: {
+          client: { select: { id: true, firstName: true, lastName: true } },
+          freelancer: { select: { id: true, firstName: true, lastName: true } }
+        }
+      });
+      res.json(chats);
+    } catch (error) {
+      console.error('Error retrieving chats:', error);
+      res.status(500).json({ message: 'Server error while retrieving chats.' });
+    }
 };
 
  // POST /Create a new chat if one doesn't exist

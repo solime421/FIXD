@@ -4,7 +4,7 @@
 ### GET All Chats - Retrieves all chats in which the authenticated user participates
 # client
 GET http://localhost:3000/api/chats
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzcwMjMsImV4cCI6MTc0NDgyMzQyM30.UTqz-4qTQ6fVSHipYSc7l_92JdwSXNwWRxTuGMl03yw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDc0MTI3MCwiZXhwIjoxNzQ0ODI3NjcwfQ.AH9otGmBaz5hPUu2tlZ5ZJ7mAS_JieUdLgPxSm-bxMY
 Content-Type: application/json
 
 
@@ -12,11 +12,11 @@ Content-Type: application/json
 # Attempts to create a new chat
 # If a chat already exists return the existing chat
 POST http://localhost:3000/api/chats
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDczNDY4MCwiZXhwIjoxNzQ0ODIxMDgwfQ.y8LSAmsr72urok4FW7qWZwVhRsJgHJkowd9sCkGDvJE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDc0MTI3MCwiZXhwIjoxNzQ0ODI3NjcwfQ.AH9otGmBaz5hPUu2tlZ5ZJ7mAS_JieUdLgPxSm-bxMY
 Content-Type: application/json
 
 {
-  "client_id": 2
+  "freelancer_id": 3
 }
 
 
