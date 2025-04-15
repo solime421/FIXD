@@ -44,6 +44,3 @@ Content-Type: application/json
 POST http://localhost:3000/api/chats/1/messages/read
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzcwMjMsImV4cCI6MTc0NDgyMzQyM30.UTqz-4qTQ6fVSHipYSc7l_92JdwSXNwWRxTuGMl03yw
 Content-Type: application/json
-
-git config --global user.email "tamara.solime1@gmail.com"
-  git config --global user.name "Solime421"
