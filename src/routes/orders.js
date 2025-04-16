@@ -4,6 +4,7 @@ import { verifyToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
+//MAYBE REMOVE
 // POST /api/orders
 router.post('/', verifyToken, orderController.createOrder);
 

@@ -22,7 +22,6 @@ model User {
   passwordHash   String
   role           Role
   profilePicture String?
-  billingInfo    Json?
   location       Json?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
@@ -82,15 +81,13 @@ model Specialty {
 }
 
 model Order {
-  id            Int      @id @default(autoincrement())
-  clientId      Int
-  freelancerId  Int
-  offerName     String // Snapshot of the accepted offer's name
-  depositPaid   Boolean  @default(false)
-  depositAmount Float?
-  status        Boolean  @default(false) // false = in progress, true = completed
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  clientId     Int
+  freelancerId Int
+  offerName    String // Snapshot of the accepted offer's name
+  status       Boolean  @default(false) // false = in progress, true = completed
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now())
 
   // Relations to User for client and freelancer.
   client     User @relation("ClientOrders", fields: [clientId], references: [id])
@@ -101,15 +98,13 @@ model Order {
 }
 
 model Offer {
-  id              Int       @id @default(autoincrement())
-  chatId          Int
-  freelancerId    Int
-  offerName       String
-  requiresDeposit Boolean
-  depositAmount   Float?
-  accepted        Boolean   @default(false)
-  createdAt       DateTime  @default(now())
-  acceptedAt      DateTime?
+  id           Int       @id @default(autoincrement())
+  chatId       Int
+  freelancerId Int
+  offerName    String
+  accepted     Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  acceptedAt   DateTime?
 
   // Relation to Chat; implicit opposite relation will be created in Chat.offers
   chat       Chat @relation(fields: [chatId], references: [id])
@@ -140,7 +135,7 @@ model Message {
   message   String
   createdAt DateTime @default(now())
   isRead    Boolean  @default(false) // New field to mark if the message is read
-  
+
   // Relations…
   chat   Chat @relation(fields: [chatId], references: [id])
   sender User @relation(fields: [senderId], references: [id], name: "UserMessages")

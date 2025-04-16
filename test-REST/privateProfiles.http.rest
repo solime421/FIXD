@@ -41,17 +41,3 @@ Content-Type: application/json
     "address": "Obelicev Venac"
   }
 }
-
-###
-### POST Update Billing Information
-POST http://localhost:3000/api/privateProfiles/billing
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzQyNjIsImV4cCI6MTc0NDgyMDY2Mn0._yMLgk5baCtQnWp_ai6P4Fep7mOSB803bdxTScgJfEI
-Content-Type: application/json
-
-{
-  "billingInfo": {
-    "cardNumber": "0000111122224444",
-    "expiry": "12/11",
-    "cvv": "321"
-  }
-}

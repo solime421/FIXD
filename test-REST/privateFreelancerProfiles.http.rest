@@ -9,7 +9,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6I
 Content-Type: application/json
 
 {
-  "aboutMeSmall": "IIII am a skilled freelancer with 10 years of experience.",
+  "aboutMeSmall": "I am a skilled freelancer with 10 years of experience.",
   "aboutMeDetailed": "I specialize in delivering quality projects on time while ensuring superior craftsmanship and attention to detail.",
   "countryOfOrigin": "Serbia"
 }
@@ -20,7 +20,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6I
 Content-Type: application/json
 
 {
-  "urgentServiceEnabled": true
+  "urgentServiceEnabled": false
 }
 
 ### Update Deposit Amount
@@ -29,5 +29,5 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6I
 Content-Type: application/json
 
 {
-  "depositAmount": 50.0
+  "depositAmount": 15.0
 }

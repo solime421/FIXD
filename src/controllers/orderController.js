@@ -3,18 +3,16 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 
-// Create a new order.
+// Create a new order. MAYBE DON'T NEED
 export const createOrder = async (req, res) => {
   try {
-    const { freelancerId, offerName, deposit_paid, depositAmount } = req.body;
+    const { freelancerId, offerName } = req.body;
 
     const order = await prisma.order.create({
       data: {
         clientId: req.user.id,
         freelancerId: parseInt(freelancerId),
         offerName,
-        depositPaid: deposit_paid,
-        depositAmount,
         status: false, // false = "in progress"
       },
     });

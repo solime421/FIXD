@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-
 const prisma = new PrismaClient();
 
 // Freelancer Sends an Offer
@@ -11,15 +10,13 @@ export const sendOffer = async (req, res) => {
       return res.status(403).json({ message: 'Only freelancers can send offers.' });
     }
 
-    const { chatId, offer_name, requires_deposit, depositAmount } = req.body;
+    const { chatId, offer_name } = req.body;
 
     const offer = await prisma.offer.create({
       data: {
         chatId: parseInt(chatId),
         freelancerId: req.user.id,
         offerName: offer_name,
-        requiresDeposit: requires_deposit,
-        depositAmount,
       },
     });
 
@@ -86,26 +83,12 @@ export const acceptOffer = async (req, res) => {
       },
     });
 
-    
-    // FIX WHEN U FIGURE OUT THE DEPOSIT PART
-
-
-    // If deposit is required, direct the client to checkout
-    if (updatedOffer.requiresDeposit && updatedOffer.depositAmount > 0) {
-      return res.json({
-        message: 'Offer accepted. Deposit required.',
-        offer: updatedOffer,
-      });
-    }
-
-    // Otherwise, create an order immediately
+    // create an order immediately
     const order = await prisma.order.create({
       data: {
         clientId: req.user.id,
         freelancerId: updatedOffer.freelancerId,
         offerName: updatedOffer.offerName,
-        depositPaid: false,
-        depositAmount: updatedOffer.depositAmount,
         status: false, // false = "in progress"
       },
     });

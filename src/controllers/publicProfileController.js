@@ -36,6 +36,7 @@ export const getPublicProfile = async (req, res) => {
           countryOfOrigin: true,
           memberSince: true,
           urgentServiceEnabled: true,
+          depositAmount: true
         },
       });
 
@@ -88,6 +89,7 @@ export const getPublicProfile = async (req, res) => {
         rating, // Computed average rating
         phone: phoneVisible ? requestedUser.phone : undefined, // Conditionally return phone number
         phoneVisible,                     // Added flag: returns true if phone should be shown
+        depositAmount: freelancerDetails?.depositAmount,
         aboutMeSmall: freelancerDetails?.aboutMeSmall,
         aboutMeDetailed: freelancerDetails?.aboutMeDetailed,
         countryOfOrigin: freelancerDetails?.countryOfOrigin,
@@ -113,7 +115,6 @@ export const getPublicProfile = async (req, res) => {
 		      id: true,
 		      offerName: true,
 		      status: true,
-		      depositPaid: true,
 		      createdAt: true,
 		    },
 		    orderBy: { createdAt: 'desc' },
@@ -128,7 +129,6 @@ export const getPublicProfile = async (req, res) => {
 		  });
 		}
 
-    // ----------- Fallback in case the role is not recognized
     res.status(400).json({ message: "Invalid user role." });
   } catch (error) {
     console.error(error);

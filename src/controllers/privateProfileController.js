@@ -16,7 +16,6 @@ export const getPersonalProfile = async (req, res) => {
         phone: true,
         email: true,
         location: true,
-        billingInfo: true,
         role: true,
       },
     });
@@ -88,28 +87,11 @@ export const updateLocation = async (req, res) => {
 };
 
 
-// Updates the billing information
-export const updateBillingInfo = async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const { billingInfo } = req.body; // e.g. { cardNumber: "**** **** **** 1234", expiry: "12/25", cvv: "***" }
-    const updatedUser = await prisma.user.update({
-      where: { id: userId },
-      data: { billingInfo },
-    });
-    res.json(updatedUser);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error." });
-  }
-};
-
 const privateProfileController = {
   getPersonalProfile,
   updatePersonalData,
   updateProfilePicture,
   updateLocation,
-  updateBillingInfo,
 };
 
 export default privateProfileController;
