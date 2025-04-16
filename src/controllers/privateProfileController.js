@@ -68,6 +68,8 @@ export const updateProfilePicture = async (req, res) => {
   }
 };
 
+
+//FIX THIS CODE A BIT
 //Updates the location
 export const updateLocation = async (req, res) => {
   try {
