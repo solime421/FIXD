@@ -1,6 +1,6 @@
 ### Basic Search Test
 # This tests the endpoint with only a search term, e.g., "mechanic".
-GET http://localhost:3000/api/search?search=painter
+GET http://localhost:3000/api/search?search=mechanic
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzQyNjIsImV4cCI6MTc0NDgyMDY2Mn0._yMLgk5baCtQnWp_ai6P4Fep7mOSB803bdxTScgJfEI
 Content-Type: application/json
 

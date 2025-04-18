@@ -12,7 +12,6 @@ const App = () => {
             <input
               type="text"
               placeholder="Enter your full name"
-              class="w-full h-[45px] bg-transparent border-none font-inter text-[14px] leading-[25px] focus:outline-none"
             />
         </div>
     </main>
