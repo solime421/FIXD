@@ -1,22 +1,19 @@
-
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Login from './components/Login';
+import Register from './components/Register'
 
 const App = () => {
   return (
-    <>
-    <header>this is the header</header>
-    <main>
-        <h1>App</h1>
-        <div className="w-[200px]"><button className='btn btn-secondary'>hello world</button></div>
-        <br />
-        <div className="w-[200px]">
-            <input
-              type="text"
-              placeholder="Enter your full name"
-            />
-        </div>
-    </main>
-    </>
-  )
-}
+    <Routes>
+      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
 
-export default App
+      {/* Fallback for any unknown URL */}
+      <Route path="*" element={<p>404: Page not found</p>} />
+    </Routes>
+  );
+};
+
+export default App;
