@@ -1,0 +1,16 @@
+### POST Leave a Review
+POST http://localhost:3000/api/reviews
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDc0NzYwOSwiZXhwIjoxNzQ0ODM0MDA5fQ.3Tf2vdSWLREh5YZGIHH0mgXFPS3WW0b75wMZsld-eh0
+Content-Type: application/json
+
+{
+  "orderId": 10,
+  "revieweeId": 4,
+  "rating": 2,
+  "comment": "Could be better"
+}
+
+### GET Freelancer Reviews (Only for Freelancer)
+GET http://localhost:3000/api/reviews
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3OTg0NzksImV4cCI6MTc0NDg4NDg3OX0.NDqYB6LBM2HZtP8RroxQ5OvoISBjRgStQyRo-_GRcJ0
+Content-Type: application/json

@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-//GET info
+//GET 
 export const getFreelancerDetails = async (req, res) => {
   try {
     // guard code - might delete

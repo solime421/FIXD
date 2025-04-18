@@ -1,0 +1,21 @@
+### Basic Search Test
+# This tests the endpoint with only a search term, e.g., "mechanic".
+GET http://localhost:3000/api/search?search=painter
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzQyNjIsImV4cCI6MTc0NDgyMDY2Mn0._yMLgk5baCtQnWp_ai6P4Fep7mOSB803bdxTScgJfEI
+Content-Type: application/json
+
+### Search with Deposit Range Filter
+GET http://localhost:3000/api/search?search=mechanic&minDeposit=0&maxDeposit=60
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzQyNjIsImV4cCI6MTc0NDgyMDY2Mn0._yMLgk5baCtQnWp_ai6P4Fep7mOSB803bdxTScgJfEI
+Content-Type: application/json
+
+### Search with Urgent Service Filter
+# only freelancers with urgentServiceEnabled set to true.
+GET http://localhost:3000/api/search?search=mechanic&urgentOnly=true
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzQyNjIsImV4cCI6MTc0NDgyMDY2Mn0._yMLgk5baCtQnWp_ai6P4Fep7mOSB803bdxTScgJfEI
+Content-Type: application/json
+
+### Search with Deposit Range and Urgent Service Filter
+GET http://localhost:3000/api/search?search=mechanic&minDeposit=0&maxDeposit=9&urgentOnly=true
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzQyNjIsImV4cCI6MTc0NDgyMDY2Mn0._yMLgk5baCtQnWp_ai6P4Fep7mOSB803bdxTScgJfEI
+Content-Type: application/json

@@ -1,14 +1,12 @@
-### CLIENT - for client@example.com - id:1
-### FREELANCER - for freelancer@example.com - id:3
 ### GET Personal Profile
 GET http://localhost:3000/api/privateProfiles/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyNzgyMzcsImV4cCI6MTc0NDM2NDYzN30.s2KdR8vsQV_8i34VC2vxT2eIUdBEPQFNBZmjiYbNWCI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzQyNjIsImV4cCI6MTc0NDgyMDY2Mn0._yMLgk5baCtQnWp_ai6P4Fep7mOSB803bdxTScgJfEI
 Content-Type: application/json
 
 ###
 ### POST Update Personal Data
 POST http://localhost:3000/api/privateProfiles/personal-data
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDI3ODE3OCwiZXhwIjoxNzQ0MzY0NTc4fQ.v-6wOwGNlcZiX6twgeBu-nsaD4wC_u606ZR8CUzNicI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzQyNjIsImV4cCI6MTc0NDgyMDY2Mn0._yMLgk5baCtQnWp_ai6P4Fep7mOSB803bdxTScgJfEI
 Content-Type: application/json
 
 {
@@ -20,7 +18,7 @@ Content-Type: application/json
 ###
 ### POST Update Profile Picture
 POST http://localhost:3000/api/privateProfiles/profile-picture
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyNzgyMzcsImV4cCI6MTc0NDM2NDYzN30.s2KdR8vsQV_8i34VC2vxT2eIUdBEPQFNBZmjiYbNWCI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzQyNjIsImV4cCI6MTc0NDgyMDY2Mn0._yMLgk5baCtQnWp_ai6P4Fep7mOSB803bdxTScgJfEI
 Content-Type: application/json
 
 {
@@ -30,7 +28,7 @@ Content-Type: application/json
 ###
 ### POST Update Location
 POST http://localhost:3000/api/privateProfiles/location
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyNzgyMzcsImV4cCI6MTc0NDM2NDYzN30.s2KdR8vsQV_8i34VC2vxT2eIUdBEPQFNBZmjiYbNWCI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzQyNjIsImV4cCI6MTc0NDgyMDY2Mn0._yMLgk5baCtQnWp_ai6P4Fep7mOSB803bdxTScgJfEI
 Content-Type: application/json
 
 {
@@ -38,22 +36,8 @@ Content-Type: application/json
     "lat": 49,
     "lng": -49,
     "zip": "34000",
-    "city": "Kragujevac",
+    "city": "Beograd",
     "country": "Serbia",
-    "address": "Drugi srpski ustanak"
-  }
-}
-
-###
-### POST Update Billing Information
-POST http://localhost:3000/api/privateProfiles/billing
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyNzgyMzcsImV4cCI6MTc0NDM2NDYzN30.s2KdR8vsQV_8i34VC2vxT2eIUdBEPQFNBZmjiYbNWCI
-Content-Type: application/json
-
-{
-  "billingInfo": {
-    "cardNumber": "0000111122224444",
-    "expiry": "12/11",
-    "cvv": "321"
+    "address": "Obelicev Venac"
   }
 }

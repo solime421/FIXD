@@ -1,0 +1,15 @@
+### GET All Orders for Authenticated User (Client Example)
+GET http://localhost:3000/api/orders
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDc0NzYwOSwiZXhwIjoxNzQ0ODM0MDA5fQ.3Tf2vdSWLREh5YZGIHH0mgXFPS3WW0b75wMZsld-eh0
+Content-Type: application/json
+
+
+### GET All Orders for Authenticated User (Freelancer Example)
+GET http://localhost:3000/api/orders
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3NDk5ODIsImV4cCI6MTc0NDgzNjM4Mn0.DbCFfEHFRSoCzi5xvpWnIlcl9Jc6dZiEXRtPv_dighk
+Content-Type: application/json
+
+### GET Freelancer Reviews (Only for Freelancer)
+GET http://localhost:3000/api/reviews
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3NDc1MzgsImV4cCI6MTc0NDgzMzkzOH0.uPiwaLFd-mMik5f-y-zBwBon45DcuS9_rqsVcvnA-t8
+Content-Type: application/json

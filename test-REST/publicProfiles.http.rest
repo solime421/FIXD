@@ -1,18 +1,18 @@
 ### GET Freelancer Public Profile
 # Simulise kako KLIENT gleda profil Majstora. Znaci, message should be enabled.
-GET http://localhost:3000/api/publicProfiles/8
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDI3ODE3OCwiZXhwIjoxNzQ0MzY0NTc4fQ.v-6wOwGNlcZiX6twgeBu-nsaD4wC_u606ZR8CUzNicI
+GET http://localhost:3000/api/publicProfiles/5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDczNDY4MCwiZXhwIjoxNzQ0ODIxMDgwfQ.y8LSAmsr72urok4FW7qWZwVhRsJgHJkowd9sCkGDvJE
 Content-Type: application/json
 
 ### GET Freelancer Public Profile
 # Simulise kako MAJSTOR gleda profil Majstora. Znaci, message should be FALSE.
-GET http://localhost:3000/api/publicProfiles/3
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyNzgwMjAsImV4cCI6MTc0NDM2NDQyMH0.ISxV-xHrpVgd83ai3beRgbNZkxeTm6B-RCh2xSFxSDs
+GET http://localhost:3000/api/publicProfiles/5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzQyNjIsImV4cCI6MTc0NDgyMDY2Mn0._yMLgk5baCtQnWp_ai6P4Fep7mOSB803bdxTScgJfEI
 Content-Type: application/json
 
 
 ### GET Client Public Profile
 # Simulise kako MAJSTOR gleda profil Klienta.
 GET http://localhost:3000/api/publicProfiles/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQyNzgwMjAsImV4cCI6MTc0NDM2NDQyMH0.ISxV-xHrpVgd83ai3beRgbNZkxeTm6B-RCh2xSFxSDs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3NDc1MzgsImV4cCI6MTc0NDgzMzkzOH0.uPiwaLFd-mMik5f-y-zBwBon45DcuS9_rqsVcvnA-t8
 Content-Type: application/json

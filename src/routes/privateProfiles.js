@@ -1,4 +1,3 @@
-// src/routes/privateProfiles.js
 import express from 'express';
 import privateProfileController from '../controllers/privateProfileController.js';
 import { verifyToken } from '../middleware/authMiddleware.js';
@@ -16,8 +15,5 @@ router.post('/profile-picture', verifyToken, privateProfileController.updateProf
 
 // Update location
 router.post('/location', verifyToken, privateProfileController.updateLocation);
-
-// Update billing information
-router.post('/billing', verifyToken, privateProfileController.updateBillingInfo);
 
 export default router;
