@@ -7,11 +7,7 @@ import jwt from 'jsonwebtoken';
 // --------- Register
 export const register = async (req, res) => {
   try {
-    const { email, first_name, last_name, phone, password, confirm_password, role } = req.body;
-
-    if (password !== confirm_password) {
-      return res.status(400).json({ message: "Passwords do not match." });
-    }
+    const { email, firstName, lastName, phone, password, role } = req.body;
 
     const lowerRole = role.toLowerCase();
 
@@ -29,8 +25,8 @@ export const register = async (req, res) => {
     const user = await prisma.user.create({
       data: {
         email,
-        firstName: first_name,
-        lastName: last_name,
+        firstName: firstName,
+        lastName: lastName,
         phone,
         passwordHash,
         role: lowerRole,
