@@ -37,6 +37,7 @@ export const register = async (req, res) => {
         firstName: true,
         lastName: true,
         role: true,
+        profilePicture: true,
       },
     });
 
@@ -71,12 +72,32 @@ export const login = async (req, res) => {
     }
 
     const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '24h' });
-    res.json({ user: { id: user.id, email: user.email, role: user.role }, token });
+    res.json({ user: { id: user.id, email: user.email, role: user.role, profilePicture: user.profilePicture }, token });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error." });
   }
 };
 
-const authController = { register, login };
+export const getMe = async (req, res) => {
+  try {
+    const me = await prisma.user.findUnique({
+      where: { id: req.user.id },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        profilePicture: true,
+      },
+    });
+    if (!me) return res.status(404).json({ message: 'User not found.' });
+    res.json(me);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: 'Server error.' });
+  }
+};
+
+
+const authController = { register, login, getMe };
 export default authController;

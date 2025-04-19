@@ -29,6 +29,11 @@ body {
   margin: 0;
 }
 
+main {
+  padding: 0 60px;
+  margin-top: 80px; /* Adjusted to account for fixed header */  
+}
+
 /* Colors */
 .gradient {
   background-image: linear-gradient(
