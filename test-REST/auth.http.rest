@@ -29,8 +29,8 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "client@example.com",
-  "password": "password123"
+  "email": "tamara.solime1@gmail.com",
+  "password": "root"
 }
 
 ### Login as freelancer

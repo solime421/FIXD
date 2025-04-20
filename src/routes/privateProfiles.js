@@ -1,6 +1,7 @@
 import express from 'express';
 import privateProfileController from '../controllers/privateProfileController.js';
 import { verifyToken } from '../middleware/authMiddleware.js';
+import { uploadSingle } from '../middleware/upload.js';
 
 const router = express.Router();
 
@@ -11,7 +12,7 @@ router.get('/me', verifyToken, privateProfileController.getPersonalProfile);
 router.post('/personal-data', verifyToken, privateProfileController.updatePersonalData);
 
 // Update only the profile picture
-router.post('/profile-picture', verifyToken, privateProfileController.updateProfilePicture);
+router.post('/profile-picture', verifyToken, uploadSingle, privateProfileController.updateProfilePicture);
 
 // Update location
 router.post('/location', verifyToken, privateProfileController.updateLocation);

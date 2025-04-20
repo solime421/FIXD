@@ -1,6 +1,6 @@
 ### GET Personal Profile
 GET http://localhost:3000/api/privateProfiles/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzQyNjIsImV4cCI6MTc0NDgyMDY2Mn0._yMLgk5baCtQnWp_ai6P4Fep7mOSB803bdxTScgJfEI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NDUxNDYwNDAsImV4cCI6MTc0NTIzMjQ0MH0.8Eefh6BBMiqp9G-UevvvxRv6PsSDg7bxSKyQRia0rSE
 Content-Type: application/json
 
 ###
@@ -18,12 +18,15 @@ Content-Type: application/json
 ###
 ### POST Update Profile Picture
 POST http://localhost:3000/api/privateProfiles/profile-picture
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ3MzQyNjIsImV4cCI6MTc0NDgyMDY2Mn0._yMLgk5baCtQnWp_ai6P4Fep7mOSB803bdxTScgJfEI
-Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NDUxNDYwNDAsImV4cCI6MTc0NTIzMjQ0MH0.8Eefh6BBMiqp9G-UevvvxRv6PsSDg7bxSKyQRia0rSE
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
-{
-  "profilePicture": "http://newexample.com/new-profile-pic.jpg"
-}
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="avatar.jpg"
+Content-Type: image/jpeg
+
+< C:\Users\Vrn\Pictures\avatar.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
 ###
 ### POST Update Location
