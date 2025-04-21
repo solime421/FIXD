@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 
-import DefaultAvatar from '../../public/images/Question.png'
+import DefaultAvatar from '../../public/icons/noUser.svg'
 
 export default function Header() {
   const { user } = useAuth()
 
   return (
-    <header className="fixed top-0 left-0 w-full bg-white flex items-center justify-between p-[20px] px-[60px] shadow-[0_1.5px_4px_rgba(0,0,0,0.2)] z-50">
+    <header className="fixed top-0 left-0 w-full bg-white flex items-center justify-between p-[15px] px-[120px] shadow-[0_1.5px_4px_rgba(0,0,0,0.2)] z-50">
 
       {/* Logo on the left */}
       <Link to="/home" className="flex items-center space-x-2">
@@ -28,7 +28,7 @@ export default function Header() {
           <img
             src={user?.profilePicture || DefaultAvatar}
             alt="Your profile"
-            className="h-13 w-13 rounded-full object-cover border-1 border-[var(--color-heading)]"
+            className="h-13 w-13 rounded-full object-cover border-[0.5px] border-[var(--color-heading)]"
           />
         </Link>
       </nav>

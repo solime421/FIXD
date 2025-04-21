@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import InputField from '../components/InputField';
 
 const Register = () => {
   const { register } = useAuth();
@@ -45,84 +46,77 @@ const Register = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-[url('../../images/FIXDBackround.png')] bg-no-repeat bg-center bg-[length:100%_auto] ">
       <div className="w-[340px] h-fit p-[30px] rounded-[15px] space-y-[30px] shadow-[0_0_4px_rgba(0,0,0,0.2)] gradient">
         <h2 className="font-semibold">Register</h2>
-        {error && <p className="text-red-500">{error}</p>}
-        <form onSubmit={handleSubmit} className="flex flex-col h-fit space-y-[30px]">
-          {/* Role dropdown */}
+        {error && <p className="text-red-500 font-bold">{error}</p>}
+        <form onSubmit={handleSubmit} className="space-y-[30px]">
+          <div>
           <select
-            name="role"
-            value={form.role}
-            onChange={handleChange}
-            className="h-[40px]"
-            required
-          >
-            <option value="client">Client</option>
-            <option value="freelancer">Freelancer</option>
-          </select>
+              name="role"
+              value={form.role}
+              onChange={handleChange}
+              className="w-full h-[40px] border-b-1 border-black
+                         outline-none bg-transparent font-body text-base"
+              required
+            >
+              <option value="client">Client</option>
+              <option value="freelancer">Freelancer</option>
+            </select>
+          </div>
 
-          {/* Email */}
-          <input
+          <InputField
             name="email"
             type="email"
             placeholder="Email"
             value={form.email}
             onChange={handleChange}
-            className="h-[40px]"
             required
           />
 
-          {/* First & Last name side by side */}
-          <div className="flex space-x-4">
-            <input
+          <div className="flex gap-4">
+            <InputField
               name="firstName"
               placeholder="First Name"
               value={form.firstName}
               onChange={handleChange}
-              className="flex-1 h-[40px]"
+              className="flex-1"
               required
             />
-            <input
+            <InputField
               name="lastName"
               placeholder="Last Name"
               value={form.lastName}
               onChange={handleChange}
-              className="flex-1 h-[40px]"
+              className="flex-1"
               required
             />
           </div>
 
-          {/* Phone */}
-          <input
+          <InputField
             name="phone"
             placeholder="Phone Number"
             value={form.phone}
             onChange={handleChange}
-            className="h-[40px]"
             required
           />
 
-          {/* Password */}
-          <input
+          <InputField
             name="password"
             type="password"
             placeholder="Password"
             value={form.password}
             onChange={handleChange}
-            className="h-[40px]"
             required
           />
 
-          {/* Confirm Password */}
-          <input
+          <InputField
             name="confirmPassword"
             type="password"
             placeholder="Confirm Password"
             value={form.confirmPassword}
             onChange={handleChange}
-            className="h-[40px]"
             required
           />
 
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-primary w-full">
             Register
           </button>
         </form>

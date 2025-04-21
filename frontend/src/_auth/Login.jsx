@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import InputField from '../components/InputField';
 
 const Login = () => {
   const { login, isAuthenticated } = useAuth();
@@ -29,11 +30,10 @@ const Login = () => {
         <div className="flex flex-col items-center justify-center min-h-screen bg-[url('/images/FIXDBackround.png')] bg-no-repeat bg-center bg-[length:100%_auto]">
 
           <div className="w-[350px] h-fit p-[30px] rounded-[15px] space-y-[30px] shadow-[0_0_4px_rgba(0,0,0,0.2)] gradient">
-            
             <h2 className="font-semibold">Sign In</h2>
-            {error && <p className="text-red-500">{error}</p>}
+            {error && <p className="text-red-500 font-bold">{error}</p>}
             <form onSubmit={handleSubmit} className="flex flex-col h-fit space-y-[40px]">
-              <input 
+              <InputField
                 name="email"
                 type="email"
                 placeholder="Email"
@@ -42,7 +42,7 @@ const Login = () => {
                 className="h-[40px]"
                 required
               />
-              <input
+              <InputField
                 name="password"
                 type="password"
                 placeholder="Password"
