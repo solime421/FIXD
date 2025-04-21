@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import PrivateLayout from './components/PrivateLayout';
+import PrivateLayout from './layout/PrivateLayout.jsx';
 import Login from './_auth/Login.jsx';
 import Register from './_auth/Register.jsx'
 import PrivateRoute from './_auth/PrivateRoute.jsx';

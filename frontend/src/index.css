@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 @import "tailwindcss";
 
 /* CSS variables */
@@ -6,6 +7,7 @@
   --color-bg-alt: #FFFBF8;
   --color-text: #000000;
   --color-heading: #3A001E;
+  --color-lightbrown: #865A57;
   --color-primary: #F74C25;
   --font-body: "Inter", sans-serif;
   --font-heading: "Exo 2", sans-serif;
@@ -18,6 +20,17 @@
   box-sizing: border-box;
 }
 
+@layer base {
+  h1 {
+    font-family: var(--font-heading);
+    color: var(--color-heading);
+    margin-bottom: 1rem;
+    line-height: 60px;
+    /* responsive font‐sizes */
+    @apply lg:text-5xl md:text-5xl sm:text-4xl text-4xl;
+  }
+}
+
 /* Base typography */
 html { font-size: 16px; }
 body {
@@ -26,7 +39,6 @@ body {
   font-family: var(--font-body);
   font-size: 18px;
   line-height: 30px;
-  margin: 0;
 }
 
 /* Colors */
@@ -40,14 +52,15 @@ body {
   );
 }
 
-/* Headings */
-h1 {
-  font-family: var(--font-heading);
-  font-size: 50px;
-  line-height: 60px;
-  color: var(--color-heading);
-  margin-bottom: 1rem;
+.box-shadow {
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
 }
+
+.box-shadow:hover {
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Headings */
 h2 { font-size: 25px; line-height: 28px; color: var(--color-heading); } /* Categorie Font */
 h3 { font-size: 20px; line-height: 35px; } /* Sub Header */
 h4 { font-size: 18px; line-height: 30px; } /* regular text */
@@ -59,6 +72,7 @@ a {
 }
 a:hover {
   text-decoration: underline;
+  cursor: pointer;
 }
 
 /* Buttons */
@@ -67,6 +81,7 @@ a:hover {
     font-family: var(--font-body);
     height: fit-content;
     border-radius: 5px;
+    cursor: pointer;
   }  
 
 .btn-primary {
@@ -89,8 +104,6 @@ a:hover {
 /* Desktop & large screens (≤1440px): 100px gutters each side */
 .container {
   max-width: calc(100% - 240px); /* 2×100px */
-  margin: 0 auto;
-  padding: 0;
 }
 
 @media (max-width: 1440px) {
