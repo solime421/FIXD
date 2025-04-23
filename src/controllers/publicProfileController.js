@@ -17,7 +17,9 @@ export const getPublicProfile = async (req, res) => {
         role: true,
         profilePicture: true,
         phone: true,
-        location: true,
+        locationAddress: true,
+        locationLat: true,
+        locationLng: true,
       },
     });
     
@@ -85,7 +87,9 @@ export const getPublicProfile = async (req, res) => {
         firstName: requestedUser.firstName,
         lastName: requestedUser.lastName,
         profilePicture: requestedUser.profilePicture,
-        location: requestedUser.location, 
+        locationAddress: requestedUser.locationAddress,
+        locationLat: requestedUser.locationLat,
+        locationLng: requestedUser.locationLng,
         rating, // Computed average rating
         phone: phoneVisible ? requestedUser.phone : undefined, // Conditionally return phone number
         phoneVisible,                     // Added flag: returns true if phone should be shown

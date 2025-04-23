@@ -3,7 +3,6 @@ const prisma = new PrismaClient();
 import { uploadToCloudinary } from '../lib/cloudinary.js';
 
 
-
 //GETS Personal Profile
 export const getPersonalProfile = async (req, res) => {
   try {
@@ -17,7 +16,9 @@ export const getPersonalProfile = async (req, res) => {
         profilePicture: true,
         phone: true,
         email: true,
-        location: true,
+        locationAddress: true,
+        locationLat: true,
+        locationLng: true,
         role: true,
       },
     });
@@ -75,22 +76,42 @@ export const updateProfilePicture = async (req, res) => {
 };
 
 
-//FIX THIS CODE A BIT
-//Updates the location
 export const updateLocation = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { location } = req.body; // e.g. { city: "New York", country: "USA" }
-    const updatedUser = await prisma.user.update({
+    const { address, lat, lng } = req.body;
+
+    // Validate presence and types
+    if (
+      typeof address !== 'string' ||
+      typeof lat     !== 'number' ||
+      typeof lng     !== 'number'
+    ) {
+      return res.status(400).json({
+        message: 'Please provide { address: string, lat: number, lng: number }.'
+      });
+    }
+
+    // Update the three location fields on your User record
+    const updated = await prisma.user.update({
       where: { id: userId },
-      data: { location },
+      data: {
+        locationAddress: address,
+        locationLat: lat,
+        locationLng: lng,
+      },
+      select: {
+        id: true,
+        locationAddress: true,
+        locationLat: true,
+        locationLng: true,
+      },
     });
-    
-    //returns
-    res.json(updatedUser);
+
+    return res.json(updated);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error." });
+    console.error('Error in updateLocation:', error);
+    return res.status(500).json({ message: "Server error." });
   }
 };
 

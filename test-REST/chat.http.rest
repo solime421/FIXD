@@ -1,7 +1,7 @@
 ### GET All Chats - Retrieves all chats in which the authenticated user participates
 # client
 GET http://localhost:3000/api/chats
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDQ5NzgyOTcsImV4cCI6MTc0NTA2NDY5N30.o_H5gvU3dokKWpPPgNo3L_kGxW1g9RuLntXL7edowxw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NDU0MjAyNDcsImV4cCI6MTc0NTUwNjY0N30.Qdf4bHE9H4hpaorvEuniFtO2KjPRtDsnrgXsBkU_gT4
 Content-Type: application/json
 
 
@@ -9,26 +9,26 @@ Content-Type: application/json
 # Attempts to create a new chat
 # If a chat already exists return the existing chat
 POST http://localhost:3000/api/chats
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDk3ODMyNCwiZXhwIjoxNzQ1MDY0NzI0fQ.g-9hj5sZ8QOI7Et5d1GDWstLg8C-TugZrIaNnDZBB_o
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NDU0MjAyNDcsImV4cCI6MTc0NTUwNjY0N30.Qdf4bHE9H4hpaorvEuniFtO2KjPRtDsnrgXsBkU_gT4
 Content-Type: application/json
 
 {
-  "freelancer_id": 4
+  "freelancer_id": 3
 }
 
 
 ### GET Chat Messages
 # Retrieves all messages for the chat with ID 10.
-GET http://localhost:3000/api/chats/1/messages
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDk3ODMyNCwiZXhwIjoxNzQ1MDY0NzI0fQ.g-9hj5sZ8QOI7Et5d1GDWstLg8C-TugZrIaNnDZBB_o
+GET http://localhost:3000/api/chats/2/messages
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NDU0MjAyNDcsImV4cCI6MTc0NTUwNjY0N30.Qdf4bHE9H4hpaorvEuniFtO2KjPRtDsnrgXsBkU_gT4
 Content-Type: application/json
 
 
 ### POST Send Message
 # Sends a new message in the chat with ID 10.
 # The message is also broadcast via Socket.IO to all users in the chat room.
-POST http://localhost:3000/api/chats/1/messages
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDk3ODMyNCwiZXhwIjoxNzQ1MDY0NzI0fQ.g-9hj5sZ8QOI7Et5d1GDWstLg8C-TugZrIaNnDZBB_o
+POST http://localhost:3000/api/chats/2/messages
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NDU0MjAyNDcsImV4cCI6MTc0NTUwNjY0N30.Qdf4bHE9H4hpaorvEuniFtO2KjPRtDsnrgXsBkU_gT4
 Content-Type: application/json
 
 {

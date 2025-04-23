@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import InputField from '../components/InputField';
 
-const Register = () => {
+export default function Register() {
   const { register } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -17,50 +17,56 @@ const Register = () => {
   });
   const [error, setError] = useState('');
 
-  const handleChange = (e) =>
+  const handleChange = e =>
     setForm(f => ({ ...f, [e.target.name]: e.target.value }));
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     setError('');
+
     if (form.password !== form.confirmPassword) {
       setError("Passwords don't match");
       return;
     }
+
     try {
       await register({
-        role: form.role,
+        role:      form.role,
         firstName: form.firstName,
-        lastName: form.lastName,
-        phone: form.phone,
-        email: form.email,
-        password: form.password,
+        lastName:  form.lastName,
+        phone:     form.phone,
+        email:     form.email,
+        password:  form.password,
       });
-      navigate('/home');
+
+      navigate('/home', { replace: true });
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed');
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[url('../../images/FIXDBackround.png')] bg-no-repeat bg-center bg-[length:100%_auto] ">
-      <div className="w-[340px] h-fit p-[30px] rounded-[15px] space-y-[30px] shadow-[0_0_4px_rgba(0,0,0,0.2)] gradient">
-        <h2 className="font-semibold">Register</h2>
+    <div
+      className="flex flex-col items-center justify-center min-h-screen
+                 bg-[url('/images/FIXDBackround.png')] bg-no-repeat bg-center bg-[length:100%_auto]"
+    >
+      <div className="w-[340px] p-[30px] rounded-[15px] space-y-[30px]
+                      shadow-[0_0_4px_rgba(0,0,0,0.2)] gradient">
+        <h2 className="font-semibold text-xl">Create an account</h2>
+
         {error && <p className="text-red-500 font-bold">{error}</p>}
+
         <form onSubmit={handleSubmit} className="space-y-[30px]">
-          <div>
           <select
-              name="role"
-              value={form.role}
-              onChange={handleChange}
-              className="w-full h-[40px] border-b-1 border-black
-                         outline-none bg-transparent font-body text-base"
-              required
-            >
-              <option value="client">Client</option>
-              <option value="freelancer">Freelancer</option>
-            </select>
-          </div>
+            name="role"
+            value={form.role}
+            onChange={handleChange}
+            className="w-full h-[40px] border-b outline-none bg-transparent"
+            required
+          >
+            <option value="client">Client</option>
+            <option value="freelancer">Freelancer</option>
+          </select>
 
           <InputField
             name="email"
@@ -92,6 +98,7 @@ const Register = () => {
 
           <InputField
             name="phone"
+            type="tel"
             placeholder="Phone Number"
             value={form.phone}
             onChange={handleChange}
@@ -122,13 +129,12 @@ const Register = () => {
         </form>
       </div>
 
-      <p className="mt-4 text-sm text-black">
+      <p className="mt-4 text-sm text-gray-800">
         Already have an account?{' '}
         <Link to="/login" className="font-bold hover:underline">
           Sign in
         </Link>
       </p>
     </div>
-)}
-
-export default Register;
+  );
+}

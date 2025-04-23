@@ -16,7 +16,6 @@ import reviewRoutes from './routes/reviews.js';
 import chatsRoutes from './routes/chats.js';
 import offersRoutes from './routes/offers.js';
 import ordersRoutes from './routes/orders.js';
-//import checkoutRoutes from './routes/checkout.js';
 
 
 const app = express();
@@ -80,7 +79,7 @@ app.get('/', (req, res)=>{
 // ----------- Register API routes
 app.use('/api/auth', authRoutes);
 //This means that all routes defined in the authRoutes file will automatically have /api/auth prefixed to their URL.
-app.use('/api/publicProfiles', publicProfilesRoutes);
+app.use('/api/publicProfile', publicProfilesRoutes);
 app.use('/api/privateProfiles', privateProfilesRoutes);
 app.use('/api/privateFreelancerProfiles', privateFreelancerProfilesRoutes); 
 app.use('/api/search', searchRoutes);

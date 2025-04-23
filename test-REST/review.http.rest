@@ -1,13 +1,13 @@
 ### POST Leave a Review
 POST http://localhost:3000/api/reviews
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc0NDc0NzYwOSwiZXhwIjoxNzQ0ODM0MDA5fQ.3Tf2vdSWLREh5YZGIHH0mgXFPS3WW0b75wMZsld-eh0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NDU0MjAyNDcsImV4cCI6MTc0NTUwNjY0N30.Qdf4bHE9H4hpaorvEuniFtO2KjPRtDsnrgXsBkU_gT4
 Content-Type: application/json
 
 {
-  "orderId": 10,
-  "revieweeId": 4,
-  "rating": 2,
-  "comment": "Could be better"
+  "orderId": 5,
+  "revieweeId": 3,
+  "rating": 5,
+  "comment": "Good work overall, but communication could have been a bit faster. Still very happy with the result. The final deliverable was good, but we had a few hiccups on scope. Overall a positive experience.."
 }
 
 ### GET Freelancer Reviews (Only for Freelancer)

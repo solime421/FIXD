@@ -14,17 +14,19 @@ datasource db {
 }
 
 model User {
-  id             Int      @id @default(autoincrement())
-  email          String   @unique
-  firstName      String
-  lastName       String
-  phone          String?
-  passwordHash   String
-  role           Role
-  profilePicture String?
-  location       Json?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id              Int      @id @default(autoincrement())
+  email           String   @unique
+  firstName       String
+  lastName        String
+  phone           String?
+  passwordHash    String
+  role            Role
+  profilePicture  String?
+  locationAddress String?
+  locationLat     Float?
+  locationLng     Float?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   freelancerDetails FreelancerDetails?
 

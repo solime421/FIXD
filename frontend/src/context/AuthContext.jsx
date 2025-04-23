@@ -1,16 +1,15 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import axios from 'axios'
 
-// 1) Create & export the Context itself
 export const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null)
+  const [user, setUser]     = useState(null)
   const [loading, setLoading] = useState(true)
 
-  // On mount try to load current user (e.g. from localStorage / API)
+  // On mount, see if we already have a token
   useEffect(() => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('authToken')
     if (token) {
       axios.defaults.headers.common.Authorization = `Bearer ${token}`
       axios.get('/api/auth/me')
@@ -27,32 +26,42 @@ export function AuthProvider({ children }) {
 
   const login = async ({ email, password }) => {
     const { data } = await axios.post('/api/auth/login', { email, password })
-    localStorage.setItem('token', data.token)
+    // store under the same key your profile page reads
+    localStorage.setItem('authToken', data.token)
     axios.defaults.headers.common.Authorization = `Bearer ${data.token}`
     setUser(data.user)
   }
 
   const register = async (payload) => {
     const { data } = await axios.post('/api/auth/register', payload)
-    localStorage.setItem('token', data.token)
+    localStorage.setItem('authToken', data.token)
     axios.defaults.headers.common.Authorization = `Bearer ${data.token}`
     setUser(data.user)
   }
 
   const logout = () => {
-    localStorage.removeItem('token')
+    localStorage.removeItem('authToken')
     delete axios.defaults.headers.common.Authorization
     setUser(null)
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        login,
+        register,
+        logout,
+        // expose this so your Login page can redirect if already logged in
+        isAuthenticated: Boolean(user)
+      }}
+    >
       {children}
     </AuthContext.Provider>
   )
 }
 
-// 2) Export a simple hook for components to consume auth state
 export function useAuth() {
   return useContext(AuthContext)
 }

@@ -2,7 +2,6 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import Logo from '../../public/logos/LogoWhiteLetters.svg'
 
-
 export default function Footer() {
   return (
     <footer className="bg-black text-white">
@@ -43,9 +42,14 @@ export default function Footer() {
 
         {/* Col 5: Support button */}
         <div className="mt-[100px] mb-[30px]">
-          <button className="btn btn-secondary w-full">
+          <a
+            href="https://wa.me/79637268181"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-secondary w-full text-center block"
+          >
             Need support?
-          </button>
+          </a>
         </div>
       </div>
     </footer>

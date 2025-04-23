@@ -1,35 +1,41 @@
+// src/App.jsx
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import PrivateLayout from './layout/PrivateLayout.jsx';
-import Login from './_auth/Login.jsx';
-import Register from './_auth/Register.jsx'
-import PrivateRoute from './_auth/PrivateRoute.jsx';
-import Home from './pages/Home.jsx'; 
-import SearchPage from './pages/SearchPage.jsx';
 
+import PrivateLayout     from './layout/PrivateLayout.jsx';
+import PrivateRoute      from './_auth/PrivateRoute.jsx';
 
-const App = () => {
+import Login             from './_auth/Login.jsx';
+import Register          from './_auth/Register.jsx';
+
+import Home              from './pages/Home.jsx';
+import SearchPage        from './pages/SearchPage.jsx';
+import PublicProfilePage from './pages/FreelancerPublicProfilePage.jsx';
+
+export default function App() {
   return (
     <main>
       <Routes>
-        {/*public routes */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-    
-        {/*private routes */}
-        <Route element={ <PrivateRoute> <PrivateLayout /> </PrivateRoute>}>
-            <Route path="/home" element={<Home />} />
-            <Route path="/search" element={<SearchPage />} />            
-            {/* add more private routes here */}
+        {/* Public‐only routes */}
+        <Route path="/"           element={<Navigate to="/login" replace />} />
+        <Route path="/login"      element={<Login />} />
+        <Route path="/register"   element={<Register />} />
 
+        {/* All private pages share the same auth check & layout */}
+        <Route element={
+          <PrivateRoute>
+            <PrivateLayout />
+          </PrivateRoute>
+        }>
+          <Route path="/home"                 element={<Home />} />
+          <Route path="/search"               element={<SearchPage />} />
+          <Route path="/publicProfile/:id"    element={<PublicProfilePage />} />
+          {/* add more protected routes here */}
         </Route>
-        
-        {/* Fallback for any unknown URL */}
+
+        {/* Catch‐all 404 */}
         <Route path="*" element={<p>404: Page not found</p>} />
       </Routes>
     </main>
   );
-};
-
-export default App;
+}
