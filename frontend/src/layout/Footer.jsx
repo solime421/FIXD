@@ -5,8 +5,8 @@ import Logo from '../../public/logos/LogoWhiteLetters.svg'
 
 export default function Footer() {
   return (
-    <footer className="bg-black text-white mt-[120px]">
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-5 gap-8 items-start py-[30px]">
+    <footer className="bg-black text-white">
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-5 gap-8 items-start pt-[60px] pb-[30px]">
         {/* Col 1: Logo */}
         <div>
           <img src={Logo} alt="FIXD logo" className="h-15" />

@@ -5,6 +5,7 @@ import Login from './_auth/Login.jsx';
 import Register from './_auth/Register.jsx'
 import PrivateRoute from './_auth/PrivateRoute.jsx';
 import Home from './pages/Home.jsx'; 
+import SearchPage from './pages/SearchPage.jsx';
 
 
 const App = () => {
@@ -19,6 +20,7 @@ const App = () => {
         {/*private routes */}
         <Route element={ <PrivateRoute> <PrivateLayout /> </PrivateRoute>}>
             <Route path="/home" element={<Home />} />
+            <Route path="/search" element={<SearchPage />} />            
             {/* add more private routes here */}
 
         </Route>

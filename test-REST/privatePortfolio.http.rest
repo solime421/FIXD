@@ -7,14 +7,14 @@ Content-Type: application/json
 ### POST Upload Portfolio Image
 # Replace the path with the full path to your local file.
 POST http://localhost:3000/api/privateFreelancerProfiles/portfolio
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDUxNDQxOTksImV4cCI6MTc0NTIzMDU5OX0.TiaRosFuUMlZAWRMOQ9fKy02x6pgmZWbpPfV1c6GRQA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDUzOTkxOTEsImV4cCI6MTc0NTQ4NTU5MX0.-h4rAOqaExT2uqO4SaEgyw3bU8NwbLzzRKHcka6AJNg
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="image"; filename="avatar.jpg"
 Content-Type: image/jpeg
 
-< C:\Users\Vrn\Pictures\avatar.jpg
+< C:\Users\Vrn\Pictures\FIXD\portfolio pictures\bobanyyy.jpg
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
 ### DELETE a Portfolio Image

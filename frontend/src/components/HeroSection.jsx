@@ -1,8 +1,17 @@
-import React from 'react'
-import BlockInput from './BlockInput'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import SearchBlock from '../components/SearchBlock.jsx';
 import HeroImage from '../../public/images/Handyman.png'
 
 export default function HeroSection() {
+  const [query, setQuery] = useState('');
+  const navigate = useNavigate();
+
+  const handleSearch = () => {
+    if (!query.trim()) return;
+    navigate(`/search?search=${encodeURIComponent(query.trim())}`);
+  };
+
   return (
           <section
             className="container flex flex-row items-center-safe xl:h-[650px] md:h-[550px] h-[550px]"
@@ -12,11 +21,12 @@ export default function HeroSection() {
                 <h1>
                   With what can we <span className="font-bold">help you today?</span>
                 </h1>
-                <div className="flex space-x-4 mt-[40px]">
-                  <BlockInput className="flex-1" />
-                  <button className="btn btn-primary w-[200px]">
-                    Search
-                  </button>
+                <div className="mt-[40px]">
+                  <SearchBlock 
+                  value={query}
+                  onChange={e => setQuery(e.target.value)}
+                  onSearch={handleSearch}
+                  className="flex-1" />
                 </div>
               </div>
     

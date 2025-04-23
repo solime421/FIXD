@@ -7,7 +7,7 @@ import AdvertiseSection from '../components/AdvertiseSection';
 
 export default function Home() {
   return (
-    <main className='space-y-[100px] mx-[120px]'>
+    <main className='space-y-[100px] mx-[120px] mb-[150px]'>
       <HeroSection />
       <OurOffersSection />
       <FAQ />

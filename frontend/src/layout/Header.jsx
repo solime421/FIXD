@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
-
 import DefaultAvatar from '../../public/icons/noUser.svg'
 
 export default function Header() {
