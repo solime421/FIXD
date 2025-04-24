@@ -1,7 +1,9 @@
 import React from 'react';
 
 export default function LocationSection({ address, lat, lng }) {
-  if (!address || lat == null || lng == null) return null;
+  if (!address || lat == null || lng == null)  {
+    return <p className="text-gray-600 italic">No reviews yet.</p>;
+  }
 
   // set a small bbox around the point for the embed
   const delta = 0.01;

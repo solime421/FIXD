@@ -5,13 +5,29 @@ import LocationSection from '../components/LocationSection.jsx';
 import LocationInput from '../components/LocationInput.jsx';
 import UrgentAndDeposit from '../components/UrgentAndDeposit.jsx';
 import PortfolioSection from '../components/PortfolioSection.jsx';
-//import SpecialtiesSection from '../components/SpecialtiesSection.jsx';
+import SpecialtiesSection from '../components/SpecialtiesSection.jsx';
+import AboutMeSection from '../components/AboutMeSection.jsx';
+import Logout from '../components/Logout.jsx';
 
 import DefaultAvatar from '../../public/icons/noUser.svg';
 import Whatsapp from '../../public/icons/Whatsapp.svg'
 import Telegram from '../../public/icons/Telegram.svg'
 import Instagram from '../../public/icons/Instagram.svg'
 import Email from '../../public/icons/Email.svg'
+
+import AboutMe from '../../public/icons/About-me.svg'
+import PersonalData from '../../public/icons/PersonalData.svg'
+import ContactUs from '../../public/icons/Contact-us.svg'
+import FAQ from '../../public/icons/FAQ.svg'
+import Location from '../../public/icons/Location.svg'
+import LogoutIcon from '../../public/icons/Logout.svg'
+import MyOrders from '../../public/icons/My-Orders.svg'
+import Pictures from '../../public/icons/Pictures.svg'
+import Specialities from '../../public/icons/Specialities.svg'
+import UrgentServices from '../../public/icons/Urgent-services.svg'
+
+
+
 
 export default function PersonalProfilePage() {
   const { updateUserPic } = useAuth();
@@ -130,6 +146,8 @@ export default function PersonalProfilePage() {
   if (error) return <p className="p-8 text-red-500">{error}</p>;
   if (!profile) return null;
 
+  const isFreelancer = profile.role === 'freelancer';
+
   return (
     <main className="py-[150px] bg-[var(--color-bg-alt)]">
       {/* Header */}
@@ -159,87 +177,136 @@ export default function PersonalProfilePage() {
           </h2>
         </div>
 
-      {/* Layout: menu + content */}
       <div className="mx-[120px] grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <aside className="w-2/3 bg-white mx-auto sticky top-[150px] rounded-lg shadow-[0_0_4px_rgba(0,0,0,0.2)] p-4 space-y-2 h-fit">
-          <Link to="#" className="block text-gray-700 hover:underline">Personal Data</Link>
-          <Link to="#" className="block text-gray-700 hover:underline">Location</Link>
-          <Link to="#" className="block text-gray-700 hover:underline">My Orders</Link>
-          <Link to="#" className="block text-gray-700 hover:underline">Logout</Link>
-        </aside>
+      <aside className="w-2/3 bg-white mx-auto sticky top-[150px] rounded-lg shadow p-4 space-y-5 h-fit">
+        <a href="#personal-data" className="block text-gray-700">
+          <img src={PersonalData} alt="" className="inline align-sub h-6 w-6 mr-3"/>Personal Data
+        </a>
+        <a href="#location" className="block text-gray-700">
+          <img src={Location} alt="" className="inline align-sub h-6 w-6 mr-3"/>Location
+        </a>
+
+        {/* freelancer-only links */}
+        {isFreelancer && (
+          <>
+            <a href="#urgent-services" className="block text-gray-700">
+              <img src={UrgentServices} alt="" className="inline align-sub h-6 w-6 mr-3"/>Order Amount & Urgent Services
+            </a>
+            <a href="#pictures" className="block text-gray-700">
+              <img src={Pictures} alt="" className="inline align-sub h-6 w-6 mr-3"/>Pictures
+            </a>
+            <a href="#specialties" className="block text-gray-700">
+              <img src={Specialities} alt="" className="inline align-sub h-6 w-6 mr-3"/>Specialties
+            </a>
+            <a href="#about-me" className="block text-gray-700 mb-13">
+              <img src={AboutMe} alt="" className="inline align-sub h-6 w-6 mr-3"/>About me
+            </a>
+          </>
+        )}
+
+        <a href="#contact-us" className="block text-gray-700">
+          <img src={ContactUs} alt="" className="inline align-sub h-6 w-6 mr-3"/>Contact Us
+        </a>
+        <Link to="/home#faq" className="block text-gray-700">
+          <img src={FAQ} alt="" className="inline align-sub h-6 w-6 mr-3"/>FAQ?
+        </Link>
+        <Logout className="w-full cursor-pointer text-left text-gray-700 flex items-center">
+          <img src={LogoutIcon} alt="" className="inline align-sub h-6 w-6 mr-3" />
+          Logout
+        </Logout>
+      </aside>
  
-        <div className="w-1/2 mx-auto lg:col-span-2 space-y-8">
+        <div className="w-1/2 mx-auto lg:col-span-2 space-y-10">
           {/* Personal Data Card */}
-          <div className="bg-white rounded-lg p-6 space-y-4 shadow-[0_0_4px_rgba(0,0,0,0.2)]">
-            <h2 className="text-xl font-semibold mb-4">Personal Data</h2>
-            <p><span className="text-gray-400">Name:</span> {profile.firstName}</p>
-            <p><span className="text-gray-400">Last Name:</span> {profile.lastName}</p>
-            <p><span className="text-gray-400">Phone Number:</span> {profile.phone}</p>
-            <p><span className="text-gray-400">Email:</span> {profile.email}</p>
-            <button onClick={() => setShowPersonalModal(true)}
-                    className="btn btn-primary w-full">Edit personal data</button>
-          </div>
+          <section id="personal-data" className="scroll-mt-[100px]">
+            <div className="bg-white rounded-lg p-6 space-y-4 shadow-[0_0_4px_rgba(0,0,0,0.2)]">
+              <h2 className="text-xl font-semibold mb-4">Personal Data</h2>
+              <p><span className="text-gray-400">Name:</span> {profile.firstName}</p>
+              <p><span className="text-gray-400">Last Name:</span> {profile.lastName}</p>
+              <p><span className="text-gray-400">Phone Number:</span> {profile.phone}</p>
+              <p><span className="text-gray-400">Email:</span> {profile.email}</p>
+              <button onClick={() => setShowPersonalModal(true)}
+                      className="btn btn-primary w-full">Edit personal data</button>
+            </div>
+          </section>
 
           {/* Location Card */}
-          <div className="bg-white rounded-lg p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)] ">
-            <h2 className="font-semibold mb-4">Location</h2>
-            <LocationSection
-              address={profile.locationAddress}
-              lat={profile.locationLat}
-              lng={profile.locationLng}
-            />
-            <button onClick={() => setShowLocationModal(true)}
-                    className="btn btn-primary w-full">Edit location</button>
-          </div>
-
-          {profile.role === 'freelancer' && (
-            <UrgentAndDeposit
-              initialDeposit={profile.depositAmount}
-              initialUrgent={profile.urgentServiceEnabled}
-              onUpdate={updates => {
-                // reflect any changes back to this main profile state
-                setProfile(p => ({ ...p, ...updates }));
-              }}
-            />
-          )}
+          <section id="location" className="scroll-mt-[100px]">
+            <div className="bg-white rounded-lg p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)] ">
+              <h2 className="font-semibold mb-4">Location</h2>
+              <LocationSection
+                address={profile.locationAddress}
+                lat={profile.locationLat}
+                lng={profile.locationLng}
+              />
+              <button onClick={() => setShowLocationModal(true)}
+                      className="btn btn-primary w-full">Edit location</button>
+            </div>
+          </section>
 
           {/* FREELANCER PORTFOLIO*/}
           {profile.role === 'freelancer' && (
-            <PortfolioSection
-              images={profile.portfolio || []}
-              onEdit={updated => setProfile(p => ({ ...p, portfolio: updated }))}
-              onAdd ={added   => setProfile(p => ({ ...p, portfolio: added   }))}
-            />
+            <>
+              <section id="urgent-services" className="scroll-mt-[100px]">
+                <UrgentAndDeposit
+                initialDeposit={profile.depositAmount}
+                initialUrgent={profile.urgentServiceEnabled}
+                onUpdate={updates => {
+                  // reflect any changes back to this main profile state
+                  setProfile(p => ({ ...p, ...updates }));
+                }}
+                          />
+              </section>
+              <section id="pictures" className="scroll-mt-[100px]">
+                <PortfolioSection
+                  images={profile.portfolio || []}
+                  onEdit={updated => setProfile(p => ({ ...p, portfolio: updated }))}
+                  onAdd ={added   => setProfile(p => ({ ...p, portfolio: added   }))}
+                />
+              </section>
+              <section id="specialties" className="scroll-mt-[100px]">
+                <SpecialtiesSection
+                    onEdit={updated => setProfile(p => ({ ...p, specialties: updated }))}
+                    onAdd ={added   => setProfile(p => ({ ...p, specialties: added   }))}
+                />
+              </section>
+              <section id="about-me" className="scroll-mt-[100px]">
+                <AboutMeSection onUpdate={updated => setProfile(p => ({ ...p, aboutme:updated }))} />
+              </section>
+
+            </>
           )}
 
           {/* Contact Us Card */}
-          <div className="bg-white rounded-lg p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)]">
-            <h2 className="font-semibold mb-4">Contact Us</h2>
-            {/* Icons row */}
-            <div className="flex justify-around space-y-6 mt-7">
-              <a href={`#`} title="Email">
-                <img src={Email} alt="Email" className="h-8 w-8" />
-              </a>
-              <a href={'#'} title="Instagram" target="_blank" rel="noopener noreferrer">
-                <img src={Instagram} alt="Instagram" className="h-8 w-8" />
-              </a>
-              <a href={`#`} title="WhatsApp" target="_blank" rel="noopener noreferrer">
-                <img src={Whatsapp} alt="Whatsapp" className="h-8 w-8" />
-              </a>
-              <a href={'#'} title="Telegram" target="_blank" rel="noopener noreferrer">
-                <img src={Telegram} alt="Telegram" className="h-8 w-8" />
-              </a>
+          <section id="contact-us" className="scroll-mt-[100px]">
+            <div className="bg-white rounded-lg p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)]">
+              <h2 className="font-semibold mb-4">Contact Us</h2>
+              {/* Icons row */}
+              <div className="flex justify-around space-y-6 mt-7">
+                <a href={`#`} title="Email">
+                  <img src={Email} alt="Email" className="h-8 w-8" />
+                </a>
+                <a href={'#'} title="Instagram" target="_blank" rel="noopener noreferrer">
+                  <img src={Instagram} alt="Instagram" className="h-8 w-8" />
+                </a>
+                <a href={`#`} title="WhatsApp" target="_blank" rel="noopener noreferrer">
+                  <img src={Whatsapp} alt="Whatsapp" className="h-8 w-8" />
+                </a>
+                <a href={'#'} title="Telegram" target="_blank" rel="noopener noreferrer">
+                  <img src={Telegram} alt="Telegram" className="h-8 w-8" />
+                </a>
+              </div>
+              {/* Action buttons */}
+              <a
+              href="https://wa.me/79637268181"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-secondary w-full text-center block"
+            >
+              Help & Support?
+            </a>
             </div>
-            {/* Action buttons */}
-            <a
-            href="https://wa.me/79637268181"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-secondary w-full text-center block"
-          >
-            Help & Support?
-          </a>
-          </div>
+          </section>
 
           {/* Personal Data Modal */}
           {showPersonalModal && (

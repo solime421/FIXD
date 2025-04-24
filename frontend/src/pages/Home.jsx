@@ -10,7 +10,9 @@ export default function Home() {
     <main className='space-y-[100px] mx-[120px] mb-[150px]'>
       <HeroSection />
       <OurOffersSection />
-      <FAQ />
+      <section id="faq" className="scroll-mt-[100px]">
+        <FAQ />
+      </section>
       <AdvertiseSection />
     </main>
   );

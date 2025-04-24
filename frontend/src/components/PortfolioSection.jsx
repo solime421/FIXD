@@ -1,10 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-/**
- * PortfolioSection
- * Fetches and displays a grid of portfolio images,
- * provides direct file selection for adding, and a modal for removal.
- */
 export default function PortfolioSection({ onEdit, onAdd }) {
   const token = localStorage.getItem('authToken');
 
@@ -121,7 +116,7 @@ export default function PortfolioSection({ onEdit, onAdd }) {
 
       {/* Portfolio display */}
       <div className="bg-white rounded-lg p-6 shadow">
-        <h2 className="text-xl font-semibold mb-4">Pictures ({images.length}/9)</h2>
+        <h2 className="font-semibold mb-6">Pictures ({images.length}/9)</h2>
         <div className="grid grid-cols-3 gap-2 mb-4">
           {images.map(img => (
             <img
@@ -154,7 +149,7 @@ export default function PortfolioSection({ onEdit, onAdd }) {
 
       {/* Remove Pictures Modal */}
       {showEditModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0  bg-black/20 backdrop-blur-sm  flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md space-y-4">
             <h3 className="text-lg font-semibold">Remove Pictures</h3>
             <div className="grid grid-cols-3 gap-2">

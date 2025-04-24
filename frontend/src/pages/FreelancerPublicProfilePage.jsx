@@ -7,8 +7,6 @@ import ReviewsSection from '../components/ReviewsSection.jsx';
 import ProfileSidebar from '../components/ProfileSidebar.jsx';
 
 
-
-
 export default function PublicProfilePage() {
   const { id } = useParams();
 

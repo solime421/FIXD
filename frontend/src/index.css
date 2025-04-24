@@ -32,7 +32,10 @@
 }
 
 /* Base typography */
-html { font-size: 16px; }
+html { 
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
