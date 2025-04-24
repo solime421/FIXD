@@ -1,4 +1,3 @@
-// src/App.jsx
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
@@ -11,6 +10,7 @@ import Register          from './_auth/Register.jsx';
 import Home              from './pages/Home.jsx';
 import SearchPage        from './pages/SearchPage.jsx';
 import PublicProfilePage from './pages/FreelancerPublicProfilePage.jsx';
+import PersonalProfilePage from './pages/PersonalProfilePage.jsx';
 
 export default function App() {
   return (
@@ -30,6 +30,7 @@ export default function App() {
           <Route path="/home"                 element={<Home />} />
           <Route path="/search"               element={<SearchPage />} />
           <Route path="/publicProfile/:id"    element={<PublicProfilePage />} />
+          <Route path="/personalProfile"      element={<PersonalProfilePage />} />
           {/* add more protected routes here */}
         </Route>
 

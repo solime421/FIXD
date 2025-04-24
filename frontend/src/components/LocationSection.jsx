@@ -18,7 +18,6 @@ export default function LocationSection({ address, lat, lng }) {
 
   return (
     <section className="mb-8">
-      <h2 className="font-semibold text-[#3A001E] mb-2">Location</h2>
       <p className="text-gray-700 mb-4">{address}</p>
       <div className="w-full h-64 overflow-hidden rounded-lg shadow-[0_0_4px_rgba(0,0,0,0.2)]">
         <iframe

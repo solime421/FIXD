@@ -5,14 +5,27 @@ import privatePortfolioController from '../controllers/privatePortfolioControlle
 
 const router = express.Router();
 
-// GET all portfolio images for the authenticated freelancer
-router.get('/', verifyToken, privatePortfolioController.getPortfolioImages);
+// GET  /api/privateFreelancerProfiles/portfolio
+router.get(
+  '/',
+  verifyToken,
+  privatePortfolioController.getPortfolioImages
+);
 
-// multer middleware handles the file under field name “image”
-// POST a new portfolio image
-router.post('/', verifyToken, uploadSingle, privatePortfolioController.addPortfolioImage);
+// POST /api/privateFreelancerProfiles/portfolio
+// uploadSingle is already .single('image'), so it'll populate `req.file.buffer`
+router.post(
+  '/',
+  verifyToken,
+  uploadSingle,
+  privatePortfolioController.addPortfolioImage
+);
 
-// DELETE a portfolio image by ID
-router.delete('/:id', verifyToken, privatePortfolioController.deletePortfolioImage);
+// DELETE /api/privateFreelancerProfiles/portfolio/:id
+router.delete(
+  '/:id',
+  verifyToken,
+  privatePortfolioController.deletePortfolioImage
+);
 
 export default router;

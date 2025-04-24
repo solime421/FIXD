@@ -166,6 +166,7 @@ export default function PublicProfilePage() {
           </div>
 
           <div>
+          <h2 className="font-semibold mb-5">Location</h2>
             <LocationSection
               address={profile.locationAddress}
               lat={profile.locationLat}

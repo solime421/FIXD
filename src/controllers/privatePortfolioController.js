@@ -2,90 +2,89 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 import { uploadToCloudinary } from '../lib/cloudinary.js';
 
-//GET
+// GET all portfolio images
 export const getPortfolioImages = async (req, res) => {
   try {
-    if (req.user.role !== 'freelancer') {
+    if (req.user.role !== 'freelancer')
       return res.status(403).json({ message: "Only freelancers can access portfolio images." });
-    }
+
     const freelancerId = req.user.id;
-    const portfolioImages = await prisma.portfolioImage.findMany({
+    const images = await prisma.portfolioImage.findMany({
       where: { freelancerId },
       select: { id: true, imageUrl: true, createdAt: true },
       orderBy: { createdAt: 'desc' },
     });
-    res.json(portfolioImages);
+    return res.json(images);
+
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error." });
+    console.error("getPortfolioImages error:", error);
+    return res.status(500).json({ message: "Server error." });
   }
 };
 
-
- // POST adds new image
- export const addPortfolioImage = async (req, res) => {
+// POST a new portfolio image
+export const addPortfolioImage = async (req, res) => {
   try {
+    // 1) Role guard
     if (req.user.role !== 'freelancer') {
       return res.status(403).json({ message: "Only freelancers can add portfolio images." });
     }
-    const freelancerId = req.user.id;
 
-    // Enforce a maximum of 9 images
-    const count = await prisma.portfolioImage.count({ where: { freelancerId } });
-    if (count >= 9) {
-      return res.status(400).json({ message: "You can only have up to 9 portfolio images." });
+    // 2) Ensure we got a file from multer
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded." });
     }
 
-    // multer should have populated req.file.buffer
-    if (!req.file?.buffer) {
-      return res.status(400).json({ message: "No image file provided." });
+    // 3) Cloudinary upload with its own error handling
+    let imageUrl;
+    try {
+      imageUrl = await uploadToCloudinary(req.file.buffer);
+    } catch (cloudErr) {
+      console.error("Cloudinary upload failed:", cloudErr);
+      return res
+        .status(502)
+        .json({ message: "Image upload failed.", detail: cloudErr.message });
     }
 
-    // Upload to Cloudinary
-    const imageUrl = await uploadToCloudinary(req.file.buffer);
-
-    // Save record in DB
+    // 4) Save URL into portfolioImage table
     const newImage = await prisma.portfolioImage.create({
-      data: { freelancerId, imageUrl },
+      data: { freelancerId: req.user.id, imageUrl },
       select: { id: true, imageUrl: true, createdAt: true },
     });
 
-    res.status(201).json(newImage);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error." });
+    return res.status(201).json(newImage);
+
+  } catch (err) {
+    // 5) Catch any other unexpected errors
+    console.error("addPortfolioImage error:", err);
+    return res.status(500).json({ message: "Server error.", detail: err.message });
   }
 };
 
-
-//DELETE /api/freelancer/portfolio/:id
+// DELETE a portfolio image
 export const deletePortfolioImage = async (req, res) => {
   try {
-    if (req.user.role !== 'freelancer') {
+    if (req.user.role !== 'freelancer')
       return res.status(403).json({ message: "Only freelancers can delete portfolio images." });
-    }
+
     const freelancerId = req.user.id;
-    const imageId = parseInt(req.params.id, 10);
+    const imageId      = parseInt(req.params.id, 10);
 
-    // Verify ownership
     const image = await prisma.portfolioImage.findUnique({ where: { id: imageId } });
-    if (!image || image.freelancerId !== freelancerId) {
+    if (!image || image.freelancerId !== freelancerId)
       return res.status(404).json({ message: "Portfolio image not found or access denied." });
-    }
 
-    // Delete
-    const deletedImage = await prisma.portfolioImage.delete({ where: { id: imageId } });
-    res.json(deletedImage);
+    const deleted = await prisma.portfolioImage.delete({ where: { id: imageId } });
+    return res.json(deleted);
+
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error." });
+    console.error("deletePortfolioImage error:", error);
+    return res.status(500).json({ message: "Server error." });
   }
 };
 
-const privatePortfolioController = {
+export default {
   getPortfolioImages,
   addPortfolioImage,
   deletePortfolioImage,
 };
-
-export default privatePortfolioController;

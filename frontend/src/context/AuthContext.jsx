@@ -4,10 +4,10 @@ import axios from 'axios'
 export const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
-  const [user, setUser]     = useState(null)
+  const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  // On mount, see if we already have a token
+  // On mount, try to restore session from localStorage token
   useEffect(() => {
     const token = localStorage.getItem('authToken')
     if (token) {
@@ -15,6 +15,7 @@ export function AuthProvider({ children }) {
       axios.get('/api/auth/me')
         .then(res => setUser(res.data))
         .catch(() => {
+          // invalid token, clear header and user
           delete axios.defaults.headers.common.Authorization
           setUser(null)
         })
@@ -24,9 +25,14 @@ export function AuthProvider({ children }) {
     }
   }, [])
 
+  // Helper to update just the profilePicture on the stored user
+  const updateUserPic = (newUrl) => {
+    setUser(u => u ? { ...u, profilePicture: newUrl } : u)
+  }
+
   const login = async ({ email, password }) => {
     const { data } = await axios.post('/api/auth/login', { email, password })
-    // store under the same key your profile page reads
+    // persist token for future sessions
     localStorage.setItem('authToken', data.token)
     axios.defaults.headers.common.Authorization = `Bearer ${data.token}`
     setUser(data.user)
@@ -53,7 +59,7 @@ export function AuthProvider({ children }) {
         login,
         register,
         logout,
-        // expose this so your Login page can redirect if already logged in
+        updateUserPic,       // allows updating avatar across the app
         isAuthenticated: Boolean(user)
       }}
     >

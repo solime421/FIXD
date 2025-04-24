@@ -16,7 +16,7 @@ export default function ProfileSidebar({
 }) {
   return (
     <aside className="sticky top-[150px] space-y-6">
-      <div className="gradient w-1/2 mx-auto rounded-lg bg-white p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)]">
+      <div className="gradient w-1/2 mx-auto rounded-lg p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)]">
         <div className="grid grid-cols-2 gap-4 items-start mb-6">
 
           {/* Left column: icon */}

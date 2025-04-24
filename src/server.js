@@ -18,6 +18,7 @@ import offersRoutes from './routes/offers.js';
 import ordersRoutes from './routes/orders.js';
 
 
+
 const app = express();
 app.use(express.json()); //It tells your Express app to automatically understand JSON data sent in requests
 

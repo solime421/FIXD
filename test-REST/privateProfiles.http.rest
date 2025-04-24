@@ -18,14 +18,14 @@ Content-Type: application/json
 ###
 ### POST Update Profile Picture
 POST http://localhost:3000/api/privateProfiles/profile-picture
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImZyZWVsYW5jZXIiLCJpYXQiOjE3NDUzOTkxOTEsImV4cCI6MTc0NTQ4NTU5MX0.-h4rAOqaExT2uqO4SaEgyw3bU8NwbLzzRKHcka6AJNg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NDU0ODA5NjksImV4cCI6MTc0NTU2NzM2OX0.ks-0WT1nBRq7BnXBWTnpt88Z5a4NKieNX1ZYviIOXpY
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="image"; filename="avatar.jpg"
 Content-Type: image/jpeg
 
-< C:\Users\Vrn\Pictures\FIXD\profilePICS\bobanyy.jpg
+< C:\Users\Vrn\Pictures\coffee.bmp
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
 ###

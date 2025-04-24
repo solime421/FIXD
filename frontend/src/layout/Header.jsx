@@ -23,7 +23,7 @@ export default function Header() {
           My Orders
         </Link>
 
-        <Link to="/profile">
+        <Link to="/personalProfile">
           <img
             src={user?.profilePicture || DefaultAvatar}
             alt="Your profile"

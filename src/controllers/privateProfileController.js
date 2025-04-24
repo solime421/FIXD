@@ -58,22 +58,30 @@ export const updateProfilePicture = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ message: "No file uploaded." });
     }
-    // 1) Upload the file buffer to Cloudinary
-    const url = await uploadToCloudinary(req.file.buffer);
 
-    // 2) Save that URL into the user record
+    // Upload to Cloudinary
+    let url;
+    try {
+      url = await uploadToCloudinary(req.file.buffer);
+    } catch (upErr) {
+      console.error('Cloudinary error', upErr);
+      return res.status(502).json({ message: "Image upload failed." });
+    }
+
+    // Save URL
     const updated = await prisma.user.update({
       where: { id: req.user.id },
       data: { profilePicture: url },
-      select: { profilePicture: true }
+      select: { profilePicture: true },
     });
 
-    res.json(updated);
+    return res.json(updated);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error." });
+    console.error('updateProfilePicture error:', error);
+    return res.status(500).json({ message: "Server error." });
   }
 };
+
 
 
 export const updateLocation = async (req, res) => {
