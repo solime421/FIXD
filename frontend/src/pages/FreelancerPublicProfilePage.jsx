@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import DefaultAvatar from '../../public/icons/noUser.svg';
 import LocationSection from '../components/LocationSection.jsx';
 import ReviewsSection from '../components/ReviewsSection.jsx';
 import ProfileSidebar from '../components/ProfileSidebar.jsx';
 
-
 export default function PublicProfilePage() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
-  //–– All hooks at the top ––
-  const [profile, setProfile]         = useState(null);
-  const [loading, setLoading]         = useState(true);
-  const [error, setError]             = useState('');
+  const [profile, setProfile]           = useState(null);
+  const [loading, setLoading]           = useState(true);
+  const [error, setError]               = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  // fetch profile
   useEffect(() => {
-    const controller = new AbortController();
+    const ctrl = new AbortController();
     const token = localStorage.getItem('authToken');
 
     async function fetchProfile() {
@@ -29,7 +29,7 @@ export default function PublicProfilePage() {
             'Content-Type': 'application/json',
             ...(token && { Authorization: `Bearer ${token}` }),
           },
-          signal: controller.signal,
+          signal: ctrl.signal,
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.message || res.statusText);
@@ -42,10 +42,30 @@ export default function PublicProfilePage() {
     }
 
     fetchProfile();
-    return () => controller.abort();
+    return () => ctrl.abort();
   }, [id]);
 
-  //–– Early returns after all hooks are declared ––
+  // kick off (or fetch) a chat and go there
+  const startChat = async () => {
+    const token = localStorage.getItem('authToken');
+    try {
+      const res = await fetch('/api/chats', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+        body: JSON.stringify({ freelancer_id: parseInt(id, 10) }),
+      });
+      const chat = await res.json();
+      if (!res.ok) throw new Error(chat.message || res.statusText);
+      navigate(`/chats/${chat.id}`);
+    } catch (err) {
+      console.error('Starting chat failed:', err);
+      alert(err.message);
+    }
+  };
+
   if (loading)  return <p className="p-8">Loading profile…</p>;
   if (error)    return <p className="p-8 text-red-500">{error}</p>;
   if (!profile) return null;
@@ -71,8 +91,8 @@ export default function PublicProfilePage() {
     <main className="py-[150px]">
       <div className="mx-[120px] grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Left column */}
-        <div className='space-y-[60px]'>
-          {/* Picture and Name */}
+        <div className="space-y-[60px]">
+          {/* Avatar + name + rating */}
           <div className="flex items-center space-x-4">
             <img
               src={profilePicture || DefaultAvatar}
@@ -94,11 +114,12 @@ export default function PublicProfilePage() {
             </div>
           </div>
 
-          <h3 className="font-semibold py-2 ">
+          {/* Short bio */}
+          <h3 className="font-semibold py-2">
             {aboutMeSmall || 'No description provided.'}
           </h3>
 
-          {/* Portfolio Slider */}
+          {/* Portfolio slider */}
           <div>
             {portfolio.length > 0 ? (
               <>
@@ -132,11 +153,11 @@ export default function PublicProfilePage() {
             )}
           </div>
 
+          {/* Detailed about */}
           <div className="rounded-lg bg-white p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)]">
             <h2 className="font-semibold text-[#3A001E] mb-5">
               About {firstName}
             </h2>
-
             <div className="space-y-3">
               <div>
                 <span className="block text-gray-400">From:</span>
@@ -145,7 +166,7 @@ export default function PublicProfilePage() {
               <div>
                 <span className="block text-gray-400">Member since:</span>
                 <span>
-                  {profile.memberSince
+                  {memberSince
                     ? new Date(memberSince).toLocaleString('default', {
                         month: 'long',
                         year: 'numeric',
@@ -154,37 +175,36 @@ export default function PublicProfilePage() {
                 </span>
               </div>
             </div>
-
             <hr className="my-4 border-gray-200" />
-
             <p>
-              {aboutMeDetailed ||
-                "No detailed bio provided."}
+              {aboutMeDetailed || "No detailed bio provided."}
             </p>
           </div>
 
+          {/* Location */}
           <div>
-          <h2 className="font-semibold mb-5">Location</h2>
+            <h2 className="font-semibold mb-5">Location</h2>
             <LocationSection
               address={profile.locationAddress}
               lat={profile.locationLat}
               lng={profile.locationLng}
             />
           </div>
-          
+
+          {/* Reviews */}
           <ReviewsSection reviews={profile.reviews} />
         </div>
 
-        {/* Right column */}
-        <div>
+        {/* Right column (sidebar) */}
         <ProfileSidebar
+          freelancerId={profile.id}
           specialties={profile.specialties.map(s => s.specialty)}
           depositAmount={profile.depositAmount}
           canMessage={profile.canMessage}
           urgentServiceEnabled={profile.urgentServiceEnabled}
           phone={profile.phone}
+          onStartChat={startChat}
         />
-        </div>
       </div>
     </main>
   );

@@ -2,27 +2,54 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 //GET Retrieve all chats where the authenticated user is involved.
+//GET Retrieve all chats where the authenticated user is involved, with unread counts
 export const getChats = async (req, res) => {
-    try {
-      const userId = req.user.id;
-      const chats = await prisma.chat.findMany({
+  try {
+    const userId = req.user.id;
+
+    // 1) Fetch all chats involving the current user
+    const chats = await prisma.chat.findMany({
+      where: {
+        OR: [
+          { clientId: userId },
+          { freelancerId: userId }
+        ]
+      },
+      orderBy: { updatedAt: 'desc' },
+      include: {
+        client:     { select: { id: true, firstName: true, lastName: true, profilePicture: true } },
+        freelancer: { select: { id: true, firstName: true, lastName: true, profilePicture: true } },
+      },
+    });
+
+    // 2) For each chat, compute how many unread messages remain from the other party
+    const withUnread = await Promise.all(chats.map(async chat => {
+      // Determine the other participant's userId
+      const otherId = chat.clientId === userId
+        ? chat.freelancerId
+        : chat.clientId;
+
+      // Count messages in this chat that were sent by the other user and not yet marked read
+      const unreadCount = await prisma.message.count({
         where: {
-          OR: [
-            { clientId: userId },
-            { freelancerId: userId }
-          ]
-        },
-        orderBy: { updatedAt: 'desc' },
-        include: {
-          client: { select: { id: true, firstName: true, lastName: true } },
-          freelancer: { select: { id: true, firstName: true, lastName: true } }
+          chatId:   chat.id,
+          senderId: otherId,
+          isRead:   false,
         }
       });
-      res.json(chats);
-    } catch (error) {
-      console.error('Error retrieving chats:', error);
-      res.status(500).json({ message: 'Server error while retrieving chats.' });
-    }
+
+      return {
+        ...chat,
+        unreadCount
+      };
+    }));
+
+    // 3) Send back the enriched chats array
+    res.json(withUnread);
+  } catch (error) {
+    console.error('Error retrieving chats:', error);
+    res.status(500).json({ message: 'Server error while retrieving chats.' });
+  }
 };
 
  // POST /Create a new chat if one doesn't exist

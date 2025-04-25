@@ -105,6 +105,7 @@ model Offer {
   freelancerId Int
   offerName    String
   accepted     Boolean   @default(false)
+  declined      Boolean  @default(false)
   createdAt    DateTime  @default(now())
   acceptedAt   DateTime?
 

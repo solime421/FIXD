@@ -48,6 +48,7 @@ export const getOfferByChat = async (req, res) => {
       where: {
         chatId,
         accepted: false,
+        declined: false,
       },
       orderBy: {
         createdAt: 'desc',
@@ -103,10 +104,21 @@ export const acceptOffer = async (req, res) => {
   }
 };
 
+export const declineOffer = async (req, res) => {
+  if (req.user.role !== 'client') return res.status(403).json({ message: 'Only clients…' });
+  const id = +req.params.id;
+  const updated = await prisma.offer.update({
+    where: { id },
+    data: { declined: true },
+  });
+  return res.json(updated);
+};
+
 const offerController = {
   sendOffer,
   getOfferByChat,
   acceptOffer,
+  declineOffer,
 };
 
 export default offerController;

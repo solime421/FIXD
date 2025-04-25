@@ -16,4 +16,7 @@ router.get('/chat/:chatId', verifyToken, offerController.getOfferByChat);
 // Client accepts the offer with the given offer ID.
 router.post('/:id/accept', verifyToken, offerController.acceptOffer);
 
+router.post('/:id/decline', verifyToken, offerController.declineOffer);
+
+
 export default router;

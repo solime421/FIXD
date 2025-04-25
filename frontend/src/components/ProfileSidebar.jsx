@@ -1,19 +1,29 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import PointFinger from '../../public/images/PointFinger.png';
 
 /**
- * ProfileSidebar
- * Displays specialties, average order amount, and contact buttons.
- * Cards are centered at 2/3 width, and the main info section
- * is laid out in two columns: text and icon.
+ * Sidebar component showing specialties, rate, and contact actions.
+ * Sticks to viewport when scrolling.
  */
 export default function ProfileSidebar({
-  specialties = [],             // array of specialty strings
-  depositAmount = 0,            // numeric average order amount
-  canMessage = false,           // whether to show "Send a message"
-  urgentServiceEnabled = false, // whether to show "Emergency Available"
-  phone,                        // phone number for the call link
+  freelancerId,
+  specialties = [],
+  depositAmount = 0,
+  canMessage = false,
+  urgentServiceEnabled = false,
+  phone,
+  onStartChat,           // new prop to kick off the chat
 }) {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  // If no specialties & no actions, render nothing
+  if (!canMessage && !urgentServiceEnabled && specialties.length === 0) {
+    return null;
+  }
+
   return (
     <aside className="sticky top-[150px] space-y-6">
       <div className="gradient w-1/2 mx-auto rounded-lg p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)]">
@@ -53,9 +63,12 @@ export default function ProfileSidebar({
           </h3>
         </div>
 
-        {/* Send a message button (full width, below grid) */}
+        {/* Send Message (only for clients) */}
         {canMessage && (
-          <button className="btn btn-primary w-full">
+          <button
+            onClick={onStartChat}
+            className="btn btn-primary w-full"
+          >
             Send a message
           </button>
         )}
