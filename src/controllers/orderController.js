@@ -25,7 +25,6 @@ export const createOrder = async (req, res) => {
 };
 
 
-//Retrieve all orders for the authenticated user.
 export const getOrders = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -38,6 +37,10 @@ export const getOrders = async (req, res) => {
         ],
       },
       orderBy: { createdAt: 'desc' },
+      include: {
+        client:     { select: { firstName: true, lastName: true } },
+        freelancer: { select: { firstName: true, lastName: true } },
+      },
     });
 
     res.json(orders);

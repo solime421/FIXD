@@ -45,57 +45,101 @@ export default function ChatPage() {
       .then(r => r.json())
       .then(data => {
         setChats(data);
+  
         if (chatId) {
           const found = data.find(c => String(c.id) === chatId);
-          if (found) setSelectedChat(found);
+          if (found) {
+            // 1) clear the dot locally
+            setChats(cs =>
+              cs.map(chat =>
+                chat.id === found.id
+                  ? { ...chat, unreadCount: 0 }
+                  : chat
+              )
+            );
+  
+            // 2) mark all as read on the server
+            fetch(`/api/chats/${found.id}/messages/read`, {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+              },
+            }).catch(console.error);
+  
+            // 3) finally select the chat
+            setSelectedChat(found);
+          }
         }
       })
       .catch(console.error);
   }, [chatId]);
 
   // 3) join all chat rooms
-  useEffect(() => {
-    if (!socketRef.current) return;
-    chats.forEach(c => socketRef.current.emit('joinRoom', c.id));
-  }, [chats]);
+useEffect(() => {
+  if (!socketRef.current) return;
+  chats.forEach(c => {
+    socketRef.current.emit('joinRoom', c.id);
+  });
+}, [chats]);
 
-  // 4) real-time new messages + new offers
-  useEffect(() => {
-    const onNewMessage = msg => {
-      // reorder sidebar
-      setChats(cs => {
-        const idx = cs.findIndex(c => c.id === msg.chatId);
-        if (idx === -1) return cs;
-        return [cs[idx], ...cs.slice(0, idx), ...cs.slice(idx + 1)];
-      });
-      if (selectedChat?.id === msg.chatId) {
-        setMessages(ms => {
-          if (ms.some(m => m.id === msg.id)) return ms;
-          return [...ms, msg];
+// 4) real-time new messages + new offers
+useEffect(() => {
+  if (!socketRef.current) return;
+
+  const onNewMessage = async (msg) => {
+    setChats(cs => cs
+      .map(c => {
+        if (c.id === msg.chatId) {
+          const isActive = c.id === selectedChat?.id;
+          return {
+            ...c,
+            unreadCount: isActive ? 0 : (c.unreadCount || 0) + 1,
+          };
+        }
+        return c;
+      })
+      // move that chat to the top
+      .sort((a, b) => a.id === msg.chatId ? -1 : b.id === msg.chatId ? 1 : 0)
+    );
+
+    if (selectedChat?.id === msg.chatId) {
+      setMessages(ms => ms.some(m => m.id === msg.id) ? ms : [...ms, msg]);
+
+      // immediately mark as read on server
+      try {
+        await fetch(`/api/chats/${msg.chatId}/messages/read`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
         });
+      } catch (err) {
+        console.error("Failed to mark as read:", err);
       }
-    };
-    const onNewOffer = offer => {
-      // if client and this is their chat, popup
-      if (user.role === 'client' && offer.chatId === selectedChat?.id) {
-        setIncomingOffer(offer);
-        setShowClientOffer(true);
-      }
-      // shift sidebar
-      setChats(cs => {
-        const idx = cs.findIndex(c => c.id === offer.chatId);
-        if (idx === -1) return cs;
-        return [cs[idx], ...cs.slice(0, idx), ...cs.slice(idx + 1)];
-      });
-    };
+    }
+  };
 
-    socketRef.current.on('newMessage', onNewMessage);
-    socketRef.current.on('newOffer', onNewOffer);
-    return () => {
-      socketRef.current.off('newMessage', onNewMessage);
-      socketRef.current.off('newOffer', onNewOffer);
-    };
-  }, [selectedChat, user.role]);
+  const onNewOffer = (offer) => {
+    // show popup if client has this chat open
+    if (user.role === 'client' && offer.chatId === selectedChat?.id) {
+      setIncomingOffer(offer);
+      setShowClientOffer(true);
+    }
+
+    // reorder the sidebar
+    setChats(cs => {
+      const idx = cs.findIndex(c => c.id === offer.chatId);
+      if (idx === -1) return cs;
+      return [cs[idx], ...cs.slice(0, idx), ...cs.slice(idx + 1)];
+    });
+  };
+
+  socketRef.current.on('newMessage', onNewMessage);
+  socketRef.current.on('newOffer',  onNewOffer);
+
+  return () => {
+    socketRef.current.off('newMessage', onNewMessage);
+    socketRef.current.off('newOffer',  onNewOffer);
+  };
+}, [selectedChat, user.role]);
 
   // 5) auto‐scroll
   useEffect(() => {
@@ -104,7 +148,20 @@ export default function ChatPage() {
   }, [messages]);
 
   // 6) select chat
-  const selectChat = c => {
+   const selectChat = c => {
+    setChats(cs =>
+      cs.map(chat =>
+        chat.id === c.id
+          ? { ...chat, unreadCount: 0 }
+          : chat
+      )
+    );
+    // 2) fire “mark as read” in background
+    fetch(`/api/chats/${c.id}/messages/read`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
+    }).catch(console.error);
+    // 3) actually select & navigate
     setSelectedChat(c);
     navigate(`/chats/${c.id}`);
   };
@@ -214,7 +271,7 @@ export default function ChatPage() {
       <ChatsScroll
           chats={chats}
           selectedChat={selectedChat}
-          onSelect={c => setSelectedChat(c)}
+          onSelect={selectChat}
         />
 
       {/* ─── Chat window & input ───────────── */}

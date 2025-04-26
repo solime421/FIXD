@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-/**
- * Masonry-style Reviews Section using CSS multi-column
- */
 export default function ReviewsSection({ reviews }) {
+  const [visibleCount, setVisibleCount] = useState(6);
+
   if (!reviews || reviews.length === 0) {
     return <p className="text-gray-600 italic">No reviews yet.</p>;
   }
+
+  const visibleReviews = reviews.slice(0, visibleCount);
+  const hasMore = reviews.length > visibleCount;
 
   return (
     <section className="mb-8">
@@ -16,7 +18,7 @@ export default function ReviewsSection({ reviews }) {
         className="columns-2 space-y-6"
         style={{ columnGap: '1.5rem' }}
       >
-        {reviews.map((r, i) => (
+        {visibleReviews.map((r, i) => (
           <div
             key={i}
             className="break-inside-avoid rounded-lg p-4 shadow-[0_0_4px_rgba(0,0,0,0.2)] bg-white w-full"
@@ -39,11 +41,25 @@ export default function ReviewsSection({ reviews }) {
             </div>
             <p className="text-gray-700 mb-2">{r.comment}</p>
             <p className="text-xs text-gray-500">
-              {new Date(r.createdAt).toLocaleDateString()}
+              {new Date(r.createdAt).toLocaleDateString('default', {
+                day:   'numeric',
+                month: 'long',
+                year:  'numeric'
+              })}
             </p>
           </div>
         ))}
       </div>
+
+      {hasMore && (
+        <div className="text-center mt-6 hover:underline">
+          <a
+            onClick={() => setVisibleCount(vc => vc + 6)}
+            className="flex justify-center text-[#865A57]">
+            Load more reviews
+          </a>
+        </div>
+      )}
     </section>
   );
 }

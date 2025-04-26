@@ -14,6 +14,7 @@ import PublicProfilePage from './pages/FreelancerPublicProfilePage.jsx';
 import PersonalProfilePage from './pages/PersonalProfilePage.jsx';
 import ChatPage          from './pages/ChatPage.jsx';
 import ChatListPage      from './pages/ChatListPage.jsx';
+import MyOrdersPage      from './pages/MyOrdersPage.jsx';
 
 export default function App() {
   return (
@@ -34,6 +35,8 @@ export default function App() {
           <Route path="/search"               element={<SearchPage />} />
           <Route path="/publicProfile/:id"    element={<PublicProfilePage />} />
           <Route path="/personalProfile"      element={<PersonalProfilePage />} />
+          <Route path="/orders"             element={<MyOrdersPage />} />
+          
         </Route>
 
         <Route element={

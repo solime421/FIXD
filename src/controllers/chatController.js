@@ -203,6 +203,10 @@ export const markMessagesAsRead = async (req, res) => {
         },
         data: { isRead: true }
       });
+
+      if (global.io) {
+        global.io.emit('messagesRead', { chatId, userId });
+      }
       
       res.json({ message: "Messages marked as read.", updatedCount: updated.count });
     } catch (error) {

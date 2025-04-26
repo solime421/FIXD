@@ -178,7 +178,7 @@ export default function PersonalProfilePage() {
         </div>
 
       <div className="mx-[120px] grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <aside className="w-2/3 bg-white mx-auto sticky top-[150px] rounded-lg shadow p-4 space-y-5 h-fit">
+      <aside className="w-2/3 bg-white mx-auto lg:sticky top-[150px] rounded-lg shadow p-4 space-y-5 h-fit">
         <a href="#personal-data" className="block text-gray-700">
           <img src={PersonalData} alt="" className="inline align-sub h-6 w-6 mr-3"/>Personal Data
         </a>
