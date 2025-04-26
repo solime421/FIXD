@@ -4,7 +4,7 @@ export default function ReviewsSection({ reviews }) {
   const [visibleCount, setVisibleCount] = useState(6);
 
   if (!reviews || reviews.length === 0) {
-    return <p className="text-gray-600 italic">No reviews yet.</p>;
+    return <p className="text-gray-600 italic">Пока нет отзывов.</p>;
   }
 
   const visibleReviews = reviews.slice(0, visibleCount);
@@ -12,8 +12,6 @@ export default function ReviewsSection({ reviews }) {
 
   return (
     <section className="mb-8">
-      <h2 className="font-semibold text-[#3A001E] mb-4">Reviews</h2>
-
       <div
         className="columns-2 space-y-6"
         style={{ columnGap: '1.5rem' }}
@@ -41,7 +39,7 @@ export default function ReviewsSection({ reviews }) {
             </div>
             <p className="text-gray-700 mb-2">{r.comment}</p>
             <p className="text-xs text-gray-500">
-              {new Date(r.createdAt).toLocaleDateString('default', {
+              {new Date(r.createdAt).toLocaleDateString('ru', {
                 day:   'numeric',
                 month: 'long',
                 year:  'numeric'
@@ -56,7 +54,7 @@ export default function ReviewsSection({ reviews }) {
           <a
             onClick={() => setVisibleCount(vc => vc + 6)}
             className="flex justify-center text-[#865A57]">
-            Load more reviews
+            Загрузить больше отзывов
           </a>
         </div>
       )}

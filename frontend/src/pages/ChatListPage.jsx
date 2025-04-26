@@ -107,7 +107,7 @@ export default function ChatPage() {
       />
       <section className="col-span-3 flex flex-col">
         <div className="flex-1 flex items-center justify-center text-gray-500">
-          Select a chat to start messaging
+          Выберите чат, чтобы начать переписку
         </div>
       </section>
     </main>

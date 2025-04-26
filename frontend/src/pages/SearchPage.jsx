@@ -68,7 +68,7 @@ export default function SearchPage() {
           value={query}
           onChange={e => setQuery(e.target.value)}
           onSearch={applyFilters}
-          placeholder="Search freelancers…"
+          placeholder="Искать специалистов…"
         />
 
         {/* Filter header */}
@@ -82,7 +82,7 @@ export default function SearchPage() {
             alt="Filter"
             className={`h-5 w-5 mr-2 transition-transform ${showFilters ? 'rotate-180' : ''}`}
           />
-          <span>Filter</span>
+          <span>Фильтр</span>
         </button>
 
         {/* Filter controls, only if toggled open */}
@@ -91,7 +91,7 @@ export default function SearchPage() {
             <InputField
                 type="number"
                 min={0}
-                placeholder="Min deposit"
+                placeholder="Мин депозит"
                 value={minDeposit}
                 onKeyDown={e => {
                   // block typing the minus key
@@ -114,7 +114,7 @@ export default function SearchPage() {
             <InputField
               type="number"
               min={0}
-              placeholder="Max deposit"
+              placeholder="Макс депозит"
               value={maxDeposit}
               onKeyDown={e => {
                 if (e.key === '-') e.preventDefault();
@@ -138,20 +138,20 @@ export default function SearchPage() {
                 onChange={e => setUrgentOnly(e.target.checked)}
                 className="cursor-pointer h-4 w-4"
               />
-              <span>Urgent only</span>
+              <span>Только срочные</span>
             </label>
             <button
               onClick={applyFilters}
               className="btn btn-secondary w-fill"
               type="button"
             >
-              Apply
+              Применить
             </button>
           </div>
         )}
 
         {/* Results */}
-        {loading && <p className='pt-[20px] text-gray-500'>Loading…</p>}
+        {loading && <p className='pt-[20px] text-gray-500'>Загрузка…</p>}
         {error   && <p className="text-red-500">{error}</p>}
         {!loading && !error && <SearchResults items={results} />}
       </div>

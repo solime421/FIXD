@@ -4,30 +4,28 @@ import { Link } from 'react-router-dom';
 
 export default function AdvertiseSection() {
   return (
-    <section className="flex justify-center gap-8 px-[200px]">
+    <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 xl:mx-[180px]">
       {/* Left panel */}
-      <div className="flex-1 flex flex-col p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)] gradient rounded-[15px] space-y-[30px]">
-        <h1>Want to advertise <span className="font-extrabold">your services?</span></h1>
-        <p className="flex-grow">
-          Grow your business effortlessly by putting your skills in front of the right clients. Our platform connects you with customers actively searching for your expertise – so you spend less time marketing and more time doing what you do best.        </p>
-      </div>
-
-      {/* Right panel */}
-      <div className="flex-1 flex flex-col p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)] gradient rounded-[15px]">
+        <div className='p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)] gradient rounded-[15px] space-y-[30px]'>
+          <h1>Хотите рекламировать <span className="font-bold">свои услуги?</span></h1>
+          <p className="flex-grow">
+            Развивайте свой бизнес легко, демонстрируя свои навыки нужным клиентам. Наша платформа соединяет вас с заказчиками, которые активно ищут ваши услуги — так вы тратите меньше времени на маркетинг и больше на любимую работу.</p>
+        </div>
+        <div className="flex flex-col justify-between p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)] gradient rounded-[15px]">
         <ul className='space-y-[15px] mb-[40px]'>
           <li className='mr-2'>
-          ✔ Get Discovered by Your Ideal Clients</li>
+          ✔ Найдите своих идеальных клиентов</li>
           <li>
-          ✔ Stand Out from Competitors</li>
+          ✔ Выделяйтесь среди конкурентов</li>
           <li>
-          ✔ Highlight your unique offerings</li>
+          ✔ Подчеркните свои уникальные предложения</li>
           <li>
-          ✔ Grow Your Business Efficiently</li>
+          ✔ Развивайте бизнес эффективно</li>
         </ul>
-        <p className='font-bold'>Create Your Professional Profile Today!</p>
+        <p className='font-bold'>Создайте свой профессиональный профиль уже сегодня!</p>
         <Link to="/register">
           <button className="btn btn-primary mt-3 w-full">
-            Create an account
+           Создать аккаунт
           </button>
         </Link>      
       </div>

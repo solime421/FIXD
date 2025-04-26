@@ -19,7 +19,7 @@ export default function HeroSection() {
             {/* Left column: content */}
             <div className="w-fill lg:w-3/5 pl-4 pr-7">
                 <h1>
-                  With what can we <span className="font-bold">help you today?</span>
+                  Чем мы <span className="font-bold">можем вам помочь сегодня?</span>
                 </h1>
                 <div className="mt-[40px]">
                   <SearchBlock 

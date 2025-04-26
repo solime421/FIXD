@@ -1,9 +1,9 @@
-// src/pages/MyOrdersPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate }         from 'react-router-dom';
 import { useAuth }             from '../context/AuthContext.jsx';
 import PreviousOrders          from '../components/PreviousOrders.jsx';
 import ReviewsSection          from '../components/ReviewsSection.jsx';
+import OrderCard               from '../components/OrderCard.jsx';
 
 export default function MyOrdersPage() {
   const { user } = useAuth();
@@ -128,99 +128,57 @@ export default function MyOrdersPage() {
     <main className="py-[150px] bg-[var(--color-bg-alt)]">
       <div className="mx-[120px] space-y-8">
 
-        {/* In‐Progress Orders */}
-        <section>
-          <h2 className="text-2xl font-semibold mb-4">My Orders</h2>
-          {inProgress.length === 0 ? (
-            <div className="py-3 text-gray-500">No order currently in progress</div>
-          ) : (
-            (() => {
-              // split into two columns
-              const colA = inProgress.filter((_, i) => i % 2 === 0);
-              const colB = inProgress.filter((_, i) => i % 2 === 1);
-              return (
-                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 items-start">
-                  {/* Icon column */}
-                  <div>
-                    <img
-                      src="public/images/Ok-sign.png"
-                      alt="OK"
-                      className="h-70 w-70 my-10"
-                    />
-                  </div>
-                  {/* Even‐indexed orders */}
-                  <div className="space-y-4">
-                    {colA.map(o => {
-                      const other = user.role === 'client' ? o.freelancer : o.client;
-                      return (
-                        <div key={o.id}
-                             className="bg-white rounded-lg p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)] space-y-3">
-                          <p className="font-bold">Great!</p>
-                          <p>
-                            {user.role === 'client'
-                              ? `${other.firstName} ${other.lastName} will be with you soon!`
-                              : `${other.firstName} ${other.lastName} is waiting for you!`}
-                          </p>
-                          <p className="text-gray-600">
-                            <span className="font-bold">Order Name:</span> {o.offerName}
-                          </p>
-                          <div className="flex space-x-4">
-                            {user.role === 'freelancer' && (
-                              <button onClick={() => markDone(o.id)}
-                                      className="btn btn-primary w-full">
-                                Order done!
-                              </button>
-                            )}
-                            <a href="https://wa.me/79637268181"
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               className="btn btn-secondary w-full">
-                              Need Support?
-                            </a>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  {/* Odd‐indexed orders */}
-                  <div className="space-y-4">
-                    {colB.map(o => {
-                      const other = user.role === 'client' ? o.freelancer : o.client;
-                      return (
-                        <div key={o.id}
-                             className="bg-white rounded-lg p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)] space-y-3">
-                          <p className="font-bold">Great!</p>
-                          <p>
-                            {user.role === 'client'
-                              ? `${other.firstName} ${other.lastName} will be with you soon!`
-                              : `${other.firstName} ${other.lastName} is waiting for you!`}
-                          </p>
-                          <p className="text-gray-600">
-                            <span className="font-bold">Order Name:</span> {o.offerName}
-                          </p>
-                          <div className="flex space-x-4">
-                            {user.role === 'freelancer' && (
-                              <button onClick={() => markDone(o.id)}
-                                      className="btn btn-primary w-full">
-                                Order done!
-                              </button>
-                            )}
-                            <a href="https://wa.me/79637268181"
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               className="btn btn-secondary w-full">
-                              Need Support?
-                            </a>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
+      <section>
+        <h2 className="font-semibold mb-4">Мои заказы</h2>
+        {inProgress.length === 0 ? (
+          <div className="py-3 text-gray-500 italic">
+            Заказов в процессе выполнения нет
+          </div>
+        ) : (
+          (() => {
+            // split into two columns
+            const colA = inProgress.filter((_, i) => i % 2 === 0);
+            const colB = inProgress.filter((_, i) => i % 2 === 1);
+            return (
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 items-start">
+                {/* column 1: the big OK icon */}
+                <div>
+                  <img
+                    src="public/images/Ok-sign.png"
+                    alt="OK"
+                    className="h-70 w-70 my-10"
+                  />
                 </div>
-              );
-            })()
-          )}
-        </section>
+        
+                {/* column 2: even‐indexed orders */}
+                <div className="space-y-4">
+                  {colA.map(o => (
+                    <OrderCard
+                      key={o.id}
+                      o={o}
+                      user={user}
+                      markDone={markDone}
+                    />
+                  ))}
+                </div>
+        
+                {/* column 3: odd‐indexed orders */}
+                <div className="space-y-4">
+                  {colB.map(o => (
+                    <OrderCard
+                      key={o.id}
+                      o={o}
+                      user={user}
+                      markDone={markDone}
+                    />
+                  ))}
+                </div>
+              </div>
+            );
+          })()
+        )}
+      </section>
+
 
         {/* Previous Orders */}
         <PreviousOrders
@@ -229,6 +187,7 @@ export default function MyOrdersPage() {
         />
 
         {/* Reviews (for freelancers) */}
+        <h2 className="font-semibold mb-4">Отзывы</h2>
         {user.role === 'freelancer' && !loadingReviews && (
           <ReviewsSection reviews={reviews} />
         )}

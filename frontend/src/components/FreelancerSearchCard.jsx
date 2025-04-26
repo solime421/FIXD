@@ -61,7 +61,7 @@ export default function FreelancerSearchCard({
             <span>{rating.toFixed(1)}</span>
           </div>
           <span className="whitespace-nowrap text-sm text-[#ACACAC]">
-            Average Order Amount: ${depositAmount}
+            Средняя сумма заказа: ${depositAmount}
           </span>
         </div>
       </div>

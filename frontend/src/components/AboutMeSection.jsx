@@ -76,38 +76,38 @@ export default function AboutMeSection({ onUpdate }) {
     }
   };
 
-  if (loading) return <p>Loading about-me…</p>;
+  if (loading) return <p>Загрузка раздела "О себе"…</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
     <div className="bg-white rounded-lg p-6 shadow space-y-4">
-      <h2 className="text-xl font-semibold">About me</h2>
+      <h2 className="text-xl font-semibold">О себе</h2>
       <div>
-        <h4 className="text-gray-400 text-sm">Short Description:</h4>
+        <h4 className="text-gray-400 text-sm">Краткое описание:</h4>
         <p className="mt-1 text-gray-700 whitespace-pre-line">{details.aboutMeSmall}</p>
       </div>
       <div>
-        <h4 className="text-gray-400 text-sm">From:</h4>
+        <h4 className="text-gray-400 text-sm">Из:</h4>
         <p className="mt-1 text-gray-700">{details.countryOfOrigin}</p>
       </div>
       <div>
-        <h4 className="text-gray-400 text-sm">About me:</h4>
+        <h4 className="text-gray-400 text-sm">О себе:</h4>
         <p className="mt-1 text-gray-700 whitespace-pre-line">{details.aboutMeDetailed}</p>
       </div>
       <button
         onClick={() => setShowModal(true)}
         className="btn btn-primary w-full"
       >
-        Edit About Me Section
+        Редактировать раздел "О себе"
       </button>
 
       {/* Edit Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-lg space-y-4">
-            <h3 className="text-lg font-semibold">Edit About Me</h3>
+            <h3 className="text-lg font-semibold">Редактировать "О себе"</h3>
             <div className="space-y-2">
-              <label className="block text-gray-600">Short Description</label>
+              <label className="block text-gray-600">Краткое описание</label>
               <InputField
                 type="text"
                 name="aboutMeSmall"
@@ -120,7 +120,7 @@ export default function AboutMeSection({ onUpdate }) {
               </div>
             </div>
             <div className="space-y-2">
-              <label className="block text-gray-600">Country of Origin</label>
+              <label className="block text-gray-600">Страна происхождения</label>
               <InputField
                 type="text"
                 name="countryOfOrigin"
@@ -129,7 +129,7 @@ export default function AboutMeSection({ onUpdate }) {
               />
             </div>
             <div className="space-y-2">
-              <label className="block text-gray-600">Detailed About Me</label>
+              <label className="block text-gray-600">Подробная информация</label>
               <textarea
                 name="aboutMeDetailed"
                 value={form.aboutMeDetailed}
@@ -147,14 +147,14 @@ export default function AboutMeSection({ onUpdate }) {
                 className="btn btn-secondary"
                 disabled={saving}
               >
-                Cancel
+                Отменить
               </button>
               <button
                 onClick={handleSave}
                 className="btn btn-primary"
                 disabled={saving}
               >
-                {saving ? 'Saving…' : 'Save'}
+                {saving ? 'Сохранение…' : 'Сохранить'}
               </button>
             </div>
           </div>

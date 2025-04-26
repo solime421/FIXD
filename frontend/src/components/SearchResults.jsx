@@ -4,7 +4,7 @@ import FreelancerSearchCard from './FreelancerSearchCard';
 
 export default function SearchResults({ items }) {
   if (!items.length) {
-    return <p className="text-center text-gray-500">No freelancers found.</p>;
+    return <p className="text-center text-gray-500">Фрилансеры не найдены.</p>;
   }
 
   return (

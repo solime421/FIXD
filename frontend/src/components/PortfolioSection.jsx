@@ -111,12 +111,12 @@ export default function PortfolioSection({ onEdit, onAdd }) {
       />
 
       {/* Loading / error states */}
-      {loading && <p>Loading images…</p>}
+      {loading && <p>Загрузка изображений…</p>}
       {error   && <p className="text-red-500">{error}</p>}
 
       {/* Portfolio display */}
       <div className="bg-white rounded-lg p-6 shadow">
-        <h2 className="font-semibold mb-6">Pictures ({images.length}/9)</h2>
+        <h2 className="font-semibold mb-6">Фотографии ({images.length}/9)</h2>
         <div className="grid grid-cols-3 gap-2 mb-4">
           {images.map(img => (
             <img
@@ -127,22 +127,22 @@ export default function PortfolioSection({ onEdit, onAdd }) {
             />
           ))}
           {images.length === 0 && (
-            <p className="col-span-3 text-gray-500">No pictures yet.</p>
+            <p className="col-span-3 text-gray-500">Пока нет фотографий.</p>
           )}
         </div>
-        <div className="flex space-x-4">
+        <div className="2xl:flex space-x-4 space-y-4 2xl:space-y-0">
           <button
-            className="btn btn-secondary flex-1"
+            className="btn btn-secondary 2xl:flex-1 w-full"
             onClick={() => setShowEditModal(true)}
           >
-            Edit Pictures
+            Редактировать фотографии
           </button>
           <button
-            className={`btn btn-primary flex-1 ${(!canAddMore || uploading) && 'opacity-50 cursor-not-allowed'}`}
+            className={`btn btn-primary 2xl:flex-1 w-full ${(!canAddMore || uploading) && 'opacity-50 cursor-not-allowed'}`}
             onClick={() => canAddMore && !uploading && fileInputRef.current.click()}
             disabled={!canAddMore || uploading}
           >
-            {uploading ? 'Uploading…' : canAddMore ? 'Add Pictures' : 'Limit reached'}
+            {uploading ? 'Загрузка…' : canAddMore ? 'Добавить фотографии' : 'Достигнут лимит'}
           </button>
         </div>
       </div>
@@ -151,7 +151,7 @@ export default function PortfolioSection({ onEdit, onAdd }) {
       {showEditModal && (
         <div className="fixed inset-0  bg-black/20 backdrop-blur-sm  flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md space-y-4">
-            <h3 className="text-lg font-semibold">Remove Pictures</h3>
+            <h3 className="text-lg font-semibold">Удалить фотографии</h3>
             <div className="grid grid-cols-3 gap-2">
               {images.map(img => (
                 <div key={img.id} className="relative">
@@ -175,7 +175,7 @@ export default function PortfolioSection({ onEdit, onAdd }) {
                 onClick={() => setShowEditModal(false)}
                 className="btn btn-secondary"
               >
-                Done
+                Готово
               </button>
             </div>
           </div>

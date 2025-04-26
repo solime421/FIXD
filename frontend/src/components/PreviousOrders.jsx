@@ -11,9 +11,9 @@ export default function PreviousOrders({ orders, onLeaveReview }) {
 
   return (
     <section>
-      <h2 className="text-2xl font-semibold mb-4">Previous Orders</h2>
+      <h2 className="font-semibold mb-4">Предыдущие заказы</h2>
       {orders.length === 0 ? (
-        <p className="text-gray-500 py-3">No previous orders.</p>
+        <p className="text-gray-500 py-3">Нет предыдущих заказов.</p>
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -25,9 +25,9 @@ export default function PreviousOrders({ orders, onLeaveReview }) {
                   className="bg-white rounded-lg p-5 shadow-[0_0_4px_rgba(0,0,0,0.2)] space-y-3"
                 >
                   <div className="space-y-1">
-                    <p className="text-gray-400 text-sm">Date</p>
+                    <p className="text-gray-400 text-sm">Дата</p>
                     <p className="font-medium">
-                      {new Date(o.createdAt).toLocaleDateString('en-GB', {
+                      {new Date(o.createdAt).toLocaleString('ru', {
                         day:   'numeric',
                         month: 'long',
                         year:  'numeric'
@@ -35,12 +35,12 @@ export default function PreviousOrders({ orders, onLeaveReview }) {
                     </p>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-gray-400 text-sm">Offer</p>
+                    <p className="text-gray-400 text-sm">Оффер</p>
                     <p>{o.offerName}</p>
                   </div>
                   <div className="space-y-1">
                     <p className="text-gray-400 text-sm">
-                      {user.role === 'client' ? 'Specialist:' : 'Client:'}
+                      {user.role === 'client' ? 'Специалист:' : 'Клиент:'}
                     </p>
                     <p>{other.firstName} {other.lastName}</p>
                   </div>
@@ -49,14 +49,14 @@ export default function PreviousOrders({ orders, onLeaveReview }) {
                       onClick={() => navigate(`/chats/${o.id}`)}
                       className="btn btn-secondary w-full"
                     >
-                      Send a message
+                      Отправить сообщение
                     </button>
                     {user.role === 'client' && (
                       <button
                         onClick={() => onLeaveReview(o)}
                         className="btn btn-primary w-full"
                       >
-                        Leave a review
+                        Оставить отзыв
                       </button>
                     )}
                   </div>
@@ -70,7 +70,7 @@ export default function PreviousOrders({ orders, onLeaveReview }) {
               <a
                 onClick={() => setCount(c => c + 6)}
               >
-                Load More
+                Загрузить ещё
               </a>
             </div>
           )}

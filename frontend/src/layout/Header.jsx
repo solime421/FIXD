@@ -72,7 +72,7 @@ export default function Header() {
           className="text-xl font-semibold text-[var(--color-heading)]
                      [font-family:var(--font-heading)] hover:underline"
         >
-          My Orders
+          Мои заказы
         </Link>
 
         <Link to="/personalProfile">

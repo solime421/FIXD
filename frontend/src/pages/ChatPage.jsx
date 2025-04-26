@@ -290,7 +290,7 @@ useEffect(() => {
                   onClick={() => setShowOfferModal(true)}
                   className="btn btn-primary h-fit"
                 >
-                  <h3>Send Offer</h3>
+                  <h3>Отправить оффер</h3>
                 </button>
               )}
             </header>
@@ -320,7 +320,7 @@ useEffect(() => {
             <div className="p-2 mb-1 flex items-center space-x-2 rounded-lg shadow-[0_0_4px_rgba(0,0,0,0.2)]">
               <input
                 className="flex-1 overflow-y-auto space-y-3 px-4 py-2 focus:outline-none"
-                placeholder="Type a message…"
+                placeholder="Напишите сообщение…"
                 value={newMessage}
                 onChange={e => setNewMessage(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && sendMessage()}
@@ -336,7 +336,7 @@ useEffect(() => {
           </>
         ) : (
           <div className="flex-1 flex items-center justify-center text-gray-500">
-            Select a chat to start messaging
+            Выберите чат, чтобы начать переписку
           </div>
         )}
       </section>
@@ -345,13 +345,13 @@ useEffect(() => {
       {showOfferModal && (
         <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="gradient rounded-lg p-6 w-full max-w-sm space-y-4">
-            <h3 className="text-lg font-semibold">Write offer name:</h3>
+            <h3 className="text-lg font-semibold">Введите название оффера:</h3>
             <InputField
               maxLength={100}
               rows={3}
               value={offerTitle}
               onChange={e => setOfferTitle(e.target.value)}
-              placeholder="Write…"
+              placeholder="Напишите…"
             />
             <div className="flex justify-end space-x-3">
               <button
@@ -359,14 +359,14 @@ useEffect(() => {
                 className="btn btn-secondary"
                 disabled={sendingOffer}
               >
-                Cancel
+                Отменить
               </button>
               <button
                 onClick={sendOffer}
                 className="btn btn-primary"
                 disabled={sendingOffer || !offerTitle.trim()}
               >
-                {sendingOffer ? 'Sending…' : 'Send'}
+                {sendingOffer ? 'Отправляется…' : 'Отправить'}
               </button>
             </div>
           </div>
@@ -383,7 +383,7 @@ useEffect(() => {
                 onClick={handleClientAccept}
                 className="btn btn-primary w-full"
               >
-                Accept
+                Принять
               </button>
                 <button
                   onClick={async () => {
@@ -396,7 +396,7 @@ useEffect(() => {
                   }}
                   className="w-full btn btn-secondary"
                 >
-                  Cancel
+                  Отменить
                 </button>
             </div>
           </div>

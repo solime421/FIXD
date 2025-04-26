@@ -43,7 +43,7 @@ export default function LocationInput({ value = '', onPlaceChange }) {
         className="w-full border rounded px-3 py-2"
         value={input}
         onChange={e => setInput(e.target.value)}
-        placeholder="Start typing address…"
+        placeholder="Начните вводить адрес…"
       />
       {results.length > 0 && (
         <ul className="absolute z-10 bg-white border rounded w-full mt-1 max-h-48 overflow-auto">

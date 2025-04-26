@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function LocationSection({ address, lat, lng }) {
   if (!address || lat == null || lng == null)  {
-    return <p className="text-gray-600 italic mb-3">No locations set yet.</p>;
+    return <p className="text-gray-600 italic mb-3">Локация ещё не указана.</p>;
   }
 
   // set a small bbox around the point for the embed

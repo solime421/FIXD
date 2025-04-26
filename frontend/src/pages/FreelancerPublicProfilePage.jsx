@@ -116,7 +116,7 @@ export default function PublicProfilePage() {
 
           {/* Short bio */}
           <h3 className="font-semibold py-2">
-            {aboutMeSmall || 'No description provided.'}
+            {aboutMeSmall || 'Описание не предоставлено.'}
           </h3>
 
           {/* Portfolio slider */}
@@ -149,29 +149,29 @@ export default function PublicProfilePage() {
                 </div>
               </>
             ) : (
-              <div className="text-gray-500 italic">No portfolio images.</div>
+              <div className="text-gray-500 italic">Нет изображений в портфолио.</div>
             )}
           </div>
 
           {/* Detailed about */}
           <div className="rounded-lg bg-white p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)]">
             <h2 className="font-semibold text-[#3A001E] mb-5">
-              About {firstName}
+              О {firstName}
             </h2>
             <div className="space-y-3">
               <div>
-                <span className="block text-gray-400">From:</span>
+                <span className="block text-gray-400">Из:</span>
                 <span>{countryOfOrigin || '—'}</span>
               </div>
               <div>
-                <span className="block text-gray-400">Member since:</span>
+                <span className="block text-gray-400">На платформе с:</span>
                 <span>
-                  {memberSince
-                    ? new Date(memberSince).toLocaleString('default', {
-                        month: 'long',
-                        year: 'numeric',
-                      })
-                    : '—'}
+                {memberSince
+                  ? new Date(memberSince).toLocaleString('ru', {
+                      month: 'long',
+                      year: 'numeric',
+                    })
+                  : '—'}
                 </span>
               </div>
             </div>
@@ -183,7 +183,7 @@ export default function PublicProfilePage() {
 
           {/* Location */}
           <div>
-            <h2 className="font-semibold mb-5">Location</h2>
+            <h2 className="font-semibold mb-5">Местоположение</h2>
             <LocationSection
               address={profile.locationAddress}
               lat={profile.locationLat}
@@ -192,6 +192,7 @@ export default function PublicProfilePage() {
           </div>
 
           {/* Reviews */}
+          <h2 className="font-semibold mb-5">Отзывы</h2>
           <ReviewsSection reviews={profile.reviews} />
         </div>
 

@@ -99,9 +99,9 @@ export default function SpecialtiesSection({ onEdit, onAdd }) {
       {/* Display card */}
       <div className="bg-white rounded-lg p-6 shadow">
         <h2 className="text-xl font-semibold mb-4">
-          Specialties ({specialties.length}/5)
+           Специализации ({specialties.length}/5)
         </h2>
-        {loading && <p>Loading…</p>}
+        {loading && <p>Загрузка…</p>}
         {error   && <p className="text-red-500">{error}</p>}
 
         <div className="space-y-2 mb-4">
@@ -112,23 +112,23 @@ export default function SpecialtiesSection({ onEdit, onAdd }) {
               </div>
             ))
           ) : (
-            <p className="text-gray-500">No specialties yet.</p>
+            <p className="text-gray-500">Пока нет специализаций.</p>
           )}
         </div>
 
-        <div className="flex space-x-4">
+        <div className="2xl:flex space-x-4 space-y-4 2xl:space-y-0">
           <button
-            className="btn btn-secondary flex-1"
+            className="btn btn-secondary 2xl:flex-1 w-full"
             onClick={() => setShowEditModal(true)}
           >
-            Edit Specialties
+            Редактировать специализации
           </button>
           <button
-            className={`btn btn-primary flex-1 ${(!canAddMore || saving) && 'opacity-50 cursor-not-allowed'}`}
+            className={`btn btn-primary 2xl:flex-1 w-full ${(!canAddMore || saving) && 'opacity-50 cursor-not-allowed'}`}
             onClick={() => canAddMore && setShowAddModal(true)}
             disabled={!canAddMore || saving}
           >
-            {canAddMore ? 'Add Specialties' : 'Limit reached'}
+            {canAddMore ? 'Добавить специализации' : 'Достигнут лимит'}
           </button>
         </div>
       </div>
@@ -137,7 +137,7 @@ export default function SpecialtiesSection({ onEdit, onAdd }) {
       {showEditModal && (
         <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md space-y-4">
-            <h3 className="text-lg font-semibold">Remove Specialties</h3>
+            <h3 className="text-lg font-semibold">Удалить специализации</h3>
             <div className="space-y-2">
               {specialties.map(s => (
                 <div key={s.id} className="flex justify-between items-center">
@@ -157,7 +157,7 @@ export default function SpecialtiesSection({ onEdit, onAdd }) {
                 onClick={() => setShowEditModal(false)}
                 className="btn btn-secondary"
               >
-                Done
+                Готово
               </button>
             </div>
           </div>

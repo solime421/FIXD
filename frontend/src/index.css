@@ -27,7 +27,7 @@
     margin-bottom: 1rem;
     line-height: 60px;
     /* responsive font‐sizes */
-    @apply lg:text-5xl md:text-5xl sm:text-4xl text-4xl;
+    @apply lg:text-5xl md:text-4xl sm:text-4xl text-3xl;
   }
 }
 

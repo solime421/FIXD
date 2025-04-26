@@ -31,7 +31,7 @@ export default function Login() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[url('/images/FIXDBackround.png')] bg-no-repeat bg-center bg-[length:100%_auto]">
       <div className="w-[350px] p-[30px] rounded-[15px] space-y-[30px] shadow-[0_0_4px_rgba(0,0,0,0.2)] gradient">
-        <h2 className="font-semibold">Sign In</h2>
+        <h2 className="font-semibold">Вход</h2>
         {error && <p className="text-red-500 font-bold">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-[40px]">
           <InputField
@@ -45,20 +45,20 @@ export default function Login() {
           <InputField
             name="password"
             type="password"
-            placeholder="Password"
+            placeholder="Пароль"
             value={form.password}
             onChange={handleChange}
             required
           />
           <button type="submit" className="btn btn-primary w-full">
-            Sign In
+            Войти
           </button>
         </form>
       </div>
       <p className="mt-4 text-sm text-black">
-        Don’t have an account?{' '}
+        Нет аккаунта?{' '}
         <Link to="/register" className="font-bold hover:underline">
-          Register
+          Зарегистрируйтесь
         </Link>
       </p>
     </div>

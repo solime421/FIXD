@@ -7,7 +7,7 @@ export default function ProfileSidebar({
   canMessage = false,
   urgentServiceEnabled = false,
   phone,
-  onStartChat,           // new prop to kick off the chat
+  onStartChat,
 }) {
 
   // If no specialties & no actions, render nothing
@@ -17,7 +17,7 @@ export default function ProfileSidebar({
 
   return (
     <aside className="top-[150px] space-y-6 sticky h-fit">
-      <div className="gradient w-1/2 mx-auto rounded-lg p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)]">
+      <div className="gradient md:w-2/3 w-1/2 mx-auto rounded-lg p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)]">
         <div className="grid grid-cols-2 gap-4 items-start mb-6">
 
           {/* Left column: icon */}
@@ -33,7 +33,7 @@ export default function ProfileSidebar({
           <div className="space-y-4">
             <div className="justify-self-end text-right">
               <h3 className="text-gray-400 text-sm capitalize mb-1 font-semibold">
-                Specialises:
+               Специализируется:
               </h3>
               <ul className="list-none space-y-1">
                 {specialties.length > 0 
@@ -50,7 +50,7 @@ export default function ProfileSidebar({
         </div>
         <div className='pb-3'>
           <h3 className="capitalize mb-1 flex justify-between font-semibold">
-            <span className='text-gray-400'>Average Order Amount:</span> ${depositAmount}
+            <span className='text-gray-400'>Средняя сумма заказа:</span> ₽{depositAmount}
           </h3>
         </div>
 
@@ -60,20 +60,20 @@ export default function ProfileSidebar({
             onClick={onStartChat}
             className="btn btn-primary w-full"
           >
-            Send a message
+            Отправить сообщение
           </button>
         )}
       </div>
 
       {/* Emergency card: same width as main card */}
       {urgentServiceEnabled && canMessage && (
-        <div className="w-1/2 mx-auto rounded-lg gradient p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)]">
-          <h3 className="text-gray-400 font-semibold mb-2">Emergency Available!</h3>
+        <div className="md:w-2/3 w-1/2 mx-auto rounded-lg gradient p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)]">
+          <h3 className="text-gray-400 font-semibold mb-2">Аварийная помощь доступна!</h3>
           <a
             href={`tel:${phone}`}
             className="btn btn-secondary w-full text-center"
           >
-            Call
+            Позвонить
           </a>
         </div>
       )}

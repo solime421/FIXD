@@ -7,7 +7,7 @@ export default function SearchBlock(props) {
         value={props.value}
         onChange={props.onChange}
         type="text"
-        placeholder={props.placeholder || "Type..."}
+        placeholder={props.placeholder || "Введите текст..."}
         className="
           w-full bg-white rounded-[5px] px-4 py-3 shadow-[0_0_4px_rgba(0,0,0,0.2)] placeholder-[#B3B3B3] text-base outline-none focus:ring-0"
           
@@ -18,7 +18,7 @@ export default function SearchBlock(props) {
         className="btn btn-primary w-[200px]"
         type="button"
       >
-        Search
+        Поиск
       </button>
     </div>
   );

@@ -14,29 +14,28 @@ export default function Footer() {
         {/* Col 2: For clients */}
         <div className='mt-[100px] mb-[30px]'>
           <ul className="space-y-4">
-            <li className="font-bold">For clients</li>
-            <li><Link to="/help">How to use?</Link></li>
-            <li><Link to="/billing">Billing info</Link></li>
-            <li><Link to="/pricing">Pricing</Link></li>
-            <li><Link to="/urgent-fix">Urgent Fix</Link></li>
+            <li className="font-bold">Для клиентов</li>
+            <li><Link to="/help">Как пользоваться?</Link></li>
+            <li><Link to="/pricing">Цены</Link></li>
+            <li><Link to="/urgent-fix">Срочный ремонт</Link></li>
           </ul>
         </div>
 
         {/* Col 3: For freelancers */}
         <div className='mt-[100px] mb-[30px]'>
           <ul className="space-y-4">
-            <li className="font-bold">For freelancers</li>
-            <li><Link to="/urgent-fix">Urgent Fix</Link></li>
-            <li><Link to="/build-profile">Build Your Profile</Link></li>
+            <li className="font-bold">Для фрилансеров</li>
+            <li><Link to="/urgent-fix">Срочный ремонт</Link></li>
+            <li><Link to="/build-profile">Создать профиль</Link></li>
           </ul>
         </div>
 
         {/* Col 4: Our company */}
         <div className='mt-[100px] mb-[30px]'>
           <ul className="space-y-4">
-            <li className="font-bold">Our company</li>
-            <li><Link to="/about">About us</Link></li>
-            <li><Link to="/support">Help &amp; support</Link></li>
+            <li className="font-bold">Наша компания</li>
+            <li><Link to="/about">О нас</Link></li>
+            <li><Link to="/support">Помощь и поддержка</Link></li>
           </ul>
         </div>
 
@@ -48,7 +47,7 @@ export default function Footer() {
             rel="noopener noreferrer"
             className="btn btn-secondary w-full text-center block"
           >
-            Need support?
+            Нужна поддержка?
           </a>
         </div>
       </div>
