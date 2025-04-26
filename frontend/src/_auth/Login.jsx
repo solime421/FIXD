@@ -9,11 +9,10 @@ export default function Login() {
   const [error, setError]   = useState('')
   const navigate            = useNavigate()
 
-  /* if already logged in, send them on to /home
+  // if already logged in, send them on to /home
   if (isAuthenticated) {
     return <Navigate to="/home" replace />
   }
-  */
 
   const handleChange = e =>
     setForm(f => ({ ...f, [e.target.name]: e.target.value }))
