@@ -110,7 +110,7 @@ export default function FreelancerPersonalPage() {
       {/* Average Order Amount Card */}
       <div className="bg-white rounded-lg space-y-4 p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)] ">
         <h2 className="text-xl font-semibold mb-4">Средняя сумма заказа:</h2>
-        <p className="mb-4">${deposit.toFixed(2)}</p>
+        <p className="mb-4">₽{deposit.toFixed(2)}</p>
         <button
           className="btn btn-primary w-full"
           onClick={() => setShowDepositModal(true)}

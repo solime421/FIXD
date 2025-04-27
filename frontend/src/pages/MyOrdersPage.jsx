@@ -187,9 +187,11 @@ export default function MyOrdersPage() {
         />
 
         {/* Reviews (for freelancers) */}
-        <h2 className="font-semibold mb-4">Отзывы</h2>
         {user.role === 'freelancer' && !loadingReviews && (
-          <ReviewsSection reviews={reviews} />
+          <>
+            <h2 className="font-semibold mb-4">Отзывы</h2>
+            <ReviewsSection reviews={reviews} />
+          </>
         )}
       </div>
 

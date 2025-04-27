@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import LocationSection from '../components/LocationSection.jsx';
 import LocationInput from '../components/LocationInput.jsx';
@@ -18,10 +17,8 @@ import Email from '../../public/icons/Email.svg'
 import AboutMe from '../../public/icons/About-me.svg'
 import PersonalData from '../../public/icons/PersonalData.svg'
 import ContactUs from '../../public/icons/Contact-us.svg'
-import FAQ from '../../public/icons/FAQ.svg'
 import Location from '../../public/icons/Location.svg'
 import LogoutIcon from '../../public/icons/Logout.svg'
-import MyOrders from '../../public/icons/My-Orders.svg'
 import Pictures from '../../public/icons/Pictures.svg'
 import Specialities from '../../public/icons/Specialities.svg'
 import UrgentServices from '../../public/icons/Urgent-services.svg'

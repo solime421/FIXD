@@ -168,12 +168,12 @@ export default function SpecialtiesSection({ onEdit, onAdd }) {
       {showAddModal && (
         <div className="fixed inset-0  bg-black/20 backdrop-blur-sm  flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-sm space-y-4">
-            <h3 className="text-lg font-semibold">Add Specialty</h3>
+            <h3 className="text-lg font-semibold">Добавить специализацию</h3>
             <input
               type="text"
               value={newSpec}
               onChange={e => setNewSpec(e.target.value)}
-              placeholder="Enter specialty"
+              placeholder="Введите специализацию"
               className="w-full border rounded px-3 py-2"
             />
             <div className="flex space-x-4">
@@ -182,13 +182,13 @@ export default function SpecialtiesSection({ onEdit, onAdd }) {
                 disabled={!newSpec.trim() || saving}
                 className="btn btn-primary flex-1"
               >
-                {saving ? 'Saving…' : 'Save'}
+                {saving ? 'Сохранение…' : 'Сохранить'}
               </button>
               <button
                 onClick={() => setShowAddModal(false)}
                 className="btn btn-secondary flex-1"
               >
-                Cancel
+                Отменить
               </button>
             </div>
           </div>

@@ -5,7 +5,7 @@ export default function ChatsScroll({ chats = [], selectedChat, onSelect}) {
   const { user } = useAuth();
 
   return (
-    <aside className="col-span-1 rounded-lg shadow-[0_0_4px_rgba(0,0,0,0.2)] overflow-y-auto space-y-3 px-4 mx-3 my-4">
+    <aside className="col-span-1 rounded-lg shadow-[0_0_4px_rgba(0,0,0,0.2)] overflow-y-auto space-y-3 px-4 mr-3 ml-4 my-4">
       <div className="p-4 flex justify-between items-center">
         <h2 className="font-bold">Чаты</h2>
       </div>

@@ -91,7 +91,7 @@ export default function SearchPage() {
             <InputField
                 type="number"
                 min={0}
-                placeholder="Мин депозит"
+                placeholder="Мин стоимость"
                 value={minDeposit}
                 onKeyDown={e => {
                   // block typing the minus key
@@ -114,7 +114,7 @@ export default function SearchPage() {
             <InputField
               type="number"
               min={0}
-              placeholder="Макс депозит"
+              placeholder="Макс стоимость"
               value={maxDeposit}
               onKeyDown={e => {
                 if (e.key === '-') e.preventDefault();
