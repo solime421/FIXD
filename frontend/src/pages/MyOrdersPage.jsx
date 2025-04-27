@@ -65,7 +65,7 @@ export default function MyOrdersPage() {
     fetchReviews();
   }, [user.role]);
 
-  if (loadingOrders) return <p className="p-8">Loading orders…</p>;
+  if (loadingOrders) return <p className="p-8">Загрузка заказов…</p>;
   if (error)         return <p className="p-8 text-red-500">{error}</p>;
 
   const inProgress = orders.filter(o => !o.status);
@@ -199,9 +199,9 @@ export default function MyOrdersPage() {
       {showReviewModal && orderToReview && (
         <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md space-y-4">
-            <h3 className="text-lg font-semibold">Leave a Review</h3>
+            <h3 className="text-lg font-semibold">Оставить отзыв</h3>
             <div className="space-y-2">
-              <label className="block text-gray-600">Rating</label>
+              <label className="block text-gray-600">Оценка</label>
               <select
                 value={reviewForm.rating}
                 onChange={e => setReviewForm(f => ({ ...f, rating: Number(e.target.value) }))}
@@ -215,7 +215,7 @@ export default function MyOrdersPage() {
               </select>
             </div>
             <div className="space-y-2">
-              <label className="block text-gray-600">Comment</label>
+              <label className="block text-gray-600">Комментарий</label>
               <textarea
                 rows={4}
                 value={reviewForm.comment}
@@ -230,14 +230,14 @@ export default function MyOrdersPage() {
                 className="btn btn-secondary w-full"
                 disabled={submittingReview}
               >
-                Cancel
+                Отмена
               </button>
               <button
                 onClick={handleSubmitReview}
                 className="btn btn-primary w-full"
                 disabled={submittingReview || !reviewForm.comment.trim()}
               >
-                {submittingReview ? 'Submitting…' : 'Submit Review'}
+                {submittingReview ? 'Отправка…' : 'Оставить отзыв'}
               </button>
             </div>
           </div>
