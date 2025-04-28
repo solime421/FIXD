@@ -1,72 +1,63 @@
+// src/pages/ChatPage.jsx
 import React, { useState, useEffect, useRef } from 'react';
-import { useAuth } from '../context/AuthContext.jsx';
-import { io } from 'socket.io-client';
-import { Send, DollarSign } from 'lucide-react';
-import { useParams, useNavigate } from 'react-router-dom';
-import ChatsScroll from '../components/ChatsScroll.jsx';
-import InputField from '../components/InputField.jsx';
+import { useAuth }                          from '../context/AuthContext.jsx';
+import { io }                               from 'socket.io-client';
+import { Send, DollarSign }                 from 'lucide-react';
+import { useParams, useNavigate }           from 'react-router-dom';
+import ChatsScroll                          from '../components/ChatsScroll.jsx';
+import InputField                           from '../components/InputField.jsx';
 
 export default function ChatPage() {
-  const { user } = useAuth();   // ← add this
-  const { chatId } = useParams();
-  const navigate = useNavigate();
-  const socketRef = useRef();
+  const { user }        = useAuth();
+  const { chatId }      = useParams();
+  const navigate        = useNavigate();
+  const socketRef       = useRef();
 
-  const [chats, setChats] = useState([]);
+  const [chats, setChats]             = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
+  const [messages, setMessages]       = useState([]);
+  const [newMessage, setNewMessage]   = useState('');
 
-  // offer states
-  const [showOfferModal, setShowOfferModal] = useState(false);
-  const [offerTitle, setOfferTitle] = useState('');
-  const [sendingOffer, setSendingOffer] = useState(false);
-
-  const [incomingOffer, setIncomingOffer] = useState(null);
+  // Offer states
+  const [showOfferModal, setShowOfferModal]   = useState(false);
+  const [offerTitle, setOfferTitle]           = useState('');
+  const [sendingOffer, setSendingOffer]       = useState(false);
+  const [incomingOffer, setIncomingOffer]     = useState(null);
   const [showClientOffer, setShowClientOffer] = useState(false);
 
-  // scroll ref
   const messagesContainerRef = useRef(null);
 
-  // 1) socket connection
+  // 1) Open socket once
   useEffect(() => {
     socketRef.current = io('http://localhost:3000', {
       withCredentials: true,
-      auth: { token: localStorage.getItem('authToken') },
+      auth: { token: localStorage.getItem('authToken') }
     });
     return () => socketRef.current.disconnect();
   }, []);
 
-  // 2) fetch chats + auto‐select from URL
+  // 2) Fetch chats + auto‐select URL, clear unread on initial open
   useEffect(() => {
     fetch('/api/chats', {
-      headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+      headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
     })
       .then(r => r.json())
       .then(data => {
         setChats(data);
-  
         if (chatId) {
           const found = data.find(c => String(c.id) === chatId);
           if (found) {
-            // 1) clear the dot locally
+            // clear badge locally
             setChats(cs =>
-              cs.map(chat =>
-                chat.id === found.id
-                  ? { ...chat, unreadCount: 0 }
-                  : chat
+              cs.map(c =>
+                c.id === found.id ? { ...c, unreadCount: 0 } : c
               )
             );
-  
-            // 2) mark all as read on the server
+            // mark read on server
             fetch(`/api/chats/${found.id}/messages/read`, {
               method: 'POST',
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-              },
+              headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
             }).catch(console.error);
-  
-            // 3) finally select the chat
             setSelectedChat(found);
           }
         }
@@ -74,156 +65,150 @@ export default function ChatPage() {
       .catch(console.error);
   }, [chatId]);
 
-  // 3) join all chat rooms
-useEffect(() => {
-  if (!socketRef.current) return;
-  chats.forEach(c => {
-    socketRef.current.emit('joinRoom', c.id);
-  });
-}, [chats]);
+  // 3) Join all rooms
+  useEffect(() => {
+    if (!socketRef.current) return;
+    chats.forEach(c => socketRef.current.emit('joinRoom', c.id));
+  }, [chats]);
 
-// 4) real-time new messages + new offers
-useEffect(() => {
-  if (!socketRef.current) return;
+  // 4) Handle real‐time newMessage & newOffer
+  useEffect(() => {
+    if (!socketRef.current) return;
 
-  const onNewMessage = async (msg) => {
-    setChats(cs => cs
-      .map(c => {
-        if (c.id === msg.chatId) {
-          const isActive = c.id === selectedChat?.id;
-          return {
-            ...c,
-            unreadCount: isActive ? 0 : (c.unreadCount || 0) + 1,
-          };
+    const onNewMessage = async msg => {
+      setChats(cs => {
+        const idx = cs.findIndex(c => c.id === msg.chatId);
+        if (idx === -1) return cs;
+        // update badges + bump
+        const updated = cs.map(c =>
+          c.id === msg.chatId
+            ? {
+                ...c,
+                unreadCount:
+                  c.id === selectedChat?.id
+                    ? 0
+                    : (c.unreadCount || 0) + 1
+              }
+            : c
+        );
+        const [moved] = updated.splice(idx, 1);
+        return [moved, ...updated];
+      });
+
+      if (selectedChat?.id === msg.chatId) {
+        // append if not duped
+        setMessages(ms => (ms.some(m => m.id === msg.id) ? ms : [...ms, msg]));
+        // mark read on server
+        try {
+          await fetch(`/api/chats/${msg.chatId}/messages/read`, {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
+          });
+        } catch (e) {
+          console.error('Mark read failed', e);
         }
-        return c;
-      })
-      // move that chat to the top
-      .sort((a, b) => a.id === msg.chatId ? -1 : b.id === msg.chatId ? 1 : 0)
-    );
-
-    if (selectedChat?.id === msg.chatId) {
-      setMessages(ms => ms.some(m => m.id === msg.id) ? ms : [...ms, msg]);
-
-      // immediately mark as read on server
-      try {
-        await fetch(`/api/chats/${msg.chatId}/messages/read`, {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
-        });
-      } catch (err) {
-        console.error("Failed to mark as read:", err);
       }
-    }
-  };
+    };
 
-  const onNewOffer = (offer) => {
-    // show popup if client has this chat open
-    if (user.role === 'client' && offer.chatId === selectedChat?.id) {
-      setIncomingOffer(offer);
-      setShowClientOffer(true);
-    }
+    const onNewOffer = offer => {
+      // bump + badge
+      setChats(cs => {
+        const idx = cs.findIndex(c => c.id === offer.chatId);
+        if (idx === -1) return cs;
+        const updated = [...cs];
+        const chat = updated[idx];
+        updated.splice(idx, 1);
+        return [
+          {
+            ...chat,
+            unreadCount:
+              chat.id === selectedChat?.id
+                ? 0
+                : (chat.unreadCount || 0) + 1
+          },
+          ...updated
+        ];
+      });
 
-    // reorder the sidebar
-    setChats(cs => {
-      const idx = cs.findIndex(c => c.id === offer.chatId);
-      if (idx === -1) return cs;
-      return [cs[idx], ...cs.slice(0, idx), ...cs.slice(idx + 1)];
-    });
-  };
+      // show popup if client is in that chat
+      if (user.role === 'client' && offer.chatId === selectedChat?.id) {
+        setIncomingOffer(offer);
+        setShowClientOffer(true);
+      }
+    };
 
-  socketRef.current.on('newMessage', onNewMessage);
-  socketRef.current.on('newOffer',  onNewOffer);
+    socketRef.current.on('newMessage', onNewMessage);
+    socketRef.current.on('newOffer', onNewOffer);
+    return () => {
+      socketRef.current.off('newMessage', onNewMessage);
+      socketRef.current.off('newOffer', onNewOffer);
+    };
+  }, [selectedChat, user.role]);
 
-  return () => {
-    socketRef.current.off('newMessage', onNewMessage);
-    socketRef.current.off('newOffer',  onNewOffer);
-  };
-}, [selectedChat, user.role]);
-
-  // 5) auto‐scroll
+  // 5) Auto‐scroll down
   useEffect(() => {
     const el = messagesContainerRef.current;
     if (el) el.scrollTop = el.scrollHeight;
   }, [messages]);
 
-  // 6) select chat
-   const selectChat = c => {
+  // 6) Selecting a chat clears its badge & navigates
+  const selectChat = c => {
     setChats(cs =>
-      cs.map(chat =>
-        chat.id === c.id
-          ? { ...chat, unreadCount: 0 }
-          : chat
-      )
+      cs.map(x => (x.id === c.id ? { ...x, unreadCount: 0 } : x))
     );
-    // 2) fire “mark as read” in background
+    // mark read in background
     fetch(`/api/chats/${c.id}/messages/read`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
     }).catch(console.error);
-    // 3) actually select & navigate
     setSelectedChat(c);
     navigate(`/chats/${c.id}`);
   };
 
-  // 7) load history & mark read
+  // 7) Load history + check pending offer
   useEffect(() => {
     if (!selectedChat) return;
     const cid = selectedChat.id;
-  
-    // 1) load messages
     fetch(`/api/chats/${cid}/messages`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+      headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
     })
       .then(r => r.json())
       .then(msgs => {
         setMessages(msgs);
-        // 2) mark those messages read
         return fetch(`/api/chats/${cid}/messages/read`, {
           method: 'POST',
-          headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+          headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
         });
       })
-      .then(() => {
-        // 3) now see if there's a pending offer
-        return fetch(`/api/offers/chat/${cid}`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
-        });
-      })
-      .then(r => {
-        if (r.ok) return r.json();
-        if (r.status === 404) return null;          // no pending offer
-        throw new Error("Failed to load pending offer");
-      })
-      .then(offer => {
-        if (offer) {
-          setIncomingOffer(offer);
+      .then(() => fetch(`/api/offers/chat/${cid}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
+      }))
+      .then(r => (r.ok ? r.json() : r.status === 404 ? null : Promise.reject()))
+      .then(ofr => {
+        if (ofr) {
+          setIncomingOffer(ofr);
           setShowClientOffer(true);
         }
       })
       .catch(console.error);
   }, [selectedChat]);
 
-  // 8) send text
+  // 8) Send a text message
   const sendMessage = async () => {
     if (!newMessage.trim() || !selectedChat) return;
     const res = await fetch(`/api/chats/${selectedChat.id}/messages`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+        'Content-Type':  'application/json',
+        Authorization:    `Bearer ${localStorage.getItem('authToken')}`
       },
-      body: JSON.stringify({ message: newMessage.trim() }),
+      body: JSON.stringify({ message: newMessage.trim() })
     });
-    if (!res.ok) {
-      console.error('Send failed:', await res.text());
-      return;
-    }
-    setNewMessage('');
-    // socket will append it
+    if (res.ok) setNewMessage('');
+    else console.error('Send failed:', await res.text());
   };
 
-  // 9) freelancer sends offer
+  // 9) Freelancer sends an offer
   const sendOffer = async () => {
     if (!offerTitle.trim() || !selectedChat) return;
     setSendingOffer(true);
@@ -231,39 +216,37 @@ useEffect(() => {
       const res = await fetch('/api/offers', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+          'Content-Type': `application/json`,
+          Authorization:   `Bearer ${localStorage.getItem('authToken')}`
         },
         body: JSON.stringify({
-          chatId: selectedChat.id,
-          offer_name: offerTitle.trim().slice(0,100),
-        }),
+          chatId:     selectedChat.id,
+          offer_name: offerTitle.trim().slice(0,100)
+        })
       });
       if (!res.ok) throw new Error(await res.text());
       setOfferTitle('');
       setShowOfferModal(false);
-      // spinner until newOffer arrives...
-    } catch (err) {
-      alert(err.message);
+    } catch (e) {
+      alert(e.message);
     } finally {
       setSendingOffer(false);
     }
   };
 
-  // 10) client accepts or cancels
+  // 10) Client accepts an offer
   const handleClientAccept = async () => {
     try {
       const res = await fetch(`/api/offers/${incomingOffer.id}/accept`, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+        headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
       });
       const { orderId } = await res.json();
       navigate(`/orders`);
-    } catch (err) {
-      console.error(err);
+    } catch (e) {
+      console.error(e);
     }
   };
-
 
   return (
     <main className="h-screen grid grid-cols-4 pt-[90px]">
@@ -356,14 +339,14 @@ useEffect(() => {
             <div className="flex justify-end space-x-3">
               <button
                 onClick={() => setShowOfferModal(false)}
-                className="btn btn-secondary"
+                className="btn btn-secondary w-full"
                 disabled={sendingOffer}
               >
                 Отменить
               </button>
               <button
                 onClick={sendOffer}
-                className="btn btn-primary"
+                className="btn btn-primary w-full"
                 disabled={sendingOffer || !offerTitle.trim()}
               >
                 {sendingOffer ? 'Отправляется…' : 'Отправить'}

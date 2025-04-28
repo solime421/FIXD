@@ -1,51 +1,48 @@
+// src/components/Header.jsx
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext.jsx';
-import DefaultAvatar          from '../../public/icons/noUser.svg';
-import messageRecievedIcon    from '../../public/icons/Message-recieved.svg';
-import noMessagesIcon         from '../../public/icons/No-messages.svg';
-import { io }                 from 'socket.io-client';
-import LogoBrown from '../../public/logos/Logo-Brown.svg';
+import { Link }                      from 'react-router-dom';
+import { useAuth }                   from '../context/AuthContext.jsx';
+import DefaultAvatar                 from '../../public/icons/noUser.svg';
+import messageReceivedIcon           from '../../public/icons/Message-recieved.svg';
+import noMessagesIcon                from '../../public/icons/No-messages.svg';
+import { io }                        from 'socket.io-client';
+import LogoBrown                     from '../../public/logos/Logo-Brown.svg';
 
 export default function Header() {
-  const { user } = useAuth();
+  const { user }      = useAuth();
   const [hasUnread, setHasUnread] = useState(false);
-  const socketRef = useRef();
+  const socketRef     = useRef();
 
-  // helper to refresh the unread‐count flag
+  // helper to recompute unread badge
   const refreshUnread = async () => {
     try {
-      const token = localStorage.getItem('authToken');
-      const res = await fetch('/api/chats', {
-        headers: { Authorization: `Bearer ${token}` }
+      const res   = await fetch('/api/chats', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
       });
       if (!res.ok) return;
       const chats = await res.json();
       setHasUnread(chats.some(c => c.unreadCount > 0));
     } catch (err) {
-      console.error('Header refreshUnread failed', err);
+      console.error('Header: failed to refresh unread', err);
     }
   };
 
-  // 1) on mount: fetch initial unread state, open socket
   useEffect(() => {
+    // 1) initial badge
     refreshUnread();
 
+    // 2) open socket
     socketRef.current = io('http://localhost:3000', {
       withCredentials: true,
       auth: { token: localStorage.getItem('authToken') }
     });
 
-    // new message anywhere → mark hasUnread
-    socketRef.current.on('newMessage', () => {
-      setHasUnread(true);
-    });
+    // 3) subscribe
+    socketRef.current.on('newMessage',   () => setHasUnread(true));
+    socketRef.current.on('newOffer',     () => setHasUnread(true));
+    socketRef.current.on('messagesRead', refreshUnread);
 
-    // when any client marks read → re‐fetch
-    socketRef.current.on('messagesRead', () => {
-      refreshUnread();
-    });
-
+    // 4) cleanup
     return () => {
       socketRef.current.disconnect();
     };
@@ -61,7 +58,7 @@ export default function Header() {
       <nav className="flex items-center space-x-[50px]">
         <Link to="/chats">
           <img
-            src={hasUnread ? messageRecievedIcon : noMessagesIcon}
+            src={hasUnread ? messageReceivedIcon : noMessagesIcon}
             alt="Chats"
             className="h-7 w-7"
           />

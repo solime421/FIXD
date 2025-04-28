@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext.jsx';
-import { io } from 'socket.io-client';
-import ChatsScroll from '../components/ChatsScroll.jsx';
+import { useAuth }                 from '../context/AuthContext.jsx';
+import { io }                      from 'socket.io-client';
+import ChatsScroll                 from '../components/ChatsScroll.jsx';
 
-export default function ChatPage() {
+export default function ChatListPage() {
   const { user, logout } = useAuth();
-  const { chatId } = useParams();        // from /chats/:chatId
-  const navigate     = useNavigate();
-  const socketRef    = useRef();
+  const { chatId }       = useParams();
+  const navigate         = useNavigate();
+  const socketRef        = useRef();
 
-  const [chats, setChats]           = useState([]);
+  const [chats, setChats]             = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
 
-  // 1) establish socket connection once
+  // 1) open socket once
   useEffect(() => {
     socketRef.current = io('http://localhost:3000', {
       withCredentials: true,
@@ -22,66 +22,59 @@ export default function ChatPage() {
     return () => socketRef.current.disconnect();
   }, []);
 
-  // 2) load chats and sync with URL
+  // 2) fetch list + auto‐select by URL
   useEffect(() => {
-    async function loadChats() {
+    (async function load() {
       const res  = await fetch('/api/chats', {
-        headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+        headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
       });
       const data = await res.json();
       setChats(data);
-
-      // auto-select if URL has chatId
       if (chatId) {
-        const match = data.find(c => String(c.id) === chatId);
-        if (match) setSelectedChat(match);
+        const found = data.find(c => String(c.id) === chatId);
+        if (found) setSelectedChat(found);
       }
-    }
-    loadChats();
+    })();
   }, [chatId]);
 
-  // 3) when chats list changes, join all those rooms
+  // 3) join all rooms whenever chats list updates
   useEffect(() => {
     if (!socketRef.current) return;
-    chats.forEach(c => {
-      socketRef.current.emit('joinRoom', c.id);
-    });
+    chats.forEach(c => socketRef.current.emit('joinRoom', c.id));
   }, [chats]);
 
-  // 4) listen for every incoming message
+  // 4) handle incoming messages globally
   useEffect(() => {
-    const handleNewMessage = msg => {
+    const onNewMessage = msg => {
       setChats(cs => {
-        // bump the relevant chat up and increment its unreadCount
         const idx = cs.findIndex(c => c.id === msg.chatId);
         if (idx === -1) return cs;
+        // bump & incr unread
         const updated = cs.map(c =>
           c.id === msg.chatId
             ? {
                 ...c,
                 unreadCount:
                   c.id === selectedChat?.id
-                    ? 0 // if currently open, clear its dot
-                    : (c.unreadCount || 0) + 1,
+                    ? 0
+                    : (c.unreadCount || 0) + 1
               }
             : c
         );
-        // move the updated chat to the front
         const [moved] = updated.splice(idx, 1);
         return [moved, ...updated];
       });
     };
 
-    socketRef.current.on('newMessage', handleNewMessage);
+    socketRef.current.on('newMessage', onNewMessage);
     return () => {
-      socketRef.current.off('newMessage', handleNewMessage);
+      socketRef.current.off('newMessage', onNewMessage);
     };
   }, [selectedChat]);
 
-  // 5) when the user picks a chat, clear its dot immediately
+  // 5) selecting a chat clears its dot immediately
   const handleSelect = c => {
     setSelectedChat(c);
-    // locally clear unread
     setChats(cs =>
       cs.map(x =>
         x.id === c.id ? { ...x, unreadCount: 0 } : x
@@ -90,7 +83,7 @@ export default function ChatPage() {
     navigate(`/chats/${c.id}`);
   };
 
-  // 6) keep URL in sync with selection
+  // 6) keep URL ↔ selection in sync
   useEffect(() => {
     if (selectedChat && String(selectedChat.id) !== chatId) {
       navigate(`/chats/${selectedChat.id}`, { replace: false });
