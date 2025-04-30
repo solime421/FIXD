@@ -1,5 +1,5 @@
-// src/components/LocationInput.jsx
 import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 
 export default function LocationInput({ value = '', onPlaceChange }) {
   const [input, setInput] = useState(value);
@@ -11,24 +11,27 @@ export default function LocationInput({ value = '', onPlaceChange }) {
       setResults([]);
       return;
     }
-    // debounce 300ms
+
     const timeout = setTimeout(() => {
-      // cancel previous request
+      // Cancel previous request if any
       if (abortRef.current) abortRef.current.abort();
       const controller = new AbortController();
       abortRef.current = controller;
 
-      fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&limit=5&q=${encodeURIComponent(
-          input
-        )}`,
-        { signal: controller.signal }
-      )
-        .then(res => res.json())
-        .then(data => setResults(data))
-        .catch(err => {
-          if (err.name !== 'AbortError') console.error(err);
-        });
+      axios.get('https://nominatim.openstreetmap.org/search', {
+        params: { format: 'json', limit: 5, q: input },
+        signal: controller.signal
+      })
+      .then(response => {
+        setResults(response.data);
+      })
+      .catch(err => {
+        if (axios.isCancel(err)) {
+          // request was cancelled
+        } else {
+          console.error(err);
+        }
+      });
     }, 300);
 
     return () => {

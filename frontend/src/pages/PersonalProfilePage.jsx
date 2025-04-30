@@ -23,6 +23,12 @@ import Pictures from '../../public/icons/Pictures.svg'
 import Specialities from '../../public/icons/Specialities.svg'
 import UrgentServices from '../../public/icons/Urgent-services.svg'
 
+import {
+  fetchPrivateProfile,
+  updateProfilePicture,
+  updatePersonalData,
+  updateLocationData
+} from '../api/personalProfile';
 
 
 
@@ -46,97 +52,74 @@ export default function PersonalProfilePage() {
 
   // Load user on mount
   useEffect(() => {
-    const controller = new AbortController();
-    const token = localStorage.getItem('authToken');
-    async function fetchProfile() {
+    let cancelled = false;
+    async function load() {
       setLoading(true);
       try {
-        const res = await fetch('/api/privateProfiles/me', {
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token && { Authorization: `Bearer ${token}` }),
-          },
-          signal: controller.signal,
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || res.statusText);
+        const data = await fetchPrivateProfile();
+        if (cancelled) return;
         setProfile(data);
-        // init forms
-        setPersonalForm({
-          firstName: data.firstName,
-          lastName: data.lastName,
-          phone: data.phone,
-        });
-        setLocationForm({
-          address: data.locationAddress,
-          lat: data.locationLat,
-          lng: data.locationLng,
-        });
+        setPersonalForm({ firstName: data.firstName, lastName: data.lastName, phone: data.phone });
+        setLocationForm({ address: data.locationAddress, lat: data.locationLat, lng: data.locationLng });
       } catch (err) {
-        if (err.name !== 'AbortError') setError(err.message);
+        if (!cancelled) setError(err.message);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
-    fetchProfile();
-    return () => controller.abort();
+    load();
+    return () => { cancelled = true; };
   }, []);
 
   // Avatar edit
   const handlePhotoClick = () => fileInputRef.current?.click();
-  const handleFileChange = async (e) => {
-    const file = e.target.files?.[0]; if (!file) return;
-    const formData = new FormData(); 
+  const handleFileChange = async e => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const formData = new FormData();
     formData.append('image', file);
+    setSaving(true);
     try {
-      const token = localStorage.getItem('authToken');
-      const res = await fetch('/api/privateProfiles/profile-picture', {
-        method: 'POST', headers: { ...(token && { Authorization: `Bearer ${token}` }) }, body: formData,
-      });
-      const text = await res.text(); let data;
-      try { data = JSON.parse(text); } catch { throw new Error(text || res.statusText); }
-      if (!res.ok) throw new Error(data.message || res.statusText);
-      setProfile(prev => ({ ...prev, profilePicture: data.profilePicture }));
-      updateUserPic(data.profilePicture);
-    } catch (err) { console.error(err); setError(err.message); }
+      const url = await updateProfilePicture(formData);
+      setProfile(p => ({ ...p, profilePicture: url }));
+      updateUserPic(url);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
   };
 
   // Save personal data
-  const handlePersonalSave = async (e) => {
-    e.preventDefault(); setSaving(true); setError('');
+  const handlePersonalSave = async e => {
+    e.preventDefault();
+    setSaving(true);
     try {
-      const token = localStorage.getItem('authToken');
-      const res = await fetch('/api/privateProfiles/personal-data', {
-        method: 'POST', headers: {
-          'Content-Type': 'application/json', ...(token && { Authorization: `Bearer ${token}` }),
-        }, body: JSON.stringify(personalForm),
-      });
-      const data = await res.json(); if (!res.ok) throw new Error(data.message || res.statusText);
-      setProfile(prev => ({ ...prev, ...data }));
+      const data = await updatePersonalData(personalForm);
+      setProfile(p => ({ ...p, ...data }));
       setShowPersonalModal(false);
-    } catch (err) { console.error(err); setError(err.message); }
-    finally { setSaving(false); }
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
   };
 
   // Save location data
   const handleLocationSave = async () => {
-    setSaving(true); setError('');
+    setSaving(true);
     try {
-      const token = localStorage.getItem('authToken');
-      const res = await fetch('/api/privateProfiles/location', {
-        method: 'POST', headers: {
-          'Content-Type': 'application/json', ...(token && { Authorization: `Bearer ${token}` }),
-        }, body: JSON.stringify(locationForm),
-      });
-      const data = await res.json(); if (!res.ok) throw new Error(data.message || res.statusText);
-      setProfile(prev => ({ ...prev,
-        locationAddress: data.locationAddress,
-        locationLat: data.locationLat,
-        locationLng: data.locationLng,
-      }));
+      const data = await updateLocationData(locationForm);
+      setProfile(p => ({ ...p, locationAddress: data.locationAddress, locationLat: data.locationLat, locationLng: data.locationLng }));
       setShowLocationModal(false);
-    } catch (err) { console.error(err); setError(err.message); }
-    finally { setSaving(false); }
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (loading) return <p className="p-8">Loading…</p>;

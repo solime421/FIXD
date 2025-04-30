@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import SearchResults from '../components/SearchResults.jsx';
 import SearchBlock from '../components/SearchBlock.jsx';
 import InputField from '../components/InputField.jsx';
+import { fetchSearchResults } from '../api/search.js';
 const FilterIcon = '/icons/Filters.svg';
 
 export default function SearchPage() {
@@ -35,16 +36,18 @@ export default function SearchPage() {
     setLoading(true);
     setError('');
 
-    fetch(`/api/search?${ps.toString()}`)
-      .then(async res => {
-        if (!res.ok) {
-          const body = await res.json().catch(() => ({}));
-          throw new Error(body.message || res.statusText);
-        }
-        return res.json();
+    fetchSearchResults({ 
+      search: term,
+      minDeposit: ps.get('minDeposit'),
+      maxDeposit: ps.get('maxDeposit'),
+      urgentOnly: ps.get('urgentOnly') === 'true',
+    })
+      .then(data => {
+        setResults(data); ////Once the search API call finishes and returns its data array, take that array and save it into the component’s results state so the UI can render the new list.
       })
-      .then(data => setResults(data))
-      .catch(err => setError(err.message))
+      .catch(err => {
+        setError(err.message || 'Ошибка загрузки результатов');
+      })
       .finally(() => setLoading(false));
   }, [rawSearch]);
 

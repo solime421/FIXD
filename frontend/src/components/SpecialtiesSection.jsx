@@ -1,4 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import {
+  fetchSpecialties,
+  addSpecialty,
+  deleteSpecialty
+} from '../api/specialties';
 
 export default function SpecialtiesSection({ onEdit, onAdd }) {
   const token = localStorage.getItem('authToken');
@@ -17,27 +22,24 @@ export default function SpecialtiesSection({ onEdit, onAdd }) {
 
   // Fetch specialties on component mount
   useEffect(() => {
-    async function fetchSpecialties() {
+    let cancelled = false;
+    async function load() {
       setLoading(true);
       try {
-        const res = await fetch('/api/privateFreelancerProfiles/specialities', {
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token && { Authorization: `Bearer ${token}` }),
-          },
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || res.statusText);
-        setSpecialties(data);
+        const data = await fetchSpecialties();
+        if (!cancelled) setSpecialties(data);
       } catch (err) {
-        console.error('Failed to load specialties:', err);
-        setError(err.message);
+        if (!cancelled) {
+          console.error('Failed to load specialties:', err);
+          setError(err.message);
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
-    fetchSpecialties();
-  }, [token]);
+    load();
+    return () => { cancelled = true; };
+  }, []);
 
   // Helper: can add more if fewer than 5
   const canAddMore = specialties.length < 5;
@@ -47,17 +49,8 @@ export default function SpecialtiesSection({ onEdit, onAdd }) {
     if (!newSpec.trim()) return;
     setSaving(true);
     try {
-      const res = await fetch('/api/privateFreelancerProfiles/specialities', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
-        body: JSON.stringify({ specialty: newSpec.trim() }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || res.statusText);
-      const updated = [...specialties, data];
+      const added = await addSpecialty(newSpec.trim());
+      const updated = [...specialties, added];
       setSpecialties(updated);
       onAdd?.(updated);
       setNewSpec('');
@@ -71,18 +64,11 @@ export default function SpecialtiesSection({ onEdit, onAdd }) {
   };
 
   // Delete a specialty via DELETE
-  const handleDelete = async (id) => {
+  const handleDelete = async id => {
     if (!window.confirm('Remove this specialty?')) return;
     setDeletingId(id);
     try {
-      const res = await fetch(`/api/privateFreelancerProfiles/specialities/${id}`, {
-        method: 'DELETE',
-        headers: {
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || res.statusText);
+      await deleteSpecialty(id);
       const updated = specialties.filter(s => s.id !== id);
       setSpecialties(updated);
       onEdit?.(updated);

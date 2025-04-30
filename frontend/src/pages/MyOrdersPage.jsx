@@ -5,6 +5,13 @@ import PreviousOrders          from '../components/PreviousOrders.jsx';
 import ReviewsSection          from '../components/ReviewsSection.jsx';
 import OrderCard               from '../components/OrderCard.jsx';
 
+import {
+  fetchOrders,
+  updateOrderStatus,
+  fetchReviews,
+  submitReview
+} from '../api/orders';
+
 export default function MyOrdersPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -26,14 +33,10 @@ export default function MyOrdersPage() {
 
   useEffect(() => {
     // 1) Fetch orders
-    async function fetchOrders() {
+    async function loadOrders() {
       setLoadingOrders(true);
       try {
-        const res = await fetch('/api/orders', {
-          headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || res.statusText);
+        const data = await fetchOrders();
         setOrders(data);
       } catch (err) {
         console.error(err);
@@ -44,15 +47,11 @@ export default function MyOrdersPage() {
     }
 
     // 2) Fetch reviews if freelancer
-    async function fetchReviews() {
+    async function loadReviews() {
       if (user.role !== 'freelancer') return;
       setLoadingReviews(true);
       try {
-        const res = await fetch('/api/reviews', {
-          headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || res.statusText);
+        const data = await fetchReviews();
         setReviews(data);
       } catch (err) {
         console.error(err);
@@ -61,8 +60,8 @@ export default function MyOrdersPage() {
       }
     }
 
-    fetchOrders();
-    fetchReviews();
+    loadOrders();
+    loadReviews();
   }, [user.role]);
 
   if (loadingOrders) return <p className="p-8">Загрузка заказов…</p>;
@@ -73,16 +72,10 @@ export default function MyOrdersPage() {
 
   const markDone = async orderId => {
     try {
-      const res = await fetch(`/api/orders/${orderId}/status`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('authToken')}`
-        },
-        body: JSON.stringify({ status: true })
-      });
-      if (!res.ok) throw new Error(await res.text());
-      setOrders(os => os.map(o => o.id === orderId ? { ...o, status: true } : o));
+      await updateOrderStatus(orderId, true);
+      setOrders(os => os.map(o => (
+        o.id === orderId ? { ...o, status: true } : o
+      )));
     } catch (err) {
       console.error(err);
       alert('Could not mark order done.');
@@ -99,21 +92,12 @@ export default function MyOrdersPage() {
     if (!orderToReview) return;
     setSubmittingReview(true);
     try {
-      const body = {
-        orderId:    orderToReview.id,
+      await submitReview({
+        orderId: orderToReview.id,
         revieweeId: orderToReview.freelancerId,
-        rating:     reviewForm.rating,
-        comment:    reviewForm.comment.trim(),
-      };
-      const res = await fetch('/api/reviews', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization:  `Bearer ${localStorage.getItem('authToken')}`
-        },
-        body: JSON.stringify(body),
+        rating: reviewForm.rating,
+        comment: reviewForm.comment
       });
-      if (!res.ok) throw new Error(await res.text());
       setShowReviewModal(false);
       setOrderToReview(null);
     } catch (err) {

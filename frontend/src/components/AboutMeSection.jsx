@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import InputField from './InputField';
 
+import {
+  fetchAboutMeDetails,
+  updateAboutMe
+} from '../api/personalProfile';
+
 export default function AboutMeSection({ onUpdate }) {
   const token = localStorage.getItem('authToken');
   const [details, setDetails] = useState({
@@ -13,29 +18,25 @@ export default function AboutMeSection({ onUpdate }) {
   const [showModal, setShowModal] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  // Fetch freelancer details on mount
+  // Get freelancer details on mount
   useEffect(() => {
-    async function fetchDetails() {
+    let cancelled = false;
+    async function load() {
       setLoading(true);
       try {
-        const res = await fetch('/api/privateFreelancerProfiles/details', {
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token && { Authorization: `Bearer ${token}` }),
-          },
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || res.statusText);
+        const data = await fetchAboutMeDetails();
+        if (cancelled) return;
         setDetails(data);
+        setForm(data);
       } catch (err) {
-        console.error('Failed to load about-me:', err);
-        setError(err.message);
+        if (!cancelled) setError(err.message);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
-    fetchDetails();
-  }, [token]);
+    load();
+    return () => { cancelled = true; };
+  }, []);
 
   // Handlers for form fields
   const [form, setForm] = useState(details);
@@ -51,26 +52,17 @@ export default function AboutMeSection({ onUpdate }) {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const res = await fetch('/api/privateFreelancerProfiles/about-me', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
-        body: JSON.stringify({
-          aboutMeSmall: form.aboutMeSmall.trim(),
-          aboutMeDetailed: form.aboutMeDetailed.trim(),
-          countryOfOrigin: form.countryOfOrigin.trim(),
-        }),
+      const data = await updateAboutMe({
+        aboutMeSmall: form.aboutMeSmall.trim(),
+        aboutMeDetailed: form.aboutMeDetailed.trim(),
+        countryOfOrigin: form.countryOfOrigin.trim()
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || res.statusText);
       setDetails(data);
       onUpdate?.(data);
       setShowModal(false);
     } catch (err) {
-      console.error('Save about-me failed:', err);
-      alert(err.message);
+      console.error(err);
+      setError(err.message);
     } finally {
       setSaving(false);
     }

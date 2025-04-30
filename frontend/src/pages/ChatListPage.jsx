@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth }                 from '../context/AuthContext.jsx';
 import { io }                      from 'socket.io-client';
 import ChatsScroll                 from '../components/ChatsScroll.jsx';
+import { fetchChats } from '../api/chats';
+
 
 export default function ChatListPage() {
   const { user, logout } = useAuth();
@@ -22,19 +24,17 @@ export default function ChatListPage() {
     return () => socketRef.current.disconnect();
   }, []);
 
-  // 2) fetch list
+  // 2) Get list of chats
   useEffect(() => {
-    (async function load() {
-      const res  = await fetch('/api/chats', {
-        headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
-      });
-      const data = await res.json();
-      setChats(data);
-      if (chatId) {
-        const found = data.find(c => String(c.id) === chatId);
-        if (found) setSelectedChat(found);
-      }
-    })();
+    fetchChats()
+      .then(data => {
+        setChats(data);
+        if (chatId) {
+          const found = data.find(c => String(c.id) === chatId);
+          if (found) setSelectedChat(found);
+        }
+      })
+      .catch(console.error);
   }, [chatId]);
 
   // 3) join all rooms whenever chats list updates

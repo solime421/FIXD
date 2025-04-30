@@ -5,6 +5,9 @@ import DefaultAvatar from '../../public/icons/noUser.svg';
 import LocationSection from '../components/LocationSection.jsx';
 import ReviewsSection from '../components/ReviewsSection.jsx';
 import ProfileSidebar from '../components/ProfileSidebar.jsx';
+import { fetchPublicProfile, startChat } from '../api/publicProfile';
+
+
 
 export default function PublicProfilePage() {
   const { id } = useParams();
@@ -15,24 +18,15 @@ export default function PublicProfilePage() {
   const [error, setError]               = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // fetch profile
+  // get profile info
   useEffect(() => {
     const ctrl = new AbortController();
-    const token = localStorage.getItem('authToken');
 
-    async function fetchProfile() {
-      setLoading(true);
-      setError('');
+    async function loadProfile() {
       try {
-        const res = await fetch(`/api/publicProfile/${id}`, {
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token && { Authorization: `Bearer ${token}` }),
-          },
-          signal: ctrl.signal,
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || res.statusText);
+        setLoading(true);
+        setError('');
+        const data = await fetchPublicProfile(id);
         setProfile(data);
       } catch (err) {
         if (err.name !== 'AbortError') setError(err.message);
@@ -41,24 +35,14 @@ export default function PublicProfilePage() {
       }
     }
 
-    fetchProfile();
+    loadProfile();
     return () => ctrl.abort();
   }, [id]);
 
-  // kick off (or fetch) a chat and go there
-  const startChat = async () => {
-    const token = localStorage.getItem('authToken');
+  // kick off (or get) a chat and go there
+  const handleStartChat = async () => {
     try {
-      const res = await fetch('/api/chats', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
-        body: JSON.stringify({ freelancer_id: parseInt(id, 10) }),
-      });
-      const chat = await res.json();
-      if (!res.ok) throw new Error(chat.message || res.statusText);
+      const chat = await startChat(id);
       navigate(`/chats/${chat.id}`);
     } catch (err) {
       console.error('Starting chat failed:', err);
@@ -204,7 +188,7 @@ export default function PublicProfilePage() {
           canMessage={profile.canMessage}
           urgentServiceEnabled={profile.urgentServiceEnabled}
           phone={profile.phone}
-          onStartChat={startChat}
+          onStartChat={handleStartChat}
         />
       </div>
     </main>

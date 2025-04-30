@@ -1,4 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
+import {
+  fetchPortfolio,
+  uploadPortfolioImage,
+  deletePortfolioImage
+} from '../api/portfolio';
 
 export default function PortfolioSection({ onEdit, onAdd }) {
   const token = localStorage.getItem('authToken');
@@ -18,51 +23,39 @@ export default function PortfolioSection({ onEdit, onAdd }) {
 
   // Fetch images on mount
   useEffect(() => {
-    async function fetchImages() {
+    let cancelled = false;
+    async function load() {
       setLoading(true);
       try {
-        const res = await fetch('/api/privateFreelancerProfiles/portfolio', {
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token && { Authorization: `Bearer ${token}` }),
-          },
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || res.statusText);
-        setImages(data);
+        const data = await fetchPortfolio();
+        if (!cancelled) setImages(data);
       } catch (err) {
-        console.error('Failed to load portfolio images:', err);
-        setError(err.message);
+        if (!cancelled) {
+          console.error('Failed to load portfolio images:', err);
+          setError(err.message);
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
-    fetchImages();
-  }, [token]);
+    load();
+    return () => { cancelled = true; };
+  }, []);
 
   // Allow adding only if fewer than 9 images
   const canAddMore = images.length < 9;
 
   // Handler: add images, enforce 9-image max
-  const handleFilesSelected = async (e) => {
+  const handleFilesSelected = async e => {
     const files = Array.from(e.target.files || []);
     if (!files.length || !canAddMore) return;
-    // enforce max limit
     const allowed = files.slice(0, 9 - images.length);
     setUploading(true);
     const added = [];
     try {
       for (const file of allowed) {
-        const formData = new FormData();
-        formData.append('image', file);
-        const res = await fetch('/api/privateFreelancerProfiles/portfolio', {
-          method: 'POST',
-          headers: { ...(token && { Authorization: `Bearer ${token}` }) },
-          body: formData,
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || res.statusText);
-        added.push(data);
+        const img = await uploadPortfolioImage(file);
+        added.push(img);
       }
       const updated = [...images, ...added];
       setImages(updated);
@@ -77,16 +70,11 @@ export default function PortfolioSection({ onEdit, onAdd }) {
   };
 
   // Handler: delete image
-  const handleDelete = async (id) => {
+  const handleDelete = async id => {
     if (!window.confirm('Delete this image?')) return;
     setDeletingId(id);
     try {
-      const res = await fetch(`/api/privateFreelancerProfiles/portfolio/${id}`, {
-        method: 'DELETE',
-        headers: { ...(token && { Authorization: `Bearer ${token}` }) },
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || res.statusText);
+      await deletePortfolioImage(id);
       const updated = images.filter(img => img.id !== id);
       setImages(updated);
       onEdit?.(updated);

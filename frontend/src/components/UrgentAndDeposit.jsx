@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext.jsx';
+import {
+  fetchFreelancerSettings,
+  updateDepositAmount,
+  updateUrgentServiceToggle
+} from '../api/urgent';
 
-/**
- * FreelancerPersonalPage
- * Fetches and manages freelancer-specific settings:
- *  - Average Order Amount (depositAmount)
- *  - Urgent Services toggle
- */
-export default function FreelancerPersonalPage() {
-  const token = localStorage.getItem('authToken');
-
+export default function FreelancerPersonalPage({ onUpdate }) {
   // State for deposit and urgent settings
   const [deposit, setDeposit] = useState(0);
   const [urgentEnabled, setUrgentEnabled] = useState(false);
@@ -25,53 +21,37 @@ export default function FreelancerPersonalPage() {
   const [newUrgent, setNewUrgent] = useState(false);
   const [savingUrgent, setSavingUrgent] = useState(false);
 
-  // On mount, fetch freelancer details
+  // On mount, fetch settings
   useEffect(() => {
-    async function loadDetails() {
-      setLoading(true);
+    let cancelled = false;
+    async function load() {
       try {
-        const res = await fetch('/api/privateFreelancerProfiles/details', {
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token && { Authorization: `Bearer ${token}` }),
-          },
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || res.statusText);
-        // initialize state from backend
-        setDeposit(data.depositAmount);
-        setNewDeposit(data.depositAmount);
-        setUrgentEnabled(data.urgentServiceEnabled);
-        setNewUrgent(data.urgentServiceEnabled);
+        const { depositAmount, urgentServiceEnabled } = await fetchFreelancerSettings();
+        if (cancelled) return;
+        setDeposit(depositAmount);
+        setNewDeposit(depositAmount);
+        setUrgentEnabled(urgentServiceEnabled);
+        setNewUrgent(urgentServiceEnabled);
       } catch (err) {
-        console.error('Failed to load freelancer details:', err);
-        setError(err.message);
+        if (!cancelled) setError(err.message);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
-    loadDetails();
-  }, [token]);
+    load();
+    return () => { cancelled = true; };
+  }, []);
 
   // Save deposit to backend
-  const handleDepositSave = async (e) => {
+  const handleDepositSave = async e => {
     e.preventDefault();
     setSavingDeposit(true);
     try {
-      const res = await fetch('/api/privateFreelancerProfiles/deposit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
-        body: JSON.stringify({ depositAmount: parseFloat(newDeposit) }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || res.statusText);
-      setDeposit(data.depositAmount);
+      const updated = await updateDepositAmount(parseFloat(newDeposit));
+      setDeposit(updated);
       setShowDepositModal(false);
+      onUpdate?.({ depositAmount: updated });
     } catch (err) {
-      console.error('Deposit update failed:', err);
       setError(err.message);
     } finally {
       setSavingDeposit(false);
@@ -82,20 +62,11 @@ export default function FreelancerPersonalPage() {
   const handleUrgentSave = async () => {
     setSavingUrgent(true);
     try {
-      const res = await fetch('/api/privateFreelancerProfiles/urgent-service', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
-        body: JSON.stringify({ urgentServiceEnabled: newUrgent }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || res.statusText);
-      setUrgentEnabled(data.urgentServiceEnabled);
+      const updated = await updateUrgentServiceToggle(newUrgent);
+      setUrgentEnabled(updated);
       setShowUrgentModal(false);
+      onUpdate?.({ urgentServiceEnabled: updated });
     } catch (err) {
-      console.error('Urgent toggle failed:', err);
       setError(err.message);
     } finally {
       setSavingUrgent(false);
@@ -103,7 +74,7 @@ export default function FreelancerPersonalPage() {
   };
 
   if (loading) return <p>Loading freelancer settings…</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
+  if (error)   return <p className="text-red-500">{error}</p>;
 
   return (
     <div className="space-y-6">
