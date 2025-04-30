@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import SearchResults from '../components/SearchResults.jsx';
 import SearchBlock from '../components/SearchBlock.jsx';
 import InputField from '../components/InputField.jsx';
-// public path to your SVG
 const FilterIcon = '/icons/Filters.svg';
 
 export default function SearchPage() {

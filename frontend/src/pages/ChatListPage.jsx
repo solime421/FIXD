@@ -22,7 +22,7 @@ export default function ChatListPage() {
     return () => socketRef.current.disconnect();
   }, []);
 
-  // 2) fetch list + auto‐select by URL
+  // 2) fetch list
   useEffect(() => {
     (async function load() {
       const res  = await fetch('/api/chats', {

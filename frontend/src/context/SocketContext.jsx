@@ -1,7 +1,7 @@
 import React, { createContext, useRef, useEffect } from 'react';
 import { io } from 'socket.io-client';
 
-export const SocketContext = createContext(null);
+export const SocketContext = createContext(null); //a way to share the socket across the app.
 
 export function SocketProvider({ children }) {
   const socketRef = useRef(null);

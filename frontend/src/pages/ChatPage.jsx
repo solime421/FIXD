@@ -1,8 +1,7 @@
-// src/pages/ChatPage.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth }                          from '../context/AuthContext.jsx';
 import { io }                               from 'socket.io-client';
-import { Send, DollarSign }                 from 'lucide-react';
+import { Send }                 from 'lucide-react';
 import { useParams, useNavigate }           from 'react-router-dom';
 import ChatsScroll                          from '../components/ChatsScroll.jsx';
 import InputField                           from '../components/InputField.jsx';
