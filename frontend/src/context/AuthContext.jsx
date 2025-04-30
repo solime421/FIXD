@@ -3,6 +3,7 @@ import axios from 'axios'
 
 export const AuthContext = createContext(null)
 
+//wraps components and provides auth data to all components.
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -11,6 +12,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const token = localStorage.getItem('authToken')
     if (token) {
+      //defining default so I don't have to do it later every time
       axios.defaults.headers.common.Authorization = `Bearer ${token}`
       axios.get('/api/auth/me')
         .then(res => setUser(res.data))
@@ -26,13 +28,14 @@ export function AuthProvider({ children }) {
   }, [])
 
   // Helper to update just the profilePicture on the stored user
+  //Allows updating just the avatar URL without refetching the full user.
   const updateUserPic = (newUrl) => {
     setUser(u => u ? { ...u, profilePicture: newUrl } : u)
   }
 
   const login = async ({ email, password }) => {
     const { data } = await axios.post('/api/auth/login', { email, password })
-    // persist token for future sessions
+    // save token for future sessions
     localStorage.setItem('authToken', data.token)
     axios.defaults.headers.common.Authorization = `Bearer ${data.token}`
     setUser(data.user)
@@ -59,7 +62,7 @@ export function AuthProvider({ children }) {
         login,
         register,
         logout,
-        updateUserPic,       // allows updating avatar across the app
+        updateUserPic,
         isAuthenticated: Boolean(user)
       }}
     >

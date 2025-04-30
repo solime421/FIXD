@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext.jsx';
+import {
+  fetchFreelancerSettings,
+  updateDepositAmount,
+  updateUrgentServiceToggle
+} from '../api/urgent';
 
-/**
- * FreelancerPersonalPage
- * Fetches and manages freelancer-specific settings:
- *  - Average Order Amount (depositAmount)
- *  - Urgent Services toggle
- */
-export default function FreelancerPersonalPage() {
-  const token = localStorage.getItem('authToken');
-
+export default function FreelancerPersonalPage({ onUpdate }) {
   // State for deposit and urgent settings
   const [deposit, setDeposit] = useState(0);
   const [urgentEnabled, setUrgentEnabled] = useState(false);
@@ -25,53 +21,37 @@ export default function FreelancerPersonalPage() {
   const [newUrgent, setNewUrgent] = useState(false);
   const [savingUrgent, setSavingUrgent] = useState(false);
 
-  // On mount, fetch freelancer details
+  // On mount, fetch settings
   useEffect(() => {
-    async function loadDetails() {
-      setLoading(true);
+    let cancelled = false;
+    async function load() {
       try {
-        const res = await fetch('/api/privateFreelancerProfiles/details', {
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token && { Authorization: `Bearer ${token}` }),
-          },
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || res.statusText);
-        // initialize state from backend
-        setDeposit(data.depositAmount);
-        setNewDeposit(data.depositAmount);
-        setUrgentEnabled(data.urgentServiceEnabled);
-        setNewUrgent(data.urgentServiceEnabled);
+        const { depositAmount, urgentServiceEnabled } = await fetchFreelancerSettings();
+        if (cancelled) return;
+        setDeposit(depositAmount);
+        setNewDeposit(depositAmount);
+        setUrgentEnabled(urgentServiceEnabled);
+        setNewUrgent(urgentServiceEnabled);
       } catch (err) {
-        console.error('Failed to load freelancer details:', err);
-        setError(err.message);
+        if (!cancelled) setError(err.message);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
-    loadDetails();
-  }, [token]);
+    load();
+    return () => { cancelled = true; };
+  }, []);
 
   // Save deposit to backend
-  const handleDepositSave = async (e) => {
+  const handleDepositSave = async e => {
     e.preventDefault();
     setSavingDeposit(true);
     try {
-      const res = await fetch('/api/privateFreelancerProfiles/deposit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
-        body: JSON.stringify({ depositAmount: parseFloat(newDeposit) }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || res.statusText);
-      setDeposit(data.depositAmount);
+      const updated = await updateDepositAmount(parseFloat(newDeposit));
+      setDeposit(updated);
       setShowDepositModal(false);
+      onUpdate?.({ depositAmount: updated });
     } catch (err) {
-      console.error('Deposit update failed:', err);
       setError(err.message);
     } finally {
       setSavingDeposit(false);
@@ -82,20 +62,11 @@ export default function FreelancerPersonalPage() {
   const handleUrgentSave = async () => {
     setSavingUrgent(true);
     try {
-      const res = await fetch('/api/privateFreelancerProfiles/urgent-service', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
-        body: JSON.stringify({ urgentServiceEnabled: newUrgent }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || res.statusText);
-      setUrgentEnabled(data.urgentServiceEnabled);
+      const updated = await updateUrgentServiceToggle(newUrgent);
+      setUrgentEnabled(updated);
       setShowUrgentModal(false);
+      onUpdate?.({ urgentServiceEnabled: updated });
     } catch (err) {
-      console.error('Urgent toggle failed:', err);
       setError(err.message);
     } finally {
       setSavingUrgent(false);
@@ -103,36 +74,36 @@ export default function FreelancerPersonalPage() {
   };
 
   if (loading) return <p>Loading freelancer settings…</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
+  if (error)   return <p className="text-red-500">{error}</p>;
 
   return (
     <div className="space-y-6">
       {/* Average Order Amount Card */}
       <div className="bg-white rounded-lg space-y-4 p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)] ">
-        <h2 className="text-xl font-semibold mb-4">Average Order Amount:</h2>
-        <p className="mb-4">${deposit.toFixed(2)}</p>
+        <h2 className="text-xl font-semibold mb-4">Средняя сумма заказа:</h2>
+        <p className="mb-4">₽{deposit.toFixed(2)}</p>
         <button
           className="btn btn-primary w-full"
           onClick={() => setShowDepositModal(true)}
         >
-          Change Average Order Amount
+          Изменить среднюю сумму заказа
         </button>
       </div>
 
       {/* Urgent Services Card */}
       <div className="bg-white rounded-lg space-y-4 p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)]">
-        <h2 className="text-xl font-semibold mb-4">Urgent Services</h2>
+        <h2 className="text-xl font-semibold mb-4">Срочные услуги</h2>
         <p className="text-gray-500 mb-4">
-          Other clients will be able to call you at any time through your profile.
+          Другие клиенты смогут звонить вам в любое время через ваш профиль.
         </p>
         <p className="mb-4">
-          <strong>{urgentEnabled ? 'Enabled' : 'Disabled'}</strong>
+          <strong>{urgentEnabled ? 'Включено' : 'Отключено'}</strong>
         </p>
         <button
           className="btn btn-primary w-full"
           onClick={() => setShowUrgentModal(true)}
         >
-          Edit
+          Редактировать
         </button>
       </div>
 
@@ -140,7 +111,7 @@ export default function FreelancerPersonalPage() {
       {showDepositModal && (
         <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-sm">
-            <h3 className="text-lg font-semibold mb-4">Set Average Order Amount</h3>
+            <h3 className="text-lg font-semibold mb-4">Установить среднюю сумму заказа</h3>
             <form onSubmit={handleDepositSave} className="space-y-4">
               <input
                 type="number"
@@ -157,14 +128,14 @@ export default function FreelancerPersonalPage() {
                   onClick={() => setShowDepositModal(false)}
                   className="btn btn-secondary"
                 >
-                  Cancel
+                  Отменить
                 </button>
                 <button
                   type="submit"
                   disabled={savingDeposit}
                   className="btn btn-primary"
                 >
-                  {savingDeposit ? 'Saving…' : 'Save'}
+                  {savingDeposit ? 'Сохранение…' : 'Сохранить'}
                 </button>
               </div>
             </form>
@@ -176,7 +147,7 @@ export default function FreelancerPersonalPage() {
       {showUrgentModal && (
         <div className="fixed inset-0 bg-black/20 backdrop-blur-sm  flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-sm">
-            <h3 className="text-lg font-semibold mb-4">Toggle Urgent Services</h3>
+            <h3 className="text-lg font-semibold mb-4">Переключить срочные услуги</h3>
             <div className="flex items-center space-x-2 mb-4">
               <input
                 id="urgent-toggle"
@@ -185,7 +156,7 @@ export default function FreelancerPersonalPage() {
                 onChange={e => setNewUrgent(e.target.checked)}
                 className="h-5 w-5"
               />
-              <label htmlFor="urgent-toggle" className="text-gray-700">Enable urgent services</label>
+              <label htmlFor="urgent-toggle" className="text-gray-700">Включить срочные услуги</label>
             </div>
             <div className="flex justify-end space-x-3">
               <button
@@ -193,14 +164,14 @@ export default function FreelancerPersonalPage() {
                 onClick={() => setShowUrgentModal(false)}
                 className="btn btn-secondary"
               >
-                Cancel
+                Отменить
               </button>
               <button
                 onClick={handleUrgentSave}
                 disabled={savingUrgent}
                 className="btn btn-primary"
               >
-                {savingUrgent ? 'Saving…' : 'Save'}
+                {savingUrgent ? 'Сохранение…' : 'Сохранить'}
               </button>
             </div>
           </div>

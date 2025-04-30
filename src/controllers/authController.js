@@ -14,7 +14,7 @@ export const register = async (req, res) => {
     // Check if user exists
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists." });
+      return res.status(400).json({ message: "Пользователь уже существует" });
     }
 
     // Hash password - salt is = 10
@@ -64,11 +64,11 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
-      return res.status(400).json({ message: "Invalid login informations." });
+      return res.status(400).json({ message: "Неверные данные для входа" });
     }
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid login information." });
+      return res.status(400).json({ message: "Неверные данные для входа" });
     }
 
     const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '24h' });
@@ -90,7 +90,7 @@ export const getMe = async (req, res) => {
         profilePicture: true,
       },
     });
-    if (!me) return res.status(404).json({ message: 'User not found.' });
+    if (!me) return res.status(404).json({ message: 'Пользователь не найден.' });
     res.json(me);
   } catch (e) {
     console.error(e);

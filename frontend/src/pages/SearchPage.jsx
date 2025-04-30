@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import SearchResults from '../components/SearchResults.jsx';
 import SearchBlock from '../components/SearchBlock.jsx';
 import InputField from '../components/InputField.jsx';
-// public path to your SVG
+import { fetchSearchResults } from '../api/search.js';
 const FilterIcon = '/icons/Filters.svg';
 
 export default function SearchPage() {
@@ -36,16 +36,18 @@ export default function SearchPage() {
     setLoading(true);
     setError('');
 
-    fetch(`/api/search?${ps.toString()}`)
-      .then(async res => {
-        if (!res.ok) {
-          const body = await res.json().catch(() => ({}));
-          throw new Error(body.message || res.statusText);
-        }
-        return res.json();
+    fetchSearchResults({ 
+      search: term,
+      minDeposit: ps.get('minDeposit'),
+      maxDeposit: ps.get('maxDeposit'),
+      urgentOnly: ps.get('urgentOnly') === 'true',
+    })
+      .then(data => {
+        setResults(data); ////Once the search API call finishes and returns its data array, take that array and save it into the component’s results state so the UI can render the new list.
       })
-      .then(data => setResults(data))
-      .catch(err => setError(err.message))
+      .catch(err => {
+        setError(err.message || 'Ошибка загрузки результатов');
+      })
       .finally(() => setLoading(false));
   }, [rawSearch]);
 
@@ -68,7 +70,7 @@ export default function SearchPage() {
           value={query}
           onChange={e => setQuery(e.target.value)}
           onSearch={applyFilters}
-          placeholder="Search freelancers…"
+          placeholder="Искать специалистов…"
         />
 
         {/* Filter header */}
@@ -82,7 +84,7 @@ export default function SearchPage() {
             alt="Filter"
             className={`h-5 w-5 mr-2 transition-transform ${showFilters ? 'rotate-180' : ''}`}
           />
-          <span>Filter</span>
+          <span>Фильтр</span>
         </button>
 
         {/* Filter controls, only if toggled open */}
@@ -91,7 +93,7 @@ export default function SearchPage() {
             <InputField
                 type="number"
                 min={0}
-                placeholder="Min deposit"
+                placeholder="Мин стоимость"
                 value={minDeposit}
                 onKeyDown={e => {
                   // block typing the minus key
@@ -114,7 +116,7 @@ export default function SearchPage() {
             <InputField
               type="number"
               min={0}
-              placeholder="Max deposit"
+              placeholder="Макс стоимость"
               value={maxDeposit}
               onKeyDown={e => {
                 if (e.key === '-') e.preventDefault();
@@ -138,20 +140,20 @@ export default function SearchPage() {
                 onChange={e => setUrgentOnly(e.target.checked)}
                 className="cursor-pointer h-4 w-4"
               />
-              <span>Urgent only</span>
+              <span>Только срочные</span>
             </label>
             <button
               onClick={applyFilters}
               className="btn btn-secondary w-fill"
               type="button"
             >
-              Apply
+              Применить
             </button>
           </div>
         )}
 
         {/* Results */}
-        {loading && <p className='pt-[20px] text-gray-500'>Loading…</p>}
+        {loading && <p className='pt-[20px] text-gray-500'>Загрузка…</p>}
         {error   && <p className="text-red-500">{error}</p>}
         {!loading && !error && <SearchResults items={results} />}
       </div>

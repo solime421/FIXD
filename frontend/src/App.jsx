@@ -50,7 +50,7 @@ export default function App() {
 
 
         {/* Catch‐all 404 */}
-        <Route path="*" element={<p>404: Page not found</p>} />
+        <Route path="*" element={<p>404: Страница не найдена</p>} />
       </Routes>
     </main>
   );

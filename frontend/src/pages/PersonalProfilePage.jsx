@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import LocationSection from '../components/LocationSection.jsx';
 import LocationInput from '../components/LocationInput.jsx';
@@ -18,14 +17,18 @@ import Email from '../../public/icons/Email.svg'
 import AboutMe from '../../public/icons/About-me.svg'
 import PersonalData from '../../public/icons/PersonalData.svg'
 import ContactUs from '../../public/icons/Contact-us.svg'
-import FAQ from '../../public/icons/FAQ.svg'
 import Location from '../../public/icons/Location.svg'
 import LogoutIcon from '../../public/icons/Logout.svg'
-import MyOrders from '../../public/icons/My-Orders.svg'
 import Pictures from '../../public/icons/Pictures.svg'
 import Specialities from '../../public/icons/Specialities.svg'
 import UrgentServices from '../../public/icons/Urgent-services.svg'
 
+import {
+  fetchPrivateProfile,
+  updateProfilePicture,
+  updatePersonalData,
+  updateLocationData
+} from '../api/personalProfile';
 
 
 
@@ -49,97 +52,74 @@ export default function PersonalProfilePage() {
 
   // Load user on mount
   useEffect(() => {
-    const controller = new AbortController();
-    const token = localStorage.getItem('authToken');
-    async function fetchProfile() {
+    let cancelled = false;
+    async function load() {
       setLoading(true);
       try {
-        const res = await fetch('/api/privateProfiles/me', {
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token && { Authorization: `Bearer ${token}` }),
-          },
-          signal: controller.signal,
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || res.statusText);
+        const data = await fetchPrivateProfile();
+        if (cancelled) return;
         setProfile(data);
-        // init forms
-        setPersonalForm({
-          firstName: data.firstName,
-          lastName: data.lastName,
-          phone: data.phone,
-        });
-        setLocationForm({
-          address: data.locationAddress,
-          lat: data.locationLat,
-          lng: data.locationLng,
-        });
+        setPersonalForm({ firstName: data.firstName, lastName: data.lastName, phone: data.phone });
+        setLocationForm({ address: data.locationAddress, lat: data.locationLat, lng: data.locationLng });
       } catch (err) {
-        if (err.name !== 'AbortError') setError(err.message);
+        if (!cancelled) setError(err.message);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
-    fetchProfile();
-    return () => controller.abort();
+    load();
+    return () => { cancelled = true; };
   }, []);
 
   // Avatar edit
   const handlePhotoClick = () => fileInputRef.current?.click();
-  const handleFileChange = async (e) => {
-    const file = e.target.files?.[0]; if (!file) return;
-    const formData = new FormData(); 
+  const handleFileChange = async e => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const formData = new FormData();
     formData.append('image', file);
+    setSaving(true);
     try {
-      const token = localStorage.getItem('authToken');
-      const res = await fetch('/api/privateProfiles/profile-picture', {
-        method: 'POST', headers: { ...(token && { Authorization: `Bearer ${token}` }) }, body: formData,
-      });
-      const text = await res.text(); let data;
-      try { data = JSON.parse(text); } catch { throw new Error(text || res.statusText); }
-      if (!res.ok) throw new Error(data.message || res.statusText);
-      setProfile(prev => ({ ...prev, profilePicture: data.profilePicture }));
-      updateUserPic(data.profilePicture);
-    } catch (err) { console.error(err); setError(err.message); }
+      const url = await updateProfilePicture(formData);
+      setProfile(p => ({ ...p, profilePicture: url }));
+      updateUserPic(url);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
   };
 
   // Save personal data
-  const handlePersonalSave = async (e) => {
-    e.preventDefault(); setSaving(true); setError('');
+  const handlePersonalSave = async e => {
+    e.preventDefault();
+    setSaving(true);
     try {
-      const token = localStorage.getItem('authToken');
-      const res = await fetch('/api/privateProfiles/personal-data', {
-        method: 'POST', headers: {
-          'Content-Type': 'application/json', ...(token && { Authorization: `Bearer ${token}` }),
-        }, body: JSON.stringify(personalForm),
-      });
-      const data = await res.json(); if (!res.ok) throw new Error(data.message || res.statusText);
-      setProfile(prev => ({ ...prev, ...data }));
+      const data = await updatePersonalData(personalForm);
+      setProfile(p => ({ ...p, ...data }));
       setShowPersonalModal(false);
-    } catch (err) { console.error(err); setError(err.message); }
-    finally { setSaving(false); }
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
   };
 
   // Save location data
   const handleLocationSave = async () => {
-    setSaving(true); setError('');
+    setSaving(true);
     try {
-      const token = localStorage.getItem('authToken');
-      const res = await fetch('/api/privateProfiles/location', {
-        method: 'POST', headers: {
-          'Content-Type': 'application/json', ...(token && { Authorization: `Bearer ${token}` }),
-        }, body: JSON.stringify(locationForm),
-      });
-      const data = await res.json(); if (!res.ok) throw new Error(data.message || res.statusText);
-      setProfile(prev => ({ ...prev,
-        locationAddress: data.locationAddress,
-        locationLat: data.locationLat,
-        locationLng: data.locationLng,
-      }));
+      const data = await updateLocationData(locationForm);
+      setProfile(p => ({ ...p, locationAddress: data.locationAddress, locationLat: data.locationLat, locationLng: data.locationLng }));
       setShowLocationModal(false);
-    } catch (err) { console.error(err); setError(err.message); }
-    finally { setSaving(false); }
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (loading) return <p className="p-8">Loading…</p>;
@@ -162,7 +142,7 @@ export default function PersonalProfilePage() {
               onClick={handlePhotoClick}
               className="absolute bottom-0 right-0 bg-[#F74C25] text-white text-xs px-2 py-1 rounded-full hover:bg-[#e04320]"
             >
-              Edit Photo
+              Сменить фото
             </button>
             <input
               type="file"
@@ -178,69 +158,66 @@ export default function PersonalProfilePage() {
         </div>
 
       <div className="mx-[120px] grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <aside className="w-2/3 bg-white mx-auto lg:sticky top-[150px] rounded-lg shadow p-4 space-y-5 h-fit">
-        <a href="#personal-data" className="block text-gray-700">
-          <img src={PersonalData} alt="" className="inline align-sub h-6 w-6 mr-3"/>Personal Data
-        </a>
-        <a href="#location" className="block text-gray-700">
-          <img src={Location} alt="" className="inline align-sub h-6 w-6 mr-3"/>Location
-        </a>
+        <aside className="w-2/3 bg-white mx-auto lg:sticky top-[150px] rounded-lg shadow p-4 space-y-5 h-fit">
+          <a href="#personal-data" className="block text-gray-700">
+            <img src={PersonalData} alt="" className="inline align-sub h-6 w-6 mr-3"/>Персональные данные
+          </a>
+          <a href="#location" className="block text-gray-700">
+            <img src={Location} alt="" className="inline align-sub h-6 w-6 mr-3"/>Местоположение
+          </a>
 
-        {/* freelancer-only links */}
-        {isFreelancer && (
-          <>
-            <a href="#urgent-services" className="block text-gray-700">
-              <img src={UrgentServices} alt="" className="inline align-sub h-6 w-6 mr-3"/>Order Amount & Urgent Services
-            </a>
-            <a href="#pictures" className="block text-gray-700">
-              <img src={Pictures} alt="" className="inline align-sub h-6 w-6 mr-3"/>Pictures
-            </a>
-            <a href="#specialties" className="block text-gray-700">
-              <img src={Specialities} alt="" className="inline align-sub h-6 w-6 mr-3"/>Specialties
-            </a>
-            <a href="#about-me" className="block text-gray-700 mb-13">
-              <img src={AboutMe} alt="" className="inline align-sub h-6 w-6 mr-3"/>About me
-            </a>
-          </>
-        )}
+          {/* freelancer-only links */}
+          {isFreelancer && (
+            <>
+              <a href="#urgent-services" className="block text-gray-700">
+                <img src={UrgentServices} alt="" className="inline align-sub h-6 w-6 mr-3"/>Сумма заказа и срочные услуги
+              </a>
+              <a href="#pictures" className="block text-gray-700">
+                <img src={Pictures} alt="" className="inline align-sub h-6 w-6 mr-3"/>Фотографии
+              </a>
+              <a href="#specialties" className="block text-gray-700">
+                <img src={Specialities} alt="" className="inline align-sub h-6 w-6 mr-3"/>Специализации
+              </a>
+              <a href="#about-me" className="block text-gray-700 mb-13">
+                <img src={AboutMe} alt="" className="inline align-sub h-6 w-6 mr-3"/>О себе
+              </a>
+            </>
+          )}
 
-        <a href="#contact-us" className="block text-gray-700">
-          <img src={ContactUs} alt="" className="inline align-sub h-6 w-6 mr-3"/>Contact Us
-        </a>
-        <Link to="/home#faq" className="block text-gray-700">
-          <img src={FAQ} alt="" className="inline align-sub h-6 w-6 mr-3"/>FAQ?
-        </Link>
-        <Logout className="w-full cursor-pointer text-left text-gray-700 flex items-center">
-          <img src={LogoutIcon} alt="" className="inline align-sub h-6 w-6 mr-3" />
-          Logout
-        </Logout>
-      </aside>
+          <a href="#contact-us" className="block text-gray-700">
+            <img src={ContactUs} alt="" className="inline align-sub h-6 w-6 mr-3"/>Связаться с нами
+          </a>
+          <Logout className="w-full cursor-pointer text-left text-gray-700 flex items-center">
+            <img src={LogoutIcon} alt="" className="inline align-sub h-6 w-6 mr-3" />
+            Выйти из аккаунта
+          </Logout>
+        </aside>
  
         <div className="w-1/2 mx-auto lg:col-span-2 space-y-10">
           {/* Personal Data Card */}
           <section id="personal-data" className="scroll-mt-[100px]">
             <div className="bg-white rounded-lg p-6 space-y-4 shadow-[0_0_4px_rgba(0,0,0,0.2)]">
-              <h2 className="text-xl font-semibold mb-4">Personal Data</h2>
-              <p><span className="text-gray-400">Name:</span> {profile.firstName}</p>
-              <p><span className="text-gray-400">Last Name:</span> {profile.lastName}</p>
-              <p><span className="text-gray-400">Phone Number:</span> {profile.phone}</p>
-              <p><span className="text-gray-400">Email:</span> {profile.email}</p>
+              <h2 className="text-xl font-semibold mb-4">Персональные данные</h2>
+              <p><span className="text-gray-400">Имя:</span> {profile.firstName}</p>
+              <p><span className="text-gray-400">Фамилия:</span> {profile.lastName}</p>
+              <p><span className="text-gray-400">Номер телефона:</span> {profile.phone}</p>
+              <p><span className="text-gray-400">Электронная почта:</span> {profile.email}</p>
               <button onClick={() => setShowPersonalModal(true)}
-                      className="btn btn-primary w-full">Edit personal data</button>
+                      className="btn btn-primary w-full">Редактировать персональные данные</button>
             </div>
           </section>
 
           {/* Location Card */}
           <section id="location" className="scroll-mt-[100px]">
             <div className="bg-white rounded-lg p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)] ">
-              <h2 className="font-semibold mb-4">Location</h2>
+              <h2 className="font-semibold mb-4">Местоположение</h2>
               <LocationSection
                 address={profile.locationAddress}
                 lat={profile.locationLat}
                 lng={profile.locationLng}
               />
               <button onClick={() => setShowLocationModal(true)}
-                      className="btn btn-primary w-full">Edit location</button>
+                      className="btn btn-primary w-full">Редактировать местоположение</button>
             </div>
           </section>
 
@@ -280,7 +257,7 @@ export default function PersonalProfilePage() {
           {/* Contact Us Card */}
           <section id="contact-us" className="scroll-mt-[100px]">
             <div className="bg-white rounded-lg p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)]">
-              <h2 className="font-semibold mb-4">Contact Us</h2>
+              <h2 className="font-semibold mb-4">Связаться с нами</h2>
               {/* Icons row */}
               <div className="flex justify-around space-y-6 mt-7">
                 <a href={`#`} title="Email">
@@ -303,7 +280,7 @@ export default function PersonalProfilePage() {
               rel="noopener noreferrer"
               className="btn btn-secondary w-full text-center block"
             >
-              Help & Support?
+              Помощь и поддержка
             </a>
             </div>
           </section>
@@ -312,31 +289,31 @@ export default function PersonalProfilePage() {
           {showPersonalModal && (
             <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
               <div className="bg-white rounded-lg p-6 w-full max-w-md">
-                <h3 className="text-lg font-semibold mb-4">Edit Personal Data</h3>
+                <h3 className="text-lg font-semibold mb-4">Редактировать персональные данные</h3>
                 <form onSubmit={handlePersonalSave} className="space-y-4">
                   <div>
-                    <label className="block text-gray-400 text-sm mb-1">Name</label>
+                    <label className="block text-gray-400 text-sm mb-1">Имя</label>
                     <input type="text" value={personalForm.firstName}
                            onChange={e => setPersonalForm(f => ({ ...f, firstName: e.target.value }))}
                            className="w-full border-b border-gray-300 pb-1 focus:outline-none" required />
                   </div>
                   <div>
-                    <label className="block text-gray-400 text-sm mb-1">Last Name</label>
+                    <label className="block text-gray-400 text-sm mb-1">Фамилия</label>
                     <input type="text" value={personalForm.lastName}
                            onChange={e => setPersonalForm(f => ({ ...f, lastName: e.target.value }))}
                            className="w-full border-b border-gray-300 pb-1 focus:outline-none" required />
                   </div>
                   <div>
-                    <label className="block text-gray-400 text-sm mb-1">Phone Number</label>
+                    <label className="block text-gray-400 text-sm mb-1">Номер телефона</label>
                     <input type="tel" value={personalForm.phone}
                            onChange={e => setPersonalForm(f => ({ ...f, phone: e.target.value }))}
                            className="w-full border-b border-gray-300 pb-1 focus:outline-none" required />
                   </div>
                   <div className="flex justify-end space-x-4 pt-4">
                     <button type="button" onClick={() => setShowPersonalModal(false)}
-                            className="btn btn-secondary">Cancel</button>
+                            className="btn btn-secondary">Отменить</button>
                     <button type="submit" disabled={saving}
-                            className="btn btn-primary">{saving ? 'Saving…' : 'Done'}</button>
+                            className="btn btn-primary">{saving ? 'Сохранение…' : 'Готово'}</button>
                   </div>
                 </form>
               </div>
@@ -347,16 +324,16 @@ export default function PersonalProfilePage() {
           {showLocationModal && (
             <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
               <div className="bg-white rounded-lg p-6 w-full max-w-md">
-                <h3 className="text-lg font-semibold mb-4">Edit Location</h3>
+                <h3 className="text-lg font-semibold mb-4">Редактировать местоположение</h3>
                 <LocationInput
                   value={locationForm.address}
                   onPlaceChange={place => setLocationForm(place)}
                 />
                 <div className="flex justify-end space-x-4 mt-4">
                   <button type="button" onClick={() => setShowLocationModal(false)}
-                          className="btn btn-secondary">Cancel</button>
+                          className="btn btn-secondary">Отменить</button>
                   <button type="button" onClick={handleLocationSave} disabled={saving}
-                          className="btn btn-primary">{saving ? 'Saving…' : 'Done'}</button>
+                          className="btn btn-primary">{saving ? 'Сохранение…' : 'Готово'}</button>
                 </div>
               </div>
             </div>

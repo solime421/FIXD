@@ -13,6 +13,7 @@ export default function FreelancerSearchCard({
   rating,
   depositAmount,
 }) {
+
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden flex flex-col h-full">
       {/* IMAGE + URGENT BADGE */}
@@ -61,7 +62,7 @@ export default function FreelancerSearchCard({
             <span>{rating.toFixed(1)}</span>
           </div>
           <span className="whitespace-nowrap text-sm text-[#ACACAC]">
-            Average Order Amount: ${depositAmount}
+            Средняя сумма заказа: ₽{depositAmount}
           </span>
         </div>
       </div>

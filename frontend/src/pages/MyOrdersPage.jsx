@@ -1,9 +1,16 @@
-// src/pages/MyOrdersPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate }         from 'react-router-dom';
 import { useAuth }             from '../context/AuthContext.jsx';
 import PreviousOrders          from '../components/PreviousOrders.jsx';
 import ReviewsSection          from '../components/ReviewsSection.jsx';
+import OrderCard               from '../components/OrderCard.jsx';
+
+import {
+  fetchOrders,
+  updateOrderStatus,
+  fetchReviews,
+  submitReview
+} from '../api/orders';
 
 export default function MyOrdersPage() {
   const { user } = useAuth();
@@ -26,14 +33,10 @@ export default function MyOrdersPage() {
 
   useEffect(() => {
     // 1) Fetch orders
-    async function fetchOrders() {
+    async function loadOrders() {
       setLoadingOrders(true);
       try {
-        const res = await fetch('/api/orders', {
-          headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || res.statusText);
+        const data = await fetchOrders();
         setOrders(data);
       } catch (err) {
         console.error(err);
@@ -44,15 +47,11 @@ export default function MyOrdersPage() {
     }
 
     // 2) Fetch reviews if freelancer
-    async function fetchReviews() {
+    async function loadReviews() {
       if (user.role !== 'freelancer') return;
       setLoadingReviews(true);
       try {
-        const res = await fetch('/api/reviews', {
-          headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || res.statusText);
+        const data = await fetchReviews();
         setReviews(data);
       } catch (err) {
         console.error(err);
@@ -61,11 +60,11 @@ export default function MyOrdersPage() {
       }
     }
 
-    fetchOrders();
-    fetchReviews();
+    loadOrders();
+    loadReviews();
   }, [user.role]);
 
-  if (loadingOrders) return <p className="p-8">Loading orders…</p>;
+  if (loadingOrders) return <p className="p-8">Загрузка заказов…</p>;
   if (error)         return <p className="p-8 text-red-500">{error}</p>;
 
   const inProgress = orders.filter(o => !o.status);
@@ -73,16 +72,10 @@ export default function MyOrdersPage() {
 
   const markDone = async orderId => {
     try {
-      const res = await fetch(`/api/orders/${orderId}/status`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('authToken')}`
-        },
-        body: JSON.stringify({ status: true })
-      });
-      if (!res.ok) throw new Error(await res.text());
-      setOrders(os => os.map(o => o.id === orderId ? { ...o, status: true } : o));
+      await updateOrderStatus(orderId, true);
+      setOrders(os => os.map(o => (
+        o.id === orderId ? { ...o, status: true } : o
+      )));
     } catch (err) {
       console.error(err);
       alert('Could not mark order done.');
@@ -99,21 +92,12 @@ export default function MyOrdersPage() {
     if (!orderToReview) return;
     setSubmittingReview(true);
     try {
-      const body = {
-        orderId:    orderToReview.id,
+      await submitReview({
+        orderId: orderToReview.id,
         revieweeId: orderToReview.freelancerId,
-        rating:     reviewForm.rating,
-        comment:    reviewForm.comment.trim(),
-      };
-      const res = await fetch('/api/reviews', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization:  `Bearer ${localStorage.getItem('authToken')}`
-        },
-        body: JSON.stringify(body),
+        rating: reviewForm.rating,
+        comment: reviewForm.comment
       });
-      if (!res.ok) throw new Error(await res.text());
       setShowReviewModal(false);
       setOrderToReview(null);
     } catch (err) {
@@ -128,99 +112,57 @@ export default function MyOrdersPage() {
     <main className="py-[150px] bg-[var(--color-bg-alt)]">
       <div className="mx-[120px] space-y-8">
 
-        {/* In‐Progress Orders */}
-        <section>
-          <h2 className="text-2xl font-semibold mb-4">My Orders</h2>
-          {inProgress.length === 0 ? (
-            <div className="py-3 text-gray-500">No order currently in progress</div>
-          ) : (
-            (() => {
-              // split into two columns
-              const colA = inProgress.filter((_, i) => i % 2 === 0);
-              const colB = inProgress.filter((_, i) => i % 2 === 1);
-              return (
-                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 items-start">
-                  {/* Icon column */}
-                  <div>
-                    <img
-                      src="public/images/Ok-sign.png"
-                      alt="OK"
-                      className="h-70 w-70 my-10"
-                    />
-                  </div>
-                  {/* Even‐indexed orders */}
-                  <div className="space-y-4">
-                    {colA.map(o => {
-                      const other = user.role === 'client' ? o.freelancer : o.client;
-                      return (
-                        <div key={o.id}
-                             className="bg-white rounded-lg p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)] space-y-3">
-                          <p className="font-bold">Great!</p>
-                          <p>
-                            {user.role === 'client'
-                              ? `${other.firstName} ${other.lastName} will be with you soon!`
-                              : `${other.firstName} ${other.lastName} is waiting for you!`}
-                          </p>
-                          <p className="text-gray-600">
-                            <span className="font-bold">Order Name:</span> {o.offerName}
-                          </p>
-                          <div className="flex space-x-4">
-                            {user.role === 'freelancer' && (
-                              <button onClick={() => markDone(o.id)}
-                                      className="btn btn-primary w-full">
-                                Order done!
-                              </button>
-                            )}
-                            <a href="https://wa.me/79637268181"
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               className="btn btn-secondary w-full">
-                              Need Support?
-                            </a>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  {/* Odd‐indexed orders */}
-                  <div className="space-y-4">
-                    {colB.map(o => {
-                      const other = user.role === 'client' ? o.freelancer : o.client;
-                      return (
-                        <div key={o.id}
-                             className="bg-white rounded-lg p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)] space-y-3">
-                          <p className="font-bold">Great!</p>
-                          <p>
-                            {user.role === 'client'
-                              ? `${other.firstName} ${other.lastName} will be with you soon!`
-                              : `${other.firstName} ${other.lastName} is waiting for you!`}
-                          </p>
-                          <p className="text-gray-600">
-                            <span className="font-bold">Order Name:</span> {o.offerName}
-                          </p>
-                          <div className="flex space-x-4">
-                            {user.role === 'freelancer' && (
-                              <button onClick={() => markDone(o.id)}
-                                      className="btn btn-primary w-full">
-                                Order done!
-                              </button>
-                            )}
-                            <a href="https://wa.me/79637268181"
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               className="btn btn-secondary w-full">
-                              Need Support?
-                            </a>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
+      <section>
+        <h2 className="font-semibold mb-4">Мои заказы</h2>
+        {inProgress.length === 0 ? (
+          <div className="py-3 text-gray-500 italic">
+            Заказов в процессе выполнения нет
+          </div>
+        ) : (
+          (() => {
+            // split into two columns
+            const colA = inProgress.filter((_, i) => i % 2 === 0);
+            const colB = inProgress.filter((_, i) => i % 2 === 1);
+            return (
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 items-start">
+                {/* column 1: the big OK icon */}
+                <div>
+                  <img
+                    src="public/images/Ok-sign.png"
+                    alt="OK"
+                    className="h-70 w-70 my-10"
+                  />
                 </div>
-              );
-            })()
-          )}
-        </section>
+        
+                {/* column 2: even‐indexed orders */}
+                <div className="space-y-4">
+                  {colA.map(o => (
+                    <OrderCard
+                      key={o.id}
+                      o={o}
+                      user={user}
+                      markDone={markDone}
+                    />
+                  ))}
+                </div>
+        
+                {/* column 3: odd‐indexed orders */}
+                <div className="space-y-4">
+                  {colB.map(o => (
+                    <OrderCard
+                      key={o.id}
+                      o={o}
+                      user={user}
+                      markDone={markDone}
+                    />
+                  ))}
+                </div>
+              </div>
+            );
+          })()
+        )}
+      </section>
+
 
         {/* Previous Orders */}
         <PreviousOrders
@@ -230,7 +172,10 @@ export default function MyOrdersPage() {
 
         {/* Reviews (for freelancers) */}
         {user.role === 'freelancer' && !loadingReviews && (
-          <ReviewsSection reviews={reviews} />
+          <>
+            <h2 className="font-semibold mb-4">Отзывы</h2>
+            <ReviewsSection reviews={reviews} />
+          </>
         )}
       </div>
 
@@ -238,9 +183,9 @@ export default function MyOrdersPage() {
       {showReviewModal && orderToReview && (
         <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md space-y-4">
-            <h3 className="text-lg font-semibold">Leave a Review</h3>
+            <h3 className="text-lg font-semibold">Оставить отзыв</h3>
             <div className="space-y-2">
-              <label className="block text-gray-600">Rating</label>
+              <label className="block text-gray-600">Оценка</label>
               <select
                 value={reviewForm.rating}
                 onChange={e => setReviewForm(f => ({ ...f, rating: Number(e.target.value) }))}
@@ -254,7 +199,7 @@ export default function MyOrdersPage() {
               </select>
             </div>
             <div className="space-y-2">
-              <label className="block text-gray-600">Comment</label>
+              <label className="block text-gray-600">Комментарий</label>
               <textarea
                 rows={4}
                 value={reviewForm.comment}
@@ -269,14 +214,14 @@ export default function MyOrdersPage() {
                 className="btn btn-secondary w-full"
                 disabled={submittingReview}
               >
-                Cancel
+                Отмена
               </button>
               <button
                 onClick={handleSubmitReview}
                 className="btn btn-primary w-full"
                 disabled={submittingReview || !reviewForm.comment.trim()}
               >
-                {submittingReview ? 'Submitting…' : 'Submit Review'}
+                {submittingReview ? 'Отправка…' : 'Оставить отзыв'}
               </button>
             </div>
           </div>

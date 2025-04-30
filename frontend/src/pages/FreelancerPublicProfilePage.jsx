@@ -5,6 +5,9 @@ import DefaultAvatar from '../../public/icons/noUser.svg';
 import LocationSection from '../components/LocationSection.jsx';
 import ReviewsSection from '../components/ReviewsSection.jsx';
 import ProfileSidebar from '../components/ProfileSidebar.jsx';
+import { fetchPublicProfile, startChat } from '../api/publicProfile';
+
+
 
 export default function PublicProfilePage() {
   const { id } = useParams();
@@ -15,24 +18,15 @@ export default function PublicProfilePage() {
   const [error, setError]               = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // fetch profile
+  // get profile info
   useEffect(() => {
     const ctrl = new AbortController();
-    const token = localStorage.getItem('authToken');
 
-    async function fetchProfile() {
-      setLoading(true);
-      setError('');
+    async function loadProfile() {
       try {
-        const res = await fetch(`/api/publicProfile/${id}`, {
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token && { Authorization: `Bearer ${token}` }),
-          },
-          signal: ctrl.signal,
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || res.statusText);
+        setLoading(true);
+        setError('');
+        const data = await fetchPublicProfile(id);
         setProfile(data);
       } catch (err) {
         if (err.name !== 'AbortError') setError(err.message);
@@ -41,24 +35,14 @@ export default function PublicProfilePage() {
       }
     }
 
-    fetchProfile();
+    loadProfile();
     return () => ctrl.abort();
   }, [id]);
 
-  // kick off (or fetch) a chat and go there
-  const startChat = async () => {
-    const token = localStorage.getItem('authToken');
+  // kick off (or get) a chat and go there
+  const handleStartChat = async () => {
     try {
-      const res = await fetch('/api/chats', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
-        body: JSON.stringify({ freelancer_id: parseInt(id, 10) }),
-      });
-      const chat = await res.json();
-      if (!res.ok) throw new Error(chat.message || res.statusText);
+      const chat = await startChat(id);
       navigate(`/chats/${chat.id}`);
     } catch (err) {
       console.error('Starting chat failed:', err);
@@ -116,7 +100,7 @@ export default function PublicProfilePage() {
 
           {/* Short bio */}
           <h3 className="font-semibold py-2">
-            {aboutMeSmall || 'No description provided.'}
+            {aboutMeSmall || 'Описание не предоставлено.'}
           </h3>
 
           {/* Portfolio slider */}
@@ -149,29 +133,29 @@ export default function PublicProfilePage() {
                 </div>
               </>
             ) : (
-              <div className="text-gray-500 italic">No portfolio images.</div>
+              <div className="text-gray-500 italic">Нет изображений в портфолио.</div>
             )}
           </div>
 
           {/* Detailed about */}
           <div className="rounded-lg bg-white p-6 shadow-[0_0_4px_rgba(0,0,0,0.2)]">
             <h2 className="font-semibold text-[#3A001E] mb-5">
-              About {firstName}
+              О {firstName}
             </h2>
             <div className="space-y-3">
               <div>
-                <span className="block text-gray-400">From:</span>
+                <span className="block text-gray-400">Из:</span>
                 <span>{countryOfOrigin || '—'}</span>
               </div>
               <div>
-                <span className="block text-gray-400">Member since:</span>
+                <span className="block text-gray-400">На платформе с:</span>
                 <span>
-                  {memberSince
-                    ? new Date(memberSince).toLocaleString('default', {
-                        month: 'long',
-                        year: 'numeric',
-                      })
-                    : '—'}
+                {memberSince
+                  ? new Date(memberSince).toLocaleString('ru', {
+                      month: 'long',
+                      year: 'numeric',
+                    })
+                  : '—'}
                 </span>
               </div>
             </div>
@@ -183,7 +167,7 @@ export default function PublicProfilePage() {
 
           {/* Location */}
           <div>
-            <h2 className="font-semibold mb-5">Location</h2>
+            <h2 className="font-semibold mb-5">Местоположение</h2>
             <LocationSection
               address={profile.locationAddress}
               lat={profile.locationLat}
@@ -192,6 +176,7 @@ export default function PublicProfilePage() {
           </div>
 
           {/* Reviews */}
+          <h2 className="font-semibold mb-5">Отзывы</h2>
           <ReviewsSection reviews={profile.reviews} />
         </div>
 
@@ -203,7 +188,7 @@ export default function PublicProfilePage() {
           canMessage={profile.canMessage}
           urgentServiceEnabled={profile.urgentServiceEnabled}
           phone={profile.phone}
-          onStartChat={startChat}
+          onStartChat={handleStartChat}
         />
       </div>
     </main>

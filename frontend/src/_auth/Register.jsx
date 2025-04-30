@@ -52,7 +52,7 @@ export default function Register() {
     >
       <div className="w-[340px] p-[30px] rounded-[15px] space-y-[30px]
                       shadow-[0_0_4px_rgba(0,0,0,0.2)] gradient">
-        <h2 className="font-semibold text-xl">Create an account</h2>
+        <h2 className="font-semibold text-xl">Создать аккаунт</h2>
 
         {error && <p className="text-red-500 font-bold">{error}</p>}
 
@@ -64,8 +64,8 @@ export default function Register() {
             className="w-full h-[40px] border-b outline-none bg-transparent"
             required
           >
-            <option value="client">Client</option>
-            <option value="freelancer">Freelancer</option>
+            <option value="client">Клиент</option>
+            <option value="freelancer">Специалист</option>
           </select>
 
           <InputField
@@ -80,7 +80,7 @@ export default function Register() {
           <div className="flex gap-4">
             <InputField
               name="firstName"
-              placeholder="First Name"
+              placeholder="Имя"
               value={form.firstName}
               onChange={handleChange}
               className="flex-1"
@@ -88,7 +88,7 @@ export default function Register() {
             />
             <InputField
               name="lastName"
-              placeholder="Last Name"
+              placeholder="Фамилия"
               value={form.lastName}
               onChange={handleChange}
               className="flex-1"
@@ -99,7 +99,7 @@ export default function Register() {
           <InputField
             name="phone"
             type="tel"
-            placeholder="Phone Number"
+            placeholder="Номер телефона"
             value={form.phone}
             onChange={handleChange}
             required
@@ -108,7 +108,7 @@ export default function Register() {
           <InputField
             name="password"
             type="password"
-            placeholder="Password"
+            placeholder="Пароль"
             value={form.password}
             onChange={handleChange}
             required
@@ -117,22 +117,22 @@ export default function Register() {
           <InputField
             name="confirmPassword"
             type="password"
-            placeholder="Confirm Password"
+            placeholder="Подтвердите пароль"
             value={form.confirmPassword}
             onChange={handleChange}
             required
           />
 
           <button type="submit" className="btn btn-primary w-full">
-            Register
+            Зарегистрироваться
           </button>
         </form>
       </div>
 
       <p className="mt-4 text-sm text-gray-800">
-        Already have an account?{' '}
+        Уже есть аккаунт?{' '}
         <Link to="/login" className="font-bold hover:underline">
-          Sign in
+         Войти
         </Link>
       </p>
     </div>

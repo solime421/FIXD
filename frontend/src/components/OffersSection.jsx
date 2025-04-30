@@ -5,20 +5,19 @@ import PointFinger from '../../public/images/PointFinger.png'
 
 const offers = [
   {
-    title: 'Urgent fixes',
+    title: 'Срочные ремонты',
     text:
-      'Quick solutions for critical issues that need immediate attention to keep your life running smoothly.',
-    // icon, etc...
+      'Быстрые решения критических проблем, требующих немедленного внимания для поддержания вашего образа жизни.',
   },
   {
-    title: 'Standard fixes',
+    title: 'Стандартные ремонты',
     text:
-      'Reliable repairs and maintenance for everyday problems to ensure optimal performance.',
+      'Надёжный ремонт и обслуживание повседневных проблем для обеспечения оптимальной работы.',
   },
   {
-    title: 'Advertise your skills',
+    title: 'Рекламируйте свои навыки',
     text:
-      'Showcase your expertise and services to attract new clients and opportunities.',
+      'Продемонстрируйте свою экспертизу и услуги, чтобы привлечь новых клиентов и возможности.',
   },
 ]
 
@@ -27,16 +26,16 @@ export default function OffersSection() {
     <section
       className="w-full gradient shadow-[0_0_4px_rgba(0,0,0,0.2)] rounded-[15px] py-[50px] px-[50px]"
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* ← Left column */}
         <div className="flex flex-col space-y-18">
           <h1>
-            Get to know <span className="font-bold">our offers!</span>
+            Узнайте о <span className="font-bold">наших предложениях!</span>
           </h1>
           <img
             src={PointFinger}
             alt="Pointing hand"
-            className="w-40 md:w-60 lg:w-80 self-start hidden md:block"
+            className="hidden md:block transform md:rotate-90 lg:rotate-0 w-40 md:w-60 lg:w-80 self-start"
           />
         </div>
 

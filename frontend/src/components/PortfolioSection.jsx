@@ -1,4 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
+import {
+  fetchPortfolio,
+  uploadPortfolioImage,
+  deletePortfolioImage
+} from '../api/portfolio';
 
 export default function PortfolioSection({ onEdit, onAdd }) {
   const token = localStorage.getItem('authToken');
@@ -18,51 +23,39 @@ export default function PortfolioSection({ onEdit, onAdd }) {
 
   // Fetch images on mount
   useEffect(() => {
-    async function fetchImages() {
+    let cancelled = false;
+    async function load() {
       setLoading(true);
       try {
-        const res = await fetch('/api/privateFreelancerProfiles/portfolio', {
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token && { Authorization: `Bearer ${token}` }),
-          },
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || res.statusText);
-        setImages(data);
+        const data = await fetchPortfolio();
+        if (!cancelled) setImages(data);
       } catch (err) {
-        console.error('Failed to load portfolio images:', err);
-        setError(err.message);
+        if (!cancelled) {
+          console.error('Failed to load portfolio images:', err);
+          setError(err.message);
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
-    fetchImages();
-  }, [token]);
+    load();
+    return () => { cancelled = true; };
+  }, []);
 
   // Allow adding only if fewer than 9 images
   const canAddMore = images.length < 9;
 
   // Handler: add images, enforce 9-image max
-  const handleFilesSelected = async (e) => {
+  const handleFilesSelected = async e => {
     const files = Array.from(e.target.files || []);
     if (!files.length || !canAddMore) return;
-    // enforce max limit
     const allowed = files.slice(0, 9 - images.length);
     setUploading(true);
     const added = [];
     try {
       for (const file of allowed) {
-        const formData = new FormData();
-        formData.append('image', file);
-        const res = await fetch('/api/privateFreelancerProfiles/portfolio', {
-          method: 'POST',
-          headers: { ...(token && { Authorization: `Bearer ${token}` }) },
-          body: formData,
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || res.statusText);
-        added.push(data);
+        const img = await uploadPortfolioImage(file);
+        added.push(img);
       }
       const updated = [...images, ...added];
       setImages(updated);
@@ -77,16 +70,11 @@ export default function PortfolioSection({ onEdit, onAdd }) {
   };
 
   // Handler: delete image
-  const handleDelete = async (id) => {
+  const handleDelete = async id => {
     if (!window.confirm('Delete this image?')) return;
     setDeletingId(id);
     try {
-      const res = await fetch(`/api/privateFreelancerProfiles/portfolio/${id}`, {
-        method: 'DELETE',
-        headers: { ...(token && { Authorization: `Bearer ${token}` }) },
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || res.statusText);
+      await deletePortfolioImage(id);
       const updated = images.filter(img => img.id !== id);
       setImages(updated);
       onEdit?.(updated);
@@ -111,12 +99,12 @@ export default function PortfolioSection({ onEdit, onAdd }) {
       />
 
       {/* Loading / error states */}
-      {loading && <p>Loading images…</p>}
+      {loading && <p>Загрузка изображений…</p>}
       {error   && <p className="text-red-500">{error}</p>}
 
       {/* Portfolio display */}
       <div className="bg-white rounded-lg p-6 shadow">
-        <h2 className="font-semibold mb-6">Pictures ({images.length}/9)</h2>
+        <h2 className="font-semibold mb-6">Фотографии ({images.length}/9)</h2>
         <div className="grid grid-cols-3 gap-2 mb-4">
           {images.map(img => (
             <img
@@ -127,22 +115,22 @@ export default function PortfolioSection({ onEdit, onAdd }) {
             />
           ))}
           {images.length === 0 && (
-            <p className="col-span-3 text-gray-500">No pictures yet.</p>
+            <p className="col-span-3 text-gray-500">Пока нет фотографий.</p>
           )}
         </div>
-        <div className="flex space-x-4">
+        <div className="2xl:flex space-x-4 space-y-4 2xl:space-y-0">
           <button
-            className="btn btn-secondary flex-1"
+            className="btn btn-secondary 2xl:flex-1 w-full"
             onClick={() => setShowEditModal(true)}
           >
-            Edit Pictures
+            Редактировать фотографии
           </button>
           <button
-            className={`btn btn-primary flex-1 ${(!canAddMore || uploading) && 'opacity-50 cursor-not-allowed'}`}
+            className={`btn btn-primary 2xl:flex-1 w-full ${(!canAddMore || uploading) && 'opacity-50 cursor-not-allowed'}`}
             onClick={() => canAddMore && !uploading && fileInputRef.current.click()}
             disabled={!canAddMore || uploading}
           >
-            {uploading ? 'Uploading…' : canAddMore ? 'Add Pictures' : 'Limit reached'}
+            {uploading ? 'Загрузка…' : canAddMore ? 'Добавить фотографии' : 'Достигнут лимит'}
           </button>
         </div>
       </div>
@@ -151,7 +139,7 @@ export default function PortfolioSection({ onEdit, onAdd }) {
       {showEditModal && (
         <div className="fixed inset-0  bg-black/20 backdrop-blur-sm  flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md space-y-4">
-            <h3 className="text-lg font-semibold">Remove Pictures</h3>
+            <h3 className="text-lg font-semibold">Удалить фотографии</h3>
             <div className="grid grid-cols-3 gap-2">
               {images.map(img => (
                 <div key={img.id} className="relative">
@@ -175,7 +163,7 @@ export default function PortfolioSection({ onEdit, onAdd }) {
                 onClick={() => setShowEditModal(false)}
                 className="btn btn-secondary"
               >
-                Done
+                Готово
               </button>
             </div>
           </div>

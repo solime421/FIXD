@@ -1,72 +1,65 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useAuth } from '../context/AuthContext.jsx';
-import { io } from 'socket.io-client';
-import { Send, DollarSign } from 'lucide-react';
-import { useParams, useNavigate } from 'react-router-dom';
-import ChatsScroll from '../components/ChatsScroll.jsx';
-import InputField from '../components/InputField.jsx';
+import { useAuth }                          from '../context/AuthContext.jsx';
+import { io }                               from 'socket.io-client';
+import { Send }                 from 'lucide-react';
+import { useParams, useNavigate }           from 'react-router-dom';
+import ChatsScroll                          from '../components/ChatsScroll.jsx';
+import InputField                           from '../components/InputField.jsx';
+import {
+  fetchChats,
+  markMessagesRead,
+  fetchMessages,
+  sendMessage as apiSendMessage,
+  fetchOfferByChat,
+  sendOffer as apiSendOffer,
+  acceptOffer,
+  declineOffer
+} from '../api/chats';
+
 
 export default function ChatPage() {
-  const { user } = useAuth();   // ← add this
-  const { chatId } = useParams();
-  const navigate = useNavigate();
-  const socketRef = useRef();
+  const { user }        = useAuth();
+  const { chatId }      = useParams();
+  const navigate        = useNavigate();
+  const socketRef       = useRef();
 
-  const [chats, setChats] = useState([]);
+  const [chats, setChats]             = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
+  const [messages, setMessages]       = useState([]);
+  const [newMessage, setNewMessage]   = useState('');
 
-  // offer states
-  const [showOfferModal, setShowOfferModal] = useState(false);
-  const [offerTitle, setOfferTitle] = useState('');
-  const [sendingOffer, setSendingOffer] = useState(false);
-
-  const [incomingOffer, setIncomingOffer] = useState(null);
+  // Offer states
+  const [showOfferModal, setShowOfferModal]   = useState(false);
+  const [offerTitle, setOfferTitle]           = useState('');
+  const [sendingOffer, setSendingOffer]       = useState(false);
+  const [incomingOffer, setIncomingOffer]     = useState(null);
   const [showClientOffer, setShowClientOffer] = useState(false);
 
-  // scroll ref
   const messagesContainerRef = useRef(null);
 
-  // 1) socket connection
+  // 1) Open socket once
   useEffect(() => {
     socketRef.current = io('http://localhost:3000', {
       withCredentials: true,
-      auth: { token: localStorage.getItem('authToken') },
+      auth: { token: localStorage.getItem('authToken') }
     });
     return () => socketRef.current.disconnect();
   }, []);
 
-  // 2) fetch chats + auto‐select from URL
+  // 2) Get chats + auto‐select URL, clear unread on initial open
   useEffect(() => {
-    fetch('/api/chats', {
-      headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
-    })
-      .then(r => r.json())
+    fetchChats()
       .then(data => {
         setChats(data);
-  
         if (chatId) {
           const found = data.find(c => String(c.id) === chatId);
           if (found) {
-            // 1) clear the dot locally
             setChats(cs =>
-              cs.map(chat =>
-                chat.id === found.id
-                  ? { ...chat, unreadCount: 0 }
-                  : chat
+              cs.map(c =>
+                c.id === found.id ? { ...c, unreadCount: 0 } : c
               )
             );
-  
-            // 2) mark all as read on the server
-            fetch(`/api/chats/${found.id}/messages/read`, {
-              method: 'POST',
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-              },
-            }).catch(console.error);
-  
-            // 3) finally select the chat
+            markMessagesRead(found.id).catch(console.error);
             setSelectedChat(found);
           }
         }
@@ -74,196 +67,148 @@ export default function ChatPage() {
       .catch(console.error);
   }, [chatId]);
 
-  // 3) join all chat rooms
-useEffect(() => {
-  if (!socketRef.current) return;
-  chats.forEach(c => {
-    socketRef.current.emit('joinRoom', c.id);
-  });
-}, [chats]);
+  // 3) Join all rooms
+  useEffect(() => {
+    if (!socketRef.current) return;
+    chats.forEach(c => socketRef.current.emit('joinRoom', c.id));
+  }, [chats]);
 
-// 4) real-time new messages + new offers
-useEffect(() => {
-  if (!socketRef.current) return;
+  // 4) Handle real‐time newMessage & newOffer
+  useEffect(() => {
+    if (!socketRef.current) return;
 
-  const onNewMessage = async (msg) => {
-    setChats(cs => cs
-      .map(c => {
-        if (c.id === msg.chatId) {
-          const isActive = c.id === selectedChat?.id;
-          return {
-            ...c,
-            unreadCount: isActive ? 0 : (c.unreadCount || 0) + 1,
-          };
+    const onNewMessage = async msg => {
+      setChats(cs => {
+        const idx = cs.findIndex(c => c.id === msg.chatId);
+        if (idx === -1) return cs;
+        const updated = cs.map(c =>
+          c.id === msg.chatId
+            ? {
+                ...c,
+                unreadCount:
+                  c.id === selectedChat?.id
+                    ? 0
+                    : (c.unreadCount || 0) + 1
+              }
+            : c
+        );
+        const [moved] = updated.splice(idx, 1);
+        return [moved, ...updated];
+      });
+
+      if (selectedChat?.id === msg.chatId) {
+        setMessages(ms => ms.some(m => m.id === msg.id) ? ms : [...ms, msg]);
+        try {
+          await markMessagesRead(msg.chatId);
+        } catch (e) {
+          console.error('Mark read failed', e);
         }
-        return c;
-      })
-      // move that chat to the top
-      .sort((a, b) => a.id === msg.chatId ? -1 : b.id === msg.chatId ? 1 : 0)
-    );
-
-    if (selectedChat?.id === msg.chatId) {
-      setMessages(ms => ms.some(m => m.id === msg.id) ? ms : [...ms, msg]);
-
-      // immediately mark as read on server
-      try {
-        await fetch(`/api/chats/${msg.chatId}/messages/read`, {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
-        });
-      } catch (err) {
-        console.error("Failed to mark as read:", err);
       }
-    }
-  };
+    };
 
-  const onNewOffer = (offer) => {
-    // show popup if client has this chat open
-    if (user.role === 'client' && offer.chatId === selectedChat?.id) {
-      setIncomingOffer(offer);
-      setShowClientOffer(true);
-    }
+    const onNewOffer = offer => {
+      setChats(cs => {
+        const idx = cs.findIndex(c => c.id === offer.chatId);
+        if (idx === -1) return cs;
+        const updated = [...cs];
+        const chat = updated[idx];
+        updated.splice(idx, 1);
+        return [
+          {
+            ...chat,
+            unreadCount:
+              chat.id === selectedChat?.id
+                ? 0
+                : (chat.unreadCount || 0) + 1
+          },
+          ...updated
+        ];
+      });
 
-    // reorder the sidebar
-    setChats(cs => {
-      const idx = cs.findIndex(c => c.id === offer.chatId);
-      if (idx === -1) return cs;
-      return [cs[idx], ...cs.slice(0, idx), ...cs.slice(idx + 1)];
-    });
-  };
+      if (user.role === 'client' && offer.chatId === selectedChat?.id) {
+        setIncomingOffer(offer);
+        setShowClientOffer(true);
+      }
+    };
 
-  socketRef.current.on('newMessage', onNewMessage);
-  socketRef.current.on('newOffer',  onNewOffer);
+    socketRef.current.on('newMessage', onNewMessage);
+    socketRef.current.on('newOffer', onNewOffer);
+    return () => {
+      socketRef.current.off('newMessage', onNewMessage);
+      socketRef.current.off('newOffer', onNewOffer);
+    };
+  }, [selectedChat, user.role]);
 
-  return () => {
-    socketRef.current.off('newMessage', onNewMessage);
-    socketRef.current.off('newOffer',  onNewOffer);
-  };
-}, [selectedChat, user.role]);
-
-  // 5) auto‐scroll
+  // 5) Auto‐scroll down
   useEffect(() => {
     const el = messagesContainerRef.current;
     if (el) el.scrollTop = el.scrollHeight;
   }, [messages]);
 
-  // 6) select chat
-   const selectChat = c => {
-    setChats(cs =>
-      cs.map(chat =>
-        chat.id === c.id
-          ? { ...chat, unreadCount: 0 }
-          : chat
-      )
-    );
-    // 2) fire “mark as read” in background
-    fetch(`/api/chats/${c.id}/messages/read`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
-    }).catch(console.error);
-    // 3) actually select & navigate
+  // 6) Selecting a chat clears its badge & navigates
+  const selectChat = async c => {
+    setChats(cs => cs.map(x => x.id === c.id ? { ...x, unreadCount: 0 } : x));
+    markMessagesRead(c.id).catch(console.error);
     setSelectedChat(c);
     navigate(`/chats/${c.id}`);
   };
 
-  // 7) load history & mark read
+  // 7) Load history + check pending offer
   useEffect(() => {
     if (!selectedChat) return;
     const cid = selectedChat.id;
-  
-    // 1) load messages
-    fetch(`/api/chats/${cid}/messages`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
-    })
-      .then(r => r.json())
-      .then(msgs => {
+
+    (async () => {
+      try {
+        const msgs = await fetchMessages(cid);
         setMessages(msgs);
-        // 2) mark those messages read
-        return fetch(`/api/chats/${cid}/messages/read`, {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
-        });
-      })
-      .then(() => {
-        // 3) now see if there's a pending offer
-        return fetch(`/api/offers/chat/${cid}`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
-        });
-      })
-      .then(r => {
-        if (r.ok) return r.json();
-        if (r.status === 404) return null;          // no pending offer
-        throw new Error("Failed to load pending offer");
-      })
-      .then(offer => {
-        if (offer) {
-          setIncomingOffer(offer);
+        await markMessagesRead(cid);
+        const ofr = await fetchOfferByChat(cid);
+        if (ofr) {
+          setIncomingOffer(ofr);
           setShowClientOffer(true);
         }
-      })
-      .catch(console.error);
+      } catch (e) {
+        console.error(e);
+      }
+    })();
   }, [selectedChat]);
 
-  // 8) send text
+  // 8) Send a text message
   const sendMessage = async () => {
     if (!newMessage.trim() || !selectedChat) return;
-    const res = await fetch(`/api/chats/${selectedChat.id}/messages`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-      },
-      body: JSON.stringify({ message: newMessage.trim() }),
-    });
-    if (!res.ok) {
-      console.error('Send failed:', await res.text());
-      return;
+    try {
+      await apiSendMessage(selectedChat.id, newMessage.trim());
+      setNewMessage('');
+    } catch (e) {
+      console.error('Send failed:', e);
     }
-    setNewMessage('');
-    // socket will append it
   };
 
-  // 9) freelancer sends offer
+  // 9) Freelancer sends an offer
   const sendOffer = async () => {
     if (!offerTitle.trim() || !selectedChat) return;
     setSendingOffer(true);
     try {
-      const res = await fetch('/api/offers', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-        },
-        body: JSON.stringify({
-          chatId: selectedChat.id,
-          offer_name: offerTitle.trim().slice(0,100),
-        }),
-      });
-      if (!res.ok) throw new Error(await res.text());
+      await apiSendOffer(selectedChat.id, offerTitle.trim());
       setOfferTitle('');
       setShowOfferModal(false);
-      // spinner until newOffer arrives...
-    } catch (err) {
-      alert(err.message);
+    } catch (e) {
+      alert(e.message);
     } finally {
       setSendingOffer(false);
     }
   };
 
-  // 10) client accepts or cancels
+  // 10) Client accepts an offer
   const handleClientAccept = async () => {
     try {
-      const res = await fetch(`/api/offers/${incomingOffer.id}/accept`, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
-      });
-      const { orderId } = await res.json();
-      navigate(`/orders`);
-    } catch (err) {
-      console.error(err);
+      const { orderId } = await acceptOffer(incomingOffer.id);
+      navigate('/orders');
+    } catch (e) {
+      console.error(e);
     }
   };
-
 
   return (
     <main className="h-screen grid grid-cols-4 pt-[90px]">
@@ -290,7 +235,7 @@ useEffect(() => {
                   onClick={() => setShowOfferModal(true)}
                   className="btn btn-primary h-fit"
                 >
-                  <h3>Send Offer</h3>
+                  <h3>Отправить оффер</h3>
                 </button>
               )}
             </header>
@@ -320,7 +265,7 @@ useEffect(() => {
             <div className="p-2 mb-1 flex items-center space-x-2 rounded-lg shadow-[0_0_4px_rgba(0,0,0,0.2)]">
               <input
                 className="flex-1 overflow-y-auto space-y-3 px-4 py-2 focus:outline-none"
-                placeholder="Type a message…"
+                placeholder="Напишите сообщение…"
                 value={newMessage}
                 onChange={e => setNewMessage(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && sendMessage()}
@@ -336,7 +281,7 @@ useEffect(() => {
           </>
         ) : (
           <div className="flex-1 flex items-center justify-center text-gray-500">
-            Select a chat to start messaging
+            Выберите чат, чтобы начать переписку
           </div>
         )}
       </section>
@@ -345,28 +290,28 @@ useEffect(() => {
       {showOfferModal && (
         <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="gradient rounded-lg p-6 w-full max-w-sm space-y-4">
-            <h3 className="text-lg font-semibold">Write offer name:</h3>
+            <h3 className="text-lg font-semibold">Введите название оффера:</h3>
             <InputField
               maxLength={100}
               rows={3}
               value={offerTitle}
               onChange={e => setOfferTitle(e.target.value)}
-              placeholder="Write…"
+              placeholder="Напишите…"
             />
             <div className="flex justify-end space-x-3">
               <button
                 onClick={() => setShowOfferModal(false)}
-                className="btn btn-secondary"
+                className="btn btn-secondary w-full"
                 disabled={sendingOffer}
               >
-                Cancel
+                Отменить
               </button>
               <button
                 onClick={sendOffer}
-                className="btn btn-primary"
+                className="btn btn-primary w-full"
                 disabled={sendingOffer || !offerTitle.trim()}
               >
-                {sendingOffer ? 'Sending…' : 'Send'}
+                {sendingOffer ? 'Отправляется…' : 'Отправить'}
               </button>
             </div>
           </div>
@@ -383,20 +328,16 @@ useEffect(() => {
                 onClick={handleClientAccept}
                 className="btn btn-primary w-full"
               >
-                Accept
+                Принять
               </button>
                 <button
                   onClick={async () => {
-                    // tell server we’ve dismissed this offer
-                    await fetch(`/api/offers/${incomingOffer.id}/decline`, {
-                      method: 'POST',
-                      headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
-                    });
+                    await declineOffer(incomingOffer.id);
                     setShowClientOffer(false);
                   }}
                   className="w-full btn btn-secondary"
                 >
-                  Cancel
+                  Отменить
                 </button>
             </div>
           </div>
