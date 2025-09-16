@@ -193,7 +193,7 @@ export default function MyOrdersPage() {
               >
                 {[5,4,3,2,1].map(n => (
                   <option key={n} value={n}>
-                    {n} star{n>1?'s':''}
+                    {n}
                   </option>
                 ))}
               </select>
@@ -205,7 +205,7 @@ export default function MyOrdersPage() {
                 value={reviewForm.comment}
                 onChange={e => setReviewForm(f => ({ ...f, comment: e.target.value }))}
                 className="w-full border rounded px-3 py-2"
-                placeholder="Write your feedback…"
+                placeholder="Напишите отзыв…"
               />
             </div>
             <div className="flex justify-end space-x-3">
