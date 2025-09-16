@@ -22,7 +22,7 @@ model User {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  freelancerDetails FreelancerDetails?
+  freelancerDetails FreelancerDetails? // 1 к 1 связь с профилем фрилансера
 
   ordersAsClient     Order[]  @relation("ClientOrders")
   ordersAsFreelancer Order[]  @relation("FreelancerOrders")
@@ -31,7 +31,7 @@ model User {
   reviewsWritten     Review[] @relation("ReviewsWritten")
   reviewsReceived    Review[] @relation("ReviewsReceived")
 
-  // Additional relations from other models:
+  // Дополнительные связи с другими моделями
   offers   Offer[]   @relation("UserOffers")
   messages Message[] @relation("UserMessages")
 }
@@ -50,7 +50,7 @@ model FreelancerDetails {
   urgentServiceEnabled Boolean  @default(false)
   depositAmount        Float?
 
-  // relation back to user
+  // Связь с таблицей User
   user User @relation(fields: [userId], references: [id])
 
   portfolioImages PortfolioImage[] @relation("FreelancerPortfolio")
@@ -63,8 +63,8 @@ model PortfolioImage {
   imageUrl     String
   createdAt    DateTime @default(now())
 
-  // Relation back to FreelancerDetails, using explicit relation name.
   freelancer FreelancerDetails @relation(fields: [freelancerId], references: [userId], name: "FreelancerPortfolio")
+  // Ссылка на владельца портфолио
 }
 
 model Specialty {
@@ -72,7 +72,6 @@ model Specialty {
   freelancerId Int
   specialty    String
 
-  // Relation back to FreelancerDetails.
   freelancer FreelancerDetails @relation(fields: [freelancerId], references: [userId], name: "FreelancerSpecialties")
 }
 
@@ -80,16 +79,15 @@ model Order {
   id           Int      @id @default(autoincrement())
   clientId     Int
   freelancerId Int
-  offerName    String // Snapshot of the accepted offer's name
-  status       Boolean  @default(false) // false = in progress, true = completed
+  offerName    String // 'Снимок' названия принятого оффера
+  status       Boolean  @default(false) // false = в процессе, true = завершен
   createdAt    DateTime @default(now())
   updatedAt    DateTime @default(now())
 
-  // Relations to User for client and freelancer.
   client     User @relation("ClientOrders", fields: [clientId], references: [id])
   freelancer User @relation("FreelancerOrders", fields: [freelancerId], references: [id])
 
-  // One-to-one relation with Review (each order can have one review)
+  // Связь с отзывом (1 к 1)
   review Review?
 }
 
@@ -103,10 +101,9 @@ model Offer {
   createdAt    DateTime  @default(now())
   acceptedAt   DateTime?
 
-  // Relation to Chat; implicit opposite relation will be created in Chat.offers
   chat       Chat @relation(fields: [chatId], references: [id])
-  // Relation to User (freelancer); we specify a relation name to link with User.offers.
   freelancer User @relation(fields: [freelancerId], references: [id], name: "UserOffers")
+  // Предложение привязано к чату и фрилансеру
 }
 
 model Chat {
@@ -116,11 +113,10 @@ model Chat {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @default(now())
 
-  // Relations to User: explicit relation names for client and freelancer.
   client     User @relation("ClientChats", fields: [clientId], references: [id])
   freelancer User @relation("FreelancerChats", fields: [freelancerId], references: [id])
 
-  // One-to-many: A Chat can have many messages and offers.
+  // One-to-many
   messages Message[]
   offers   Offer[]
 }
@@ -147,9 +143,7 @@ model Review {
   comment    String?
   createdAt  DateTime @default(now())
 
-  // Relation to Order.
   order    Order @relation(fields: [orderId], references: [id])
-  // Relations to User for reviewer and reviewee with explicit names.
   reviewer User  @relation("ReviewsWritten", fields: [reviewerId], references: [id])
   reviewee User  @relation("ReviewsReceived", fields: [revieweeId], references: [id])
 }
